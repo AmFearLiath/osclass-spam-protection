@@ -18,8 +18,9 @@ class spam_prot extends DAO {
         $this->_table_sp_items          = '`'.DB_TABLE_PREFIX.'t_spam_protection_items`';
         $this->_table_sp_comments       = '`'.DB_TABLE_PREFIX.'t_spam_protection_comments`';
         $this->_table_sp_contacts       = '`'.DB_TABLE_PREFIX.'t_spam_protection_contacts`';
+        $this->_table_sp_logins         = '`'.DB_TABLE_PREFIX.'t_spam_protection_logins`';
         
-        $this->debug                    = new Debugger;
+        //$this->debug                    = new Debugger;
         parent::__construct();
     }
     
@@ -970,7 +971,7 @@ class spam_prot extends DAO {
     
     // Functions for login protection
     function _checkEmail($email) {
-        $this->dao->select('');
+        $this->dao->select('*');
         $this->dao->from($this->_table_user);
         $this->dao->where("s_email", $email);
         
@@ -983,29 +984,75 @@ class spam_prot extends DAO {
     function _checkUserLogin($email, $password) {
         
         if (!$this->_checkEmail($email)) {
-            $this->debug->do_log('debug', 'unknown email');
+            //$this->debug->do_log('debug', 'unknown email');
             return false;
         } else {
             $user = User::newInstance()->findByEmail($email);
             if (!osc_verify_password($password, (isset($user['s_password']) ? $user['s_password'] : ''))) {
-                $this->debug->do_log('debug', 'wrong password');
+                //$this->debug->do_log('debug', 'wrong password');
                 return false;
                 
             } else {
-                $this->debug->do_log('debug', 'user logged in');
+                //$this->debug->do_log('debug', 'user logged in');
                 return true;
             }
         }
         
     }
     
+    function _handleUserLogin($email) {
+           
+    }
+    
     function _countUserLogin($email) {
+    
+        $time = $this->_get('sp_security_login_time')*60;
+        $ip = $this->_IpUserLogin();
+            
+        $this->dao->select('*');
+        $this->dao->from($this->_table_sp_logins);
+        $this->dao->where("dt_date_login > ".(time()-$time));
+        $this->dao->where("s_email", $email);
+        $this->dao->orWhere("s_ip", $ip);
         
+        $result = $this->dao->get();
+        if ($result->numRows() > 0) { return true; }
         
+        return false;       
+    }
+    
+    function _increaseUserLogin($email) {        
+        $ip = $this->_IpUserLogin();        
+        if ($this->dao->insert($this->_table_sp_logins, array('s_email' => $email, 's_ip' => $ip, 'dt_date_login' => time()))) {
+            return true;    
+        } else {
+            return false;
+        }      
     }
     
     function _resetUserLogin($email) {
         
+        
+    }
+    
+    function _IpUserLogin($email) {
+
+        if (getenv('HTTP_CLIENT_IP')) {
+            $ipaddress = getenv('HTTP_CLIENT_IP');
+        } elseif (getenv('HTTP_X_FORWARDED_FOR')) {
+            $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+        } elseif (getenv('HTTP_X_FORWARDED')) {
+            $ipaddress = getenv('HTTP_X_FORWARDED');
+        } elseif (getenv('HTTP_FORWARDED_FOR')) {
+            $ipaddress = getenv('HTTP_FORWARDED_FOR');
+        } elseif (getenv('HTTP_FORWARDED')) {
+           $ipaddress = getenv('HTTP_FORWARDED');
+        } elseif (getenv('REMOTE_ADDR')) {
+            $ipaddress = getenv('REMOTE_ADDR');
+        } else {
+            return false;
+        }
+        return $ipaddress;    
         
     }    
 }
