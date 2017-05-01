@@ -3,7 +3,7 @@
 Plugin Name: Spam Protection
 Plugin URI: http://amfearliath.tk/osclass-spam-protection/
 Description: Spam Protection for Osclass. Checks in ads, comments and contact mails for duplicates, banned e-mail addresses and stopwords. Includes a honeypot and many other features. 
-Version: 1.4.1
+Version: 1.4.0
 Author: Liath
 Author URI: http://amfearliath.tk
 Short Name: spamprotection
@@ -48,9 +48,7 @@ Changelog
 
 1.3.4 - Stopwords now shown, if ad was blocked for this reason, Search for duplicates improved, translations corrected
 
-1.4.0 - New selectable method added in search for duplicates, item comment protection added, translations corrected. Help section redesigned.
-
-1.4.1 - Removed wrong button from check ad page 
+1.4.0 - New selectable method added in search for duplicates, item comment protection added, translations corrected. Help section redesigned. 
 */
 
 require_once('classes/class.spamprotection.php');
@@ -66,6 +64,25 @@ if (Params::getParam('spamcomment') == 'activate') {
     $sp->_spamActionComments('activate', Params::getParam('id'));    
 } elseif (Params::getParam('spam') == 'block') {
     $sp->_spamActionComments('spamcomment', Params::getParam('id'));    
+}
+
+// Login Check
+$action = Params::getParam('action');
+$email = Params::getParam('email');
+$password = Params::getParam('password', false, false);
+
+if ($action == 'login_post' && !empty($email) && !empty($password)) {
+    
+    $logins = $sp->_countUserLogin($email);
+    //$logins = 5;
+    if (!empty($logins) && $logins >= 5) {
+        die("Contact support if you have errors while login");
+    }
+    if (!$sp->_checkUserLogin($email, $password)) {
+        $sp->_countUserLogin($email);
+    } else {
+        $sp->_resetUserLogin($email);    
+    }
 }                                       
 
 // User wants to delete his contact mail

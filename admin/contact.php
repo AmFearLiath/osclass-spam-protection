@@ -8,16 +8,16 @@ $data = $sp->_get();
 ?>
 <div class="settings">
 
-    <ul class="contacttabs sp_tabs">
-        <li class="contacttab-link current" data-tab="sp_contact_mainfeatures"><a><?php _e('Main Settings', 'spamprotection'); ?></a></li>
-        <li class="contacttab-link " data-tab="sp_contact_emailblock"><a><?php _e('E-Mail Block', 'spamprotection'); ?></a></li>
-        <li class="contacttab-link " data-tab="sp_contact_stopwords"><a><?php _e('Stopwords', 'spamprotection'); ?></a></li>
-        <li class="contacttab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
+    <ul class="subtabs sp_tabs">
+        <li class="subtab-link current" data-tab="sp_contact_mainfeatures"><a><?php _e('Main Settings', 'spamprotection'); ?></a></li>
+        <li class="subtab-link " data-tab="sp_contact_emailblock"><a><?php _e('E-Mail Block', 'spamprotection'); ?></a></li>
+        <li class="subtab-link " data-tab="sp_contact_stopwords"><a><?php _e('Stopwords', 'spamprotection'); ?></a></li>
+        <li class="subtab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
     </ul>
     
-    <div id="sp_contact_options" class="sp_contact_options enabled">
+    <div id="sp_contact_options" class="sp_contact_options <?php echo (empty($data['sp_contact_activate']) || $data['sp_contact_activate'] == '0' ? 'disabled' : 'enabled'); ?>">
     
-        <div id="sp_contact_mainfeatures" class="contacttab-content current">
+        <div id="sp_contact_mainfeatures" class="subtab-content current">
         
             <div class="row form-group">
                 <label>
@@ -63,7 +63,7 @@ $data = $sp->_get();
                     
         </div>
         
-        <div id="sp_contact_emailblock" class="contacttab-content">
+        <div id="sp_contact_emailblock" class="subtab-content">
             <div class="row form-group">
                 <label>
                     <input type="checkbox" name="sp_contact_blocked" value="1"<?php if (!empty($data['sp_contact_blocked'])) { echo ' checked="checked"'; } ?> />
@@ -90,7 +90,7 @@ $data = $sp->_get();
             </div>        
         </div>
         
-        <div id="sp_contact_stopwords" class="contacttab-content">
+        <div id="sp_contact_stopwords" class="subtab-content">
             <div class="row form-group">
                 <h3><?php _e('Stop Words', 'spamprotection'); ?></h3>
                 <p>
