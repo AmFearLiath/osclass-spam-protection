@@ -3,7 +3,7 @@
 Plugin Name: Spam Protection
 Plugin URI: http://amfearliath.tk/osclass-spam-protection/
 Description: Spam Protection for Osclass. Checks in ads, comments and contact mails for duplicates, banned e-mail addresses and stopwords. Includes a honeypot and many other features. 
-Version: 1.5.0
+Version: 1.5.1
 Author: Liath
 Author URI: http://amfearliath.tk
 Short Name: spamprotection
@@ -52,7 +52,9 @@ Changelog
 
 1.4.1 - Wrong button in check ads page removed
 
-1.5.0 - Security settings for login and form protection added 
+1.5.0 - Security settings for login and form protection added
+
+1.5.1 - Removed Email ban for form protection 
 */
 
 require_once('classes/class.spamprotection.php');
