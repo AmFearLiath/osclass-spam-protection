@@ -20,8 +20,7 @@ class spam_prot extends DAO {
         $this->_table_sp_comments       = '`'.DB_TABLE_PREFIX.'t_spam_protection_comments`';
         $this->_table_sp_contacts       = '`'.DB_TABLE_PREFIX.'t_spam_protection_contacts`';
         $this->_table_sp_logins         = '`'.DB_TABLE_PREFIX.'t_spam_protection_logins`';
-
-        $this->debug                    = new Debugger;
+        
         parent::__construct();
     }
     
@@ -1108,8 +1107,6 @@ class spam_prot extends DAO {
                 'alt_body'  => $body,
                 'reply_to'  => osc_contact_email()
             );
-            
-            $this->debug->do_log('debug', $params);
             
             $return = false;
             if (osc_sendMail($params)) {
