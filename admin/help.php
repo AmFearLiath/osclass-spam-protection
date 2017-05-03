@@ -178,7 +178,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
             <p><?php _e("Here you can define which action is done after the login limit has reached.", "spamprotection"); ?></p>
             <ul>
                 <li><?php _e("Disable user account", "spamprotection"); ?><br /><small><?php _e("With this option, the user account will be disabled", "spamprotection"); ?> <?php _e("<strong>(recommended)</strong>", "spamprotection"); ?></small></li>
-                <li><?php _e("Add Email and IP to Banlist", "spamprotection"); ?><br /><small><?php _e("This will add the user email and ip to the ban list", "spamprotection"); ?></small></li>
+                <li><?php _e("Add IP to Banlist", "spamprotection"); ?><br /><small><?php _e("This will add the user ip to the ban list", "spamprotection"); ?></small></li>
                 <li><?php _e("Both", "spamprotection"); ?><br /><small><?php _e("Both actions will done after limit has reached", "spamprotection"); ?></small></li>
             </ul>
             
