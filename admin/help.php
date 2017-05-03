@@ -184,7 +184,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
             
             <hr />
             
-            <h3><?php _e("Inform user how many trys are remaining", "spamprotection"); ?></h3>            
+            <h3><?php _e("Inform user how many tries are remaining", "spamprotection"); ?></h3>            
             <p><?php _e("Is this option activated, the user will be informed how many login attempts are remaining after each false login.", "spamprotection"); ?></p>
             
             <hr />

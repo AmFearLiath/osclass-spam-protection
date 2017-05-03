@@ -47,9 +47,9 @@ $data = $sp->_get();
             <div class="row form-group">
                 <label>
                     <input type="checkbox" name="sp_security_login_inform" value="1"<?php if (!empty($data['sp_security_login_inform'])) { echo ' checked="checked"'; } ?> />
-                    <?php _e('Inform user how many trys are remaining', 'spamprotection'); ?>
+                    <?php _e('Inform user how many tries are remaining', 'spamprotection'); ?>
                 </label><br />
-                <small><?php _e('This option allows to inform the user after each false login, how many trys are remainig, before your choosen action is done', 'spamprotection'); ?></small>
+                <small><?php _e('This option allows to inform the user after each false login, how many tries are remainig, before your choosen action is done', 'spamprotection'); ?></small>
             </div>
 
             <div class="row form-group">
