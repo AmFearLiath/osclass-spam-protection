@@ -463,3 +463,46 @@ span.sp_review_close {
     border-radius: 3px;
     cursor: pointer;
 }
+
+#sp_security_login_honeypots > div > strong {
+    display: block;
+    margin: 5px 0 0;
+    padding: 5px;
+    width: calc(100% - 21px);
+    background-color: #666;
+    color: #fff;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-left: 11px solid #666;
+    border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;    
+}
+
+#sp_security_login_honeypots > div > pre {
+    display: block;
+    padding: 10px;
+    margin: 0;
+    overflow: auto;
+    width: calc(100% - 32px);
+    background-color: #f3f3f3;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-left: 11px solid #666;
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre;
+    white-space: pre-wrap;
+    border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;    
+}
+
+#sp_security_login_honeypots code {
+    line-height: 1.6em;
+    font-size: 11px;
+    font-family: "Courier New", Courier, monospace, sans-serif;
+    text-align: left;
+    color: #555;
+    border: 0;    
+}

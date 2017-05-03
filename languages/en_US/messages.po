@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OSClass Spam Protection\n"
-"POT-Creation-Date: 2017-05-01 01:09+0200\n"
-"PO-Revision-Date: 2017-05-01 01:09+0200\n"
+"POT-Creation-Date: 2017-05-03 16:31+0200\n"
+"PO-Revision-Date: 2017-05-03 16:32+0200\n"
 "Last-Translator: \n"
 "Language-Team: Liath <amfearliath@gmx.de>\n"
 "Language: de_DE\n"
@@ -90,27 +90,28 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: admin/comments.php:12 admin/contact.php:12 admin/help.php:131
-#: admin/help.php:165
+#: admin/comments.php:12 admin/contact.php:12 admin/help.php:132
+#: admin/help.php:205
 msgid "Main Settings"
 msgstr ""
 
-#: admin/comments.php:13 admin/contact.php:13 admin/help.php:109
-#: admin/help.php:148 admin/help.php:186 admin/settings.php:17
+#: admin/comments.php:13 admin/contact.php:13 admin/help.php:110
+#: admin/help.php:149 admin/help.php:226 admin/settings.php:17
 msgid "E-Mail Block"
 msgstr ""
 
-#: admin/comments.php:14 admin/contact.php:14 admin/help.php:53
-#: admin/help.php:119 admin/help.php:158 admin/help.php:196
+#: admin/comments.php:14 admin/contact.php:14 admin/help.php:54
+#: admin/help.php:120 admin/help.php:159 admin/help.php:236
 #: admin/settings.php:18
 msgid "Stopwords"
 msgstr ""
 
-#: admin/comments.php:15 admin/contact.php:15 admin/settings.php:20
+#: admin/comments.php:15 admin/contact.php:15 admin/security.php:12
+#: admin/settings.php:20
 msgid "Save"
 msgstr ""
 
-#: admin/comments.php:25 admin/help.php:133
+#: admin/comments.php:25 admin/help.php:134
 msgid "Activate the Comment Spam Protection"
 msgstr ""
 
@@ -120,22 +121,22 @@ msgid ""
 "optional and can be de/activated separetely"
 msgstr ""
 
-#: admin/comments.php:33 admin/contact.php:33 admin/help.php:138
-#: admin/help.php:172
+#: admin/comments.php:33 admin/contact.php:33 admin/help.php:139
+#: admin/help.php:212
 msgid "Check for Links"
 msgstr ""
 
-#: admin/comments.php:36 admin/contact.php:36 admin/help.php:141
-#: admin/help.php:176 admin/settings.php:40
+#: admin/comments.php:36 admin/contact.php:36 admin/help.php:142
+#: admin/help.php:216 admin/settings.php:40
 msgid "Deactivated"
 msgstr ""
 
-#: admin/comments.php:37 admin/help.php:87 admin/help.php:142
+#: admin/comments.php:37 admin/help.php:88 admin/help.php:143
 #: admin/settings.php:50
 msgid "Only title"
 msgstr ""
 
-#: admin/comments.php:38 admin/help.php:88 admin/help.php:143
+#: admin/comments.php:38 admin/help.php:89 admin/help.php:144
 #: admin/settings.php:51
 msgid "Title and description"
 msgstr ""
@@ -146,8 +147,8 @@ msgid ""
 "disable it"
 msgstr ""
 
-#: admin/comments.php:50 admin/contact.php:70 admin/help.php:113
-#: admin/help.php:152 admin/help.php:190 admin/settings.php:100
+#: admin/comments.php:50 admin/contact.php:70 admin/help.php:114
+#: admin/help.php:153 admin/help.php:230 admin/settings.php:100
 msgid "Block banned E-Mailadresses"
 msgstr ""
 
@@ -160,8 +161,8 @@ msgstr ""
 msgid "Enter the blocked E-Mailadresses, separated by ,"
 msgstr ""
 
-#: admin/comments.php:62 admin/contact.php:82 admin/help.php:114
-#: admin/help.php:153 admin/help.php:191 admin/settings.php:112
+#: admin/comments.php:62 admin/contact.php:82 admin/help.php:115
+#: admin/help.php:154 admin/help.php:231 admin/settings.php:112
 msgid "Block banned E-Mail TLD"
 msgstr ""
 
@@ -301,32 +302,35 @@ msgstr ""
 msgid "Delete comment and block user"
 msgstr ""
 
-#: admin/config.php:34 admin/config.php:47
-msgid "<strong>All Settings saved.</strong> Your plugin ist now configured"
+#: admin/config.php:38
+msgid "<strong>All Settings saved.</strong>"
 msgstr ""
 
-#: admin/config.php:38 admin/config.php:51
-msgid ""
-"<strong>Error.</strong> Your settings can not be saved, please try again"
+#: admin/config.php:42
+msgid "<strong>Error.</strong> Your settings can not be saved."
 msgstr ""
 
-#: admin/config.php:62 admin/help.php:8
+#: admin/config.php:51 admin/help.php:8
 msgid "Ad Settings"
 msgstr ""
 
-#: admin/config.php:63 admin/help.php:9
+#: admin/config.php:52 admin/help.php:9
 msgid "Comment Settings"
 msgstr ""
 
-#: admin/config.php:64 admin/help.php:10
+#: admin/config.php:53 admin/help.php:10
 msgid "Contact Settings"
 msgstr ""
 
-#: admin/config.php:65 index.php:196
+#: admin/config.php:54 admin/help.php:11
+msgid "Security Settings"
+msgstr ""
+
+#: admin/config.php:55 index.php:232
 msgid "Help"
 msgstr ""
 
-#: admin/contact.php:25 admin/help.php:167
+#: admin/contact.php:25 admin/help.php:207
 msgid "Activate the Contact Form Spam Protection"
 msgstr ""
 
@@ -336,7 +340,7 @@ msgid ""
 "optional and can be de/activated separetely"
 msgstr ""
 
-#: admin/contact.php:37 admin/help.php:175
+#: admin/contact.php:37 admin/help.php:215
 msgid "Activated"
 msgstr ""
 
@@ -346,7 +350,7 @@ msgid ""
 "marks mail as spam"
 msgstr ""
 
-#: admin/contact.php:46 admin/help.php:104 admin/help.php:181
+#: admin/contact.php:46 admin/help.php:105 admin/help.php:221
 #: admin/settings.php:84
 msgid "Activate the Honeypot form field"
 msgstr ""
@@ -470,192 +474,193 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: admin/help.php:11
+#: admin/help.php:12
 msgid "About"
 msgstr ""
 
-#: admin/help.php:18
-msgid "Welcome to Spam Protection"
+#: admin/help.php:19
+#, php-format
+msgid "Welcome to Spam Protection %s"
 msgstr ""
 
-#: admin/help.php:20
+#: admin/help.php:21
 msgid ""
 "Since you can read this help, you have already installed the plugin. So "
 "let's continue with the functions."
 msgstr ""
 
-#: admin/help.php:21
+#: admin/help.php:22
 msgid "You can configure this plugin in two ways."
 msgstr ""
 
-#: admin/help.php:23
+#: admin/help.php:24
 msgid "Through the plugin page and check the option \"configure\""
 msgstr ""
 
-#: admin/help.php:24
+#: admin/help.php:25
 msgid ""
 "or through the Tools-Tab that you can find on the button \"More\" to the "
 "left side."
 msgstr ""
 
-#: admin/help.php:26
+#: admin/help.php:27
 msgid ""
 "After your Settings, the Spam Protection is ready to work, you dont have to "
 "modify your files or something else."
 msgstr ""
 
-#: admin/help.php:28
+#: admin/help.php:29
 msgid "This plugin gives you different options to stop spam."
 msgstr ""
 
-#: admin/help.php:31
+#: admin/help.php:32
 msgid "Add Honeypot"
 msgstr ""
 
-#: admin/help.php:33
+#: admin/help.php:34
 msgid "This option adds a \"honeypot\" and protect against bots."
 msgstr ""
 
-#: admin/help.php:34
+#: admin/help.php:35
 msgid "You can set Honeypots for ads or contact mails"
 msgstr ""
 
-#: admin/help.php:38
+#: admin/help.php:39
 msgid "Search for duplicates"
 msgstr ""
 
-#: admin/help.php:39
+#: admin/help.php:40
 msgid "This option searches for duplicate posts from the user."
 msgstr ""
 
-#: admin/help.php:42
+#: admin/help.php:43
 msgid "Check MX Record from user email-addresses"
 msgstr ""
 
-#: admin/help.php:43
+#: admin/help.php:44
 msgid ""
 "This option enables you to check if the sended mail address has an "
 "authentical MX Record"
 msgstr ""
 
-#: admin/help.php:46
+#: admin/help.php:47
 msgid "Block banned email-addresses"
 msgstr ""
 
-#: admin/help.php:48
+#: admin/help.php:49
 msgid ""
 "This option enables you to block email-addresses, so all ads are "
 "automatically marked as spam from this mail-address"
 msgstr ""
 
-#: admin/help.php:49 admin/help.php:56
+#: admin/help.php:50 admin/help.php:57
 msgid "Available for ads, comments and contact mails"
 msgstr ""
 
-#: admin/help.php:55
+#: admin/help.php:56
 msgid ""
 "This option gives you the option to define words they are blocked. When an "
 "ad is posted with one or more of this words, its automatically marked as spam"
 msgstr ""
 
-#: admin/help.php:60 admin/settings.php:19 admin/settings.php:161
+#: admin/help.php:61 admin/settings.php:19 admin/settings.php:161
 msgid ".htaccess Editor"
 msgstr ""
 
-#: admin/help.php:61
+#: admin/help.php:62
 msgid ""
 "Here you can modify your .htaccess to include some protections against bots. "
 "But beware, edit this only if you know what you do!"
 msgstr ""
 
-#: admin/help.php:65
+#: admin/help.php:66
 msgid "Thats all"
 msgstr ""
 
-#: admin/help.php:66
+#: admin/help.php:67
 msgid "Have fun with this little plugin"
 msgstr ""
 
-#: admin/help.php:71 admin/settings.php:16
+#: admin/help.php:72 admin/settings.php:16
 msgid "Main Features"
 msgstr ""
 
-#: admin/help.php:73 admin/settings.php:29
+#: admin/help.php:74 admin/settings.php:29
 msgid "Activate the Spam Protection"
 msgstr ""
 
-#: admin/help.php:74
+#: admin/help.php:75
 msgid ""
 "Here you can de/activate the whole Spam Protection to secure your ads. You "
 "can deactivate some features optionally, but deactivate this checkbox will "
 "deactivate the whole system."
 msgstr ""
 
-#: admin/help.php:78 admin/settings.php:37
+#: admin/help.php:79 admin/settings.php:37
 msgid "Check for duplicates"
 msgstr ""
 
-#: admin/help.php:79
+#: admin/help.php:80
 msgid ""
 "1.) Here you can define where to search for duplicates. Searching in all "
 "items can cause heavy server load, if you have a lot of ads."
 msgstr ""
 
-#: admin/help.php:81 admin/settings.php:41
+#: admin/help.php:82 admin/settings.php:41
 msgid "Per user"
 msgstr ""
 
-#: admin/help.php:81
+#: admin/help.php:82
 msgid "This will only search in ads from same user."
 msgstr ""
 
-#: admin/help.php:81 admin/help.php:88 admin/help.php:94 admin/help.php:143
-#: admin/help.php:175
+#: admin/help.php:82 admin/help.php:89 admin/help.php:95 admin/help.php:144
+#: admin/help.php:180 admin/help.php:215
 msgid "<strong>(recommended)</strong>"
 msgstr ""
 
-#: admin/help.php:82 admin/settings.php:42
+#: admin/help.php:83 admin/settings.php:42
 msgid "All items"
 msgstr ""
 
-#: admin/help.php:82
+#: admin/help.php:83
 msgid "This will search in all ads in your database."
 msgstr ""
 
-#: admin/help.php:85
+#: admin/help.php:86
 msgid "2.) Here you can define what is checked while searching for duplicates"
 msgstr ""
 
-#: admin/help.php:87
+#: admin/help.php:88
 msgid "This will only search in title."
 msgstr ""
 
-#: admin/help.php:88
+#: admin/help.php:89
 msgid "This will search in title and description."
 msgstr ""
 
-#: admin/help.php:91
+#: admin/help.php:92
 msgid ""
 "3.) Here you can define the algorythm which is used for duplicates search "
 "and where you want to search for duplicates."
 msgstr ""
 
-#: admin/help.php:93 admin/settings.php:59
+#: admin/help.php:94 admin/settings.php:59
 msgid "md5/string comparition"
 msgstr ""
 
-#: admin/help.php:93
+#: admin/help.php:94
 msgid ""
 "This algorythm works as following: removing all blanks, convert text to "
 "lowercase, then get <a href=\"http://php.net/manual/en/function.md5.php"
 "\">md5 hash</a> of text and compare with other ads."
 msgstr ""
 
-#: admin/help.php:94 admin/settings.php:60
+#: admin/help.php:95 admin/settings.php:60
 msgid "Similar text"
 msgstr ""
 
-#: admin/help.php:94
+#: admin/help.php:95
 msgid ""
 "This algorythm is using the <em><a href=\"http://php.net/manual/en/function."
 "similar-text.php\">similar_text()</a></em> function: the whole text would be "
@@ -663,19 +668,19 @@ msgid ""
 "can define how high the similarity can be at maximum."
 msgstr ""
 
-#: admin/help.php:99
+#: admin/help.php:100
 msgid ""
 "Check <a href=\"https://en.wikipedia.org/wiki/MX_record\">MX Record</a> of "
 "used Mail"
 msgstr ""
 
-#: admin/help.php:100
+#: admin/help.php:101
 msgid ""
 "Sometimes mails from fake-domains are used. With this option you can check, "
 "if there is an authentically mailbox behind the used Email address."
 msgstr ""
 
-#: admin/help.php:105
+#: admin/help.php:106
 msgid ""
 "<a href=\"https://en.wikipedia.org/wiki/Honeypot_(computing)\">Honeypots</a> "
 "are a trap for bots. Normal users can't see them and don't fill it out. If "
@@ -683,124 +688,223 @@ msgid ""
 "the ad as spam."
 msgstr ""
 
-#: admin/help.php:111 admin/help.php:150 admin/help.php:188
+#: admin/help.php:112 admin/help.php:151 admin/help.php:228
 msgid "Here you can block Emails on two ways:"
 msgstr ""
 
-#: admin/help.php:113
+#: admin/help.php:114
 msgid ""
 "Here you can save blocked Email addresses which are not allowed to use for "
 "new ads."
 msgstr ""
 
-#: admin/help.php:114
+#: admin/help.php:115
 msgid ""
 "Here you can block Email providers which are not allowed to use for new ads."
 msgstr ""
 
-#: admin/help.php:120
+#: admin/help.php:121
 msgid ""
 "Save here your \"Badwords\" where you don't want, that they can be used in "
 "your ads."
 msgstr ""
 
-#: admin/help.php:124
+#: admin/help.php:125
 msgid ""
 "<a href=\"https://en.wikipedia.org/wiki/.htaccess\">.htaccess</a> Editor"
 msgstr ""
 
-#: admin/help.php:125
+#: admin/help.php:126
 msgid ""
 "This is only for experienced users who know what they are doing. Don't use "
 "this option because it can cause heavy errors on you whole page!"
 msgstr ""
 
-#: admin/help.php:134
+#: admin/help.php:135
 msgid ""
 "Here you can de/activate the whole Spam Protection to secure your comments. "
 "You can deactivate some features optionally, but deactivate this checkbox "
 "will deactivate the whole system."
 msgstr ""
 
-#: admin/help.php:139
+#: admin/help.php:140
 msgid "Here you can define where to search for links/urls in comments."
 msgstr ""
 
-#: admin/help.php:141 admin/help.php:176
+#: admin/help.php:142 admin/help.php:216
 msgid "Deactivate the search for links/urls."
 msgstr ""
 
-#: admin/help.php:142
+#: admin/help.php:143
 msgid "Search only in comment title for links/urls."
 msgstr ""
 
-#: admin/help.php:143
+#: admin/help.php:144
 msgid "Search in comment title and description for links/urls."
 msgstr ""
 
-#: admin/help.php:152
+#: admin/help.php:153
 msgid ""
 "Here you can save blocked Email addresses which are not allowed to use for "
 "new comments."
 msgstr ""
 
-#: admin/help.php:153
+#: admin/help.php:154
 msgid ""
 "Here you can block Email providers which are not allowed to use for new "
 "comments."
 msgstr ""
 
-#: admin/help.php:159
+#: admin/help.php:160
 msgid ""
 "Save here your \"Badwords\" where you don't want, that they can be used in "
 "your comments."
 msgstr ""
 
+#: admin/help.php:165 admin/security.php:11
+msgid "Form Protection"
+msgstr ""
+
+#: admin/help.php:167 admin/security.php:21
+msgid "Activate the Form Protection"
+msgstr ""
+
 #: admin/help.php:168
+msgid ""
+"This Option activates the whole form protection. You can deactivate some "
+"features optionally, but deactivate this checkbox will deactivate the whole "
+"system."
+msgstr ""
+
+#: admin/help.php:172 admin/security.php:28
+msgid "Max amount of wrong logins"
+msgstr ""
+
+#: admin/help.php:173
+msgid "Here you can define how many logins in which time range are allowed."
+msgstr ""
+
+#: admin/help.php:177 admin/security.php:38
+msgid "Action done after false logins"
+msgstr ""
+
+#: admin/help.php:178
+msgid ""
+"Here you can define which action is done after the login limit has reached."
+msgstr ""
+
+#: admin/help.php:180 admin/security.php:41
+msgid "Disable user account"
+msgstr ""
+
+#: admin/help.php:180
+msgid "With this option, the user account will be disabled"
+msgstr ""
+
+#: admin/help.php:181 admin/security.php:42
+msgid "Add Email and IP to Banlist"
+msgstr ""
+
+#: admin/help.php:181
+msgid "This will add the user email and ip to the ban list"
+msgstr ""
+
+#: admin/help.php:182 admin/security.php:43
+msgid "Both"
+msgstr ""
+
+#: admin/help.php:182
+msgid "Both actions will done after limit has reached"
+msgstr ""
+
+#: admin/help.php:187 admin/security.php:50
+msgid "Inform user how many trys are remaining"
+msgstr ""
+
+#: admin/help.php:188
+msgid ""
+"Is this option activated, the user will be informed how many login attempts "
+"are remaining after each false login."
+msgstr ""
+
+#: admin/help.php:192 admin/security.php:56
+msgid "Add Honeypot to login/register/recover forms"
+msgstr ""
+
+#: admin/help.php:193
+msgid "This options allow you to add Honeypots to following pages"
+msgstr ""
+
+#: admin/help.php:195
+msgid "User Login"
+msgstr ""
+
+#: admin/help.php:196
+msgid "User Regster"
+msgstr ""
+
+#: admin/help.php:197
+msgid "Password Recovery"
+msgstr ""
+
+#: admin/help.php:199
+msgid ""
+"If this Honeypot is filled out while sending the form, the system will "
+"increase the number of login attempts and the action follows the rules you "
+"have set before."
+msgstr ""
+
+#: admin/help.php:200
+msgid ""
+"Because of missing action hooks you have to add one line of code in some "
+"files. Explanation how to add you will find after this option himself."
+msgstr ""
+
+#: admin/help.php:208
 msgid ""
 "Here you can de/activate the whole Spam Protection to secure your contact "
 "mails. You can deactivate some features optionally, but deactivate this "
 "checkbox will deactivate the whole system."
 msgstr ""
 
-#: admin/help.php:173
+#: admin/help.php:213
 msgid "Here you can define where to search for links/urls in contact mails."
 msgstr ""
 
-#: admin/help.php:175
+#: admin/help.php:215
 msgid "Activate the search for links/urls."
 msgstr ""
 
-#: admin/help.php:182
+#: admin/help.php:222
 msgid ""
 "Honeypots are a trap for bots. Normal users can't see them and don't fill it "
 "out. If this form field is filled out, the system knows that this is a bot "
 "and marks the ad as spam."
 msgstr ""
 
-#: admin/help.php:190
+#: admin/help.php:230
 msgid ""
 "Here you can save blocked Email addresses which are not allowed to use for "
 "new contact mails."
 msgstr ""
 
-#: admin/help.php:191
+#: admin/help.php:231
 msgid ""
 "Here you can block Email providers which are not allowed to use for new "
 "contact mails."
 msgstr ""
 
-#: admin/help.php:197
+#: admin/help.php:237
 msgid ""
 "Save here your \"Badwords\" where you don't want, that they can be used in "
 "your contact mails."
 msgstr ""
 
-#: admin/help.php:202
+#: admin/help.php:242
 msgid "About this plugin"
 msgstr ""
 
-#: admin/help.php:203
+#: admin/help.php:243
 msgid ""
 "This plugin I've developed at the request of the community in the OSClass "
 "forum. There I was given lots of ideas and some have participated in beta "
@@ -815,22 +919,66 @@ msgid ""
 "use this plugin properly."
 msgstr ""
 
-#: admin/help.php:211
+#: admin/help.php:251
 msgid "If an ad was marked as spam, you will be informed on your admin page."
 msgstr ""
 
-#: admin/help.php:213
+#: admin/help.php:253
 msgid "This button redirect you to the table, where all spam ads are listed."
 msgstr ""
 
-#: admin/help.php:214
+#: admin/help.php:254
 msgid "Here you can find a new option to check this ad and choose some action."
 msgstr ""
 
-#: admin/help.php:217
+#: admin/help.php:257
 msgid ""
 "Here you can see all informations about this ad or user and choose your "
 "preferred action."
+msgstr ""
+
+#: admin/security.php:23
+msgid ""
+"This Option activates the whole form protection. Some features are optional "
+"and can be de/activated separetely"
+msgstr ""
+
+#: admin/security.php:52
+msgid ""
+"This option allows to inform the user after each false login, how many trys "
+"are remainig, before your choosen action is done"
+msgstr ""
+
+#: admin/security.php:57
+msgid ""
+"This Option ads a hidden form field to the login/register/recovery forms. "
+"After a bot tap into your trap, action following rules you have set above."
+msgstr ""
+
+#: admin/security.php:61
+msgid "Login"
+msgstr ""
+
+#: admin/security.php:68
+msgid "Registration"
+msgstr ""
+
+#: admin/security.php:75
+msgid "Password recovery"
+msgstr ""
+
+#: admin/security.php:89
+msgid ""
+"To make this honeypot works for login and recover pages, you need to add one "
+"line of code in each of this files."
+msgstr ""
+
+#: admin/security.php:90
+msgid "Insert it right before the closing <em>form</em> tag &lt;/form&gt;"
+msgstr ""
+
+#: admin/security.php:108
+msgid "Example"
 msgstr ""
 
 #: admin/settings.php:31
@@ -935,68 +1083,124 @@ msgstr ""
 msgid "Beware of editing this file, unless you know what you're doing!!!"
 msgstr ""
 
-#: classes/class.spamprotection.php:146
+#: classes/class.spamprotection.php:167
 msgid "Spam found"
 msgstr ""
 
-#: classes/class.spamprotection.php:155
+#: classes/class.spamprotection.php:176
 msgid "Spam comment found"
 msgstr ""
 
-#: classes/class.spamprotection.php:164
+#: classes/class.spamprotection.php:185
 msgid "Spam Contact Mail found"
 msgstr ""
 
-#: index.php:121 index.php:189 index.php:193
+#: classes/class.spamprotection.php:1011
+msgid "Spam Protection - Too many false login attempts"
+msgstr ""
+
+#: classes/class.spamprotection.php:1089
+msgid "False logins on {PAGE_NAME}"
+msgstr ""
+
+#: classes/class.spamprotection.php:1090
+msgid "Hello {MAIL_USER},"
+msgstr ""
+
+#: classes/class.spamprotection.php:1091
+msgid ""
+"We have detected some false logins for your account {MAIL_USED} on "
+"{PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}"
+msgstr ""
+
+#: classes/class.spamprotection.php:1092
+msgid ""
+"In order to our security policy, we have temporarily disabled your account "
+"and banned the used IP in our System. You can use following link to unban "
+"and reactivate your Account. If this was not you, please contact the support "
+"and change your password. You can use the password recovery function, if you "
+"don't remember your password."
+msgstr ""
+
+#: classes/class.spamprotection.php:1093
+msgid "Unban your account: {UNBAN_LINK} "
+msgstr ""
+
+#: classes/class.spamprotection.php:1094
+msgid "Password recovery: {PASSWORD_LINK} "
+msgstr ""
+
+#: classes/class.spamprotection.php:1095
+msgid "Best regards"
+msgstr ""
+
+#: index.php:82
+msgid ""
+"<strong>Info!</strong> Your account has been reactivated, you can login as "
+"usual."
+msgstr ""
+
+#: index.php:157 index.php:225 index.php:229
 msgid "Spam Protection"
 msgstr ""
 
-#: index.php:127
+#: index.php:163
 msgid "Thank you for rating this plugin"
 msgstr ""
 
-#: index.php:128
+#: index.php:164
 msgid ""
 "This plugin is and will always be free of charge! If you found any errors, "
 "please contact me in OSClass Forum to solve your problems before rating this "
 "plugin."
 msgstr ""
 
-#: index.php:129
+#: index.php:165
 msgid ""
 "If you are happy with this plugin and love to use it, please rate it now on "
 "OSClass Market!"
 msgstr ""
 
-#: index.php:130
+#: index.php:166
 msgid "Thanks in advance.<br />Liath"
 msgstr ""
 
-#: index.php:134
+#: index.php:170
 msgid "Rate now"
 msgstr ""
 
-#: index.php:137
+#: index.php:173
 msgid "OSClass Forum"
 msgstr ""
 
-#: index.php:139
+#: index.php:175
 msgid "Not now"
 msgstr ""
 
-#: index.php:195
+#: index.php:231
 msgid "Settings"
 msgstr ""
 
-#: index.php:260
+#: index.php:296
 msgid "Check Spam"
 msgstr ""
 
-#: index.php:278
+#: index.php:314
 #, php-format
 msgid ""
 "Your email must be verified by a moderator because it has been identified as "
 "spam. After successful verification we will forward your e-mail to the user. "
 "Click Delete if you do not want your message to be moderated. <a "
 "href='%s'>Delete</a>"
+msgstr ""
+
+#: index.php:348
+msgid ""
+"<strong>Information!</strong> Your account is suspended due to too much of "
+"false login attempts. Please contact support."
+msgstr ""
+
+#: index.php:361
+#, php-format
+msgid "<strong>Warning!</strong> Only %d login attempts remaining"
 msgstr ""

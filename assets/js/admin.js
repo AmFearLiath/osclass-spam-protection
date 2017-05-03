@@ -127,9 +127,35 @@ $(document).ready(function(){
         }    
     });
     
+    $(document).on("click", "input[name=sp_security_login_hp], input[name=sp_security_recover_hp]", function(){
+        
+        var login   = $("input[name=sp_security_login_hp]"),
+            recover = $("input[name=sp_security_recover_hp]");
+        
+        if (login.is(":checked")) {
+            $("#sp_security_login_honeypots, #sp_security_login_hp_cont").fadeIn("slow");        
+        } else {
+            if (!recover.is(":checked")) {
+                $("#sp_security_login_honeypots").fadeOut("slow");
+            }
+            $("#sp_security_login_hp_cont").fadeOut("slow");
+        }
+            
+        if (recover.is(":checked")) {
+            $("#sp_security_login_honeypots, #sp_security_recover_hp_cont").fadeIn("slow");        
+        } else {
+            if (!login.is(":checked")) {
+                $("#sp_security_login_honeypots").fadeOut("slow");
+            }
+            $("#sp_security_recover_hp_cont").fadeOut("slow");
+        }    
+    });
+    
     $(document).on("click", "ul.tabs li", function(){
         var tab_id = $(this).attr('data-tab');
 
+        $("input#sp_tab").val(tab_id);
+        
         $('ul.tabs li').removeClass('current');
         $('.tab-content').removeClass('current');
 

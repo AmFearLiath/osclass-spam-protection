@@ -19,42 +19,29 @@ if (Params::getParam('spam') == 'activate') {
     return true;    
 }
 
-if (Params::getParam('tab') == 'settings') {
-    $settings = true;    
-} elseif (Params::getParam('tab') == 'contact') {
+if (Params::getParam('tab') == 'sp_contact') {
     $contact = true;    
-} elseif (Params::getParam('tab') == 'comments') {
+} elseif (Params::getParam('tab') == 'sp_comments') {
     $comments = true;    
-} elseif (Params::getParam('tab') == 'security') {
-    $comments = true;    
+} elseif (Params::getParam('tab') == 'sp_security') {
+    $security = true;    
+} elseif (Params::getParam('tab') == 'sp_shelp') {
+    $help = true;    
+} else {
+    $settings = true;    
 }
 
 if (Params::getParam('settings') == 'save') {
     $params = Params::getParamsAsArray('', false);
     if ($sp->_saveSettings($params)) {
         ob_get_clean();
-        osc_add_flash_ok_message(__('<strong>All Settings saved.</strong> Your plugin ist now configured', 'spamprotection'), 'admin');
-        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab=settings');    
+        osc_add_flash_ok_message(__('<strong>All Settings saved.</strong>', 'spamprotection'), 'admin');
+        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
     } else {
         ob_get_clean();
-        osc_add_flash_error_message(__('<strong>Error.</strong> Your settings can not be saved, please try again', 'spamprotection'), 'admin');
-        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab=settings');    
-    }
-    
-    $settings = true;      
-} elseif (Params::getParam('comments') == 'save') {
-    $params = Params::getParamsAsArray('', false);
-    if ($sp->_saveComments($params)) {
-        ob_get_clean();
-        osc_add_flash_ok_message(__('<strong>All Settings saved.</strong> Your plugin ist now configured', 'spamprotection'), 'admin');
-        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab=comments');    
-    } else {
-        ob_get_clean();
-        osc_add_flash_error_message(__('<strong>Error.</strong> Your settings can not be saved, please try again', 'spamprotection'), 'admin');
-        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab=comments');    
-    }
-    
-    $settings = true;      
+        osc_add_flash_error_message(__('<strong>Error.</strong> Your settings can not be saved.', 'spamprotection'), 'admin');
+        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
+    }      
 }
     
 ?>
@@ -65,12 +52,12 @@ if (Params::getParam('settings') == 'save') {
             <li class="tab-link<?php if (isset($comments) && $comments) { echo ' current'; } ?>" data-tab="sp_comments"><a><?php _e('Comment Settings', 'spamprotection'); ?></a></li>
             <li class="tab-link<?php if (isset($contact) && $contact) { echo ' current'; } ?>" data-tab="sp_contact"><a><?php _e('Contact Settings', 'spamprotection'); ?></a></li>
             <li class="tab-link<?php if (isset($security) && $security) { echo ' current'; } ?>" data-tab="sp_security"><a><?php _e('Security Settings', 'spamprotection'); ?></a></li>
-            <li class="tab-link<?php if (!$settings && !$comments) { echo ' current'; } ?>" data-tab="sp_help"><a><?php _e('Help', 'spamprotection'); ?></a></li>
+            <li class="tab-link<?php if (isset($help) && $help) { echo ' current'; } ?>" data-tab="sp_help"><a><?php _e('Help', 'spamprotection'); ?></a></li>
         </ul>
         
         <form id="sp_save_settings" action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php'); ?>" method="POST">
             <input type="hidden" name="page" value="plugins" />
-            <input type="hidden" name="tab" value="settings" />
+            <input type="hidden" name="tab" id="sp_tab" value="<?php echo Params::getParam('tab'); ?>" />
             <input type="hidden" name="action" value="renderplugin" />
             <input type="hidden" name="file" value="<?php echo osc_plugin_folder(__FILE__); ?>config.php" />
             <input type="hidden" name="settings" value="save" />
@@ -93,7 +80,7 @@ if (Params::getParam('settings') == 'save') {
             
         </form>
 
-        <div id="sp_help" class="tab-content<?php if (!$settings && !$comments) { echo ' current'; } ?>">
+        <div id="sp_help" class="tab-content<?php if (isset($help) && $help) { echo ' current'; } ?>">
             <?php include_once(osc_plugin_path('spamprotection/admin/help.php')); ?>
         </div>        
     </div>   

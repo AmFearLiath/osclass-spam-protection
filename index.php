@@ -3,7 +3,7 @@
 Plugin Name: Spam Protection
 Plugin URI: http://amfearliath.tk/osclass-spam-protection/
 Description: Spam Protection for Osclass. Checks in ads, comments and contact mails for duplicates, banned e-mail addresses and stopwords. Includes a honeypot and many other features. 
-Version: 1.4.0
+Version: 1.5.0
 Author: Liath
 Author URI: http://amfearliath.tk
 Short Name: spamprotection
@@ -44,11 +44,15 @@ Changelog
 
 1.3.2 - Added optional search for duplicates in descriptions. Searchalgorythm improved. Configuration page changed.
 
-1.3.3 â€“ Global var changed, to prevent error messages
+1.3.3 – Global var changed, to prevent error messages
 
 1.3.4 - Stopwords now shown, if ad was blocked for this reason, Search for duplicates improved, translations corrected
 
-1.4.0 - New selectable method added in search for duplicates, item comment protection added, translations corrected. Help section redesigned. 
+1.4.0 - New selectable method added in search for duplicates, item comment protection added, translations corrected. Help section redesigned.
+
+1.4.1 - Wrong button in check ads page removed
+
+1.5.0 - Security settings for login and form protection added 
 */
 
 require_once('classes/class.spamprotection.php');
@@ -64,29 +68,22 @@ if (Params::getParam('spamcomment') == 'activate') {
     $sp->_spamActionComments('activate', Params::getParam('id'));    
 } elseif (Params::getParam('spam') == 'block') {
     $sp->_spamActionComments('spamcomment', Params::getParam('id'));    
-}
+} 
 
-// Login Check
-if ($sp->_get('sp_security_activate') == '1') {
-    
-    $action = Params::getParam('action');
+if (Params::getParam('page') == 'sp_activate_account') {
     $email = Params::getParam('email');
-    $password = Params::getParam('password', false, false);
-
-    if ($action == 'login_post' && !empty($email) && !empty($password)) {
+    $token = Params::getParam('token');
+    $user = User::newInstance()->findByEmail($email);
+    
+    if (md5($user['s_secret']) == $token) {
+        $sp->_resetUserLogin($email);
         
-        $logins = $sp->_countUserLogin($email);
-        $max_logins = $sp->_get('sp_security_login_count');
-        
-        if (!empty($logins) && $logins >= $max_logins) {
-            $sp->_handleUserLogin($email);
-            return;    
-        } if (!$sp->_checkUserLogin($email, $password)) {
-            $sp->_increaseUserLogin($email);
-        } else {
-            $sp->_resetUserLogin($email);    
-        }
-    }                                       
+        ob_get_clean();
+        osc_add_flash_ok_message(__('<strong>Info!</strong> Your account has been reactivated, you can login as usual.', 'spamprotection'));
+    
+        header('Location: '.osc_user_login_url());
+        exit;    
+    }        
 }
 
 // User wants to delete his contact mail
@@ -134,6 +131,22 @@ osc_add_hook('delete_comment', 'sp_delete_comment');
 osc_add_hook('actions_manage_items', 'sp_compare_items');
 osc_add_hook('hook_email_item_inquiry', 'sp_check_contact_item', 1);
 osc_add_hook('hook_email_contact_user', 'sp_check_contact_user', 1);
+
+if ($sp->_get('sp_security_activate') == '1') {
+    osc_add_hook('before_validating_login', 'sp_check_user_login', 1);
+}
+
+if ($sp->_get('sp_security_activate') == '1') {
+    if (spam_prot::newInstance()->_get('sp_security_login_hp') == '1') {
+        osc_add_hook('user_login_form', 'sp_add_honeypot_security');
+    }
+    if (spam_prot::newInstance()->_get('sp_security_register_hp') == '1') {
+        osc_add_hook('user_register_form', 'sp_add_honeypot_security');
+    }
+    if (spam_prot::newInstance()->_get('sp_security_recover_hp') == '1') {
+        osc_add_hook('user_recover_form', 'sp_add_honeypot_security');
+    }
+}
 
 /*
     FUNCTIONS
@@ -314,5 +327,49 @@ function sp_check_contact_user($id, $yourEmail, $yourName, $phoneNumber, $messag
         'phoneNumber' => $phoneNumber
     );
     sp_check_contact_item($data);    
+}
+
+function sp_check_user_login() {
+    $token = Params::getParam('token');
+    $action = Params::getParam('action');
+    $email = Params::getParam('email');
+    $password = Params::getParam('password', false, false);
+
+    if ($action == 'login_post' && !empty($email) && !empty($password)) {        
+        $logins = spam_prot::newInstance()->_countUserLogin($email);
+        $max_logins = spam_prot::newInstance()->_get('sp_security_login_count');
+        
+        if (!empty($logins) && $logins >= $max_logins) {
+            
+            spam_prot::newInstance()->_handleUserLogin($email, $logins);
+            
+            if (spam_prot::newInstance()->_get('sp_security_login_inform') == '1') {                
+                ob_get_clean();
+                osc_add_flash_error_message(sprintf(__('<strong>Information!</strong> Your account is suspended due to too much of false login attempts. Please contact support.', 'spamprotection'), ($max_logins-$logins)));
+            }
+            
+            spam_prot::newInstance()->_informUser($email);
+            header('Location: '.osc_user_login_url());
+            exit;                
+        } if (!spam_prot::newInstance()->_checkUserLogin($email, $password) || !empty($token)) {
+            
+            spam_prot::newInstance()->_increaseUserLogin($email, $logins);
+            $logins = spam_prot::newInstance()->_countUserLogin($email);
+            
+            if (spam_prot::newInstance()->_get('sp_security_login_inform') == '1') {
+                ob_get_clean();
+                osc_add_flash_error_message(sprintf(__('<strong>Warning!</strong> Only %d login attempts remaining', 'spamprotection'), ($max_logins-$logins)));
+            }
+            
+            header('Location: '.osc_user_login_url());
+            exit;
+        } else {            
+            spam_prot::newInstance()->_resetUserLogin($email);    
+        }
+    }
+}
+
+function sp_add_honeypot_security() {
+    echo '<input id="token" type="text" name="token" value="" class="form-control sp_form_field" autocomplete="off">';    
 }
 ?>

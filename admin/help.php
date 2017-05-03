@@ -8,6 +8,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
         <li class="subtab-link" data-tab="sp_help_ads"><a><?php _e('Ad Settings', 'spamprotection'); ?></a></li>
         <li class="subtab-link" data-tab="sp_help_comments"><a><?php _e('Comment Settings', 'spamprotection'); ?></a></li>
         <li class="subtab-link" data-tab="sp_help_contacts"><a><?php _e('Contact Settings', 'spamprotection'); ?></a></li>
+        <li class="subtab-link" data-tab="sp_help_security"><a><?php _e('Security Settings', 'spamprotection'); ?></a></li>
         <li class="subtab-link" data-tab="sp_help_about"><a><?php _e('About', 'spamprotection'); ?></a></li>
     </ul>
     
@@ -158,6 +159,45 @@ $info = osc_plugin_get_info("spamprotection/index.php");
             <h2><?php _e("Stopwords", "spamprotection"); ?></h2>            
             <p><?php _e("Save here your \"Badwords\" where you don't want, that they can be used in your comments.", "spamprotection"); ?></p>
         
+        </div>
+        
+        <div id="sp_help_security" class="subtab-content">
+            <h2><?php _e("Form Protection", "spamprotection"); ?></h2>
+            
+            <h3><?php _e("Activate the Form Protection", "spamprotection"); ?></h3>
+            <p><?php _e("This Option activates the whole form protection. You can deactivate some features optionally, but deactivate this checkbox will deactivate the whole system.", "spamprotection"); ?></p>
+            
+            <hr />
+            
+            <h3><?php _e("Max amount of wrong logins", "spamprotection"); ?></h3>            
+            <p><?php _e("Here you can define how many logins in which time range are allowed.", "spamprotection"); ?></p>
+            
+            <hr />
+            
+            <h3><?php _e("Action done after false logins", "spamprotection"); ?></h3>            
+            <p><?php _e("Here you can define which action is done after the login limit has reached.", "spamprotection"); ?></p>
+            <ul>
+                <li><?php _e("Disable user account", "spamprotection"); ?><br /><small><?php _e("With this option, the user account will be disabled", "spamprotection"); ?> <?php _e("<strong>(recommended)</strong>", "spamprotection"); ?></small></li>
+                <li><?php _e("Add Email and IP to Banlist", "spamprotection"); ?><br /><small><?php _e("This will add the user email and ip to the ban list", "spamprotection"); ?></small></li>
+                <li><?php _e("Both", "spamprotection"); ?><br /><small><?php _e("Both actions will done after limit has reached", "spamprotection"); ?></small></li>
+            </ul>
+            
+            <hr />
+            
+            <h3><?php _e("Inform user how many trys are remaining", "spamprotection"); ?></h3>            
+            <p><?php _e("Is this option activated, the user will be informed how many login attempts are remaining after each false login.", "spamprotection"); ?></p>
+            
+            <hr />
+            
+            <h3><?php _e("Add Honeypot to login/register/recover forms", "spamprotection"); ?></h3>            
+            <p><?php _e("This options allow you to add Honeypots to following pages", "spamprotection"); ?></p>
+            <ul>
+                <li><?php _e("User Login", "spamprotection"); ?></li>
+                <li><?php _e("User Regster", "spamprotection"); ?></li>
+                <li><?php _e("Password Recovery", "spamprotection"); ?></li>
+            </ul>            
+            <p><?php _e("If this Honeypot is filled out while sending the form, the system will increase the number of login attempts and the action follows the rules you have set before.", "spamprotection"); ?></p>
+            <p><?php _e("Because of missing action hooks you have to add one line of code in some files. Explanation how to add you will find after this option himself.", "spamprotection"); ?></p>
         </div>
         
         <div id="sp_help_contacts" class="subtab-content">
