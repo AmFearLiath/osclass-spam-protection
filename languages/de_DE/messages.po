@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OSClass Spam Protection\n"
-"POT-Creation-Date: 2017-05-03 16:12+0200\n"
-"PO-Revision-Date: 2017-05-03 16:31+0200\n"
+"POT-Creation-Date: 2017-05-03 21:09+0200\n"
+"PO-Revision-Date: 2017-05-03 21:09+0200\n"
 "Last-Translator: \n"
 "Language-Team: Liath <amfearliath@gmx.de>\n"
 "Language: de_DE\n"
@@ -932,7 +932,7 @@ msgid "Both actions will done after limit has reached"
 msgstr "Hiermit werden beide Aktionen zusammen ausgeführt"
 
 #: admin/help.php:187 admin/security.php:50
-msgid "Inform user how many trys are remaining"
+msgid "Inform user how many tries are remaining"
 msgstr "Den Benutzer über die verbleibenden Anmeldeversuche informieren"
 
 #: admin/help.php:188
@@ -1102,7 +1102,7 @@ msgstr ""
 
 #: admin/security.php:52
 msgid ""
-"This option allows to inform the user after each false login, how many trys "
+"This option allows to inform the user after each false login, how many tries "
 "are remainig, before your choosen action is done"
 msgstr ""
 "Wenn diese Einstellung aktiviert ist, wird der Benutzer über die "
@@ -1269,31 +1269,31 @@ msgstr "(Datei nicht beschreibbar)"
 msgid "Beware of editing this file, unless you know what you're doing!!!"
 msgstr "Diese Datei nicht bearbeiten, wenn Du nicht weisst was Du tust!!!"
 
-#: classes/class.spamprotection.php:167
+#: classes/class.spamprotection.php:166
 msgid "Spam found"
 msgstr "Spam gefunden"
 
-#: classes/class.spamprotection.php:176
+#: classes/class.spamprotection.php:175
 msgid "Spam comment found"
 msgstr "Spamkommentar gefunden"
 
-#: classes/class.spamprotection.php:185
+#: classes/class.spamprotection.php:184
 msgid "Spam Contact Mail found"
 msgstr "Spam Kontaktnachricht gefunden"
 
-#: classes/class.spamprotection.php:1011
+#: classes/class.spamprotection.php:1010
 msgid "Spam Protection - Too many false login attempts"
 msgstr "Spam Protection - Zuviele falsche Anmeldeversuche"
 
-#: classes/class.spamprotection.php:1089
+#: classes/class.spamprotection.php:1088
 msgid "False logins on {PAGE_NAME}"
 msgstr "Fehllogins auf {PAGE_NAME}"
 
-#: classes/class.spamprotection.php:1090
+#: classes/class.spamprotection.php:1089
 msgid "Hello {MAIL_USER},"
 msgstr "Hallo {MAIL_USER},"
 
-#: classes/class.spamprotection.php:1091
+#: classes/class.spamprotection.php:1090
 msgid ""
 "We have detected some false logins for your account {MAIL_USED} on "
 "{PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}"
@@ -1302,7 +1302,7 @@ msgstr ""
 "fehlgeschlagene Loginversuche aufgefallen. Der letzte Versuch war am "
 "{MAIL_DATE} von IP {MAIL_IP}"
 
-#: classes/class.spamprotection.php:1092
+#: classes/class.spamprotection.php:1091
 msgid ""
 "In order to our security policy, we have temporarily disabled your account "
 "and banned the used IP in our System. You can use following link to unban "
@@ -1317,15 +1317,15 @@ msgstr ""
 "Passwort vergessen Funktion verwenden, solltest Du Dein Passwort vergessen "
 "haben."
 
-#: classes/class.spamprotection.php:1093
+#: classes/class.spamprotection.php:1092
 msgid "Unban your account: {UNBAN_LINK} "
 msgstr "Account freischalten: {UNBAN_LINK} "
 
-#: classes/class.spamprotection.php:1094
+#: classes/class.spamprotection.php:1093
 msgid "Password recovery: {PASSWORD_LINK} "
 msgstr "Passwort wiederherstellen: {PASSWORD_LINK} "
 
-#: classes/class.spamprotection.php:1095
+#: classes/class.spamprotection.php:1094
 msgid "Best regards"
 msgstr "Mit freundlichen Grüßen"
 
