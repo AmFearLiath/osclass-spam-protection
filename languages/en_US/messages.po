@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OSClass Spam Protection\n"
-"POT-Creation-Date: 2017-05-03 21:09+0200\n"
-"PO-Revision-Date: 2017-05-03 21:09+0200\n"
+"POT-Creation-Date: 2017-05-04 01:05+0200\n"
+"PO-Revision-Date: 2017-05-04 01:06+0200\n"
 "Last-Translator: \n"
 "Language-Team: Liath <amfearliath@gmx.de>\n"
 "Language: de_DE\n"
@@ -802,11 +802,11 @@ msgid "With this option, the user account will be disabled"
 msgstr ""
 
 #: admin/help.php:181 admin/security.php:42
-msgid "Add Email and IP to Banlist"
+msgid "Add IP to Banlist"
 msgstr ""
 
 #: admin/help.php:181
-msgid "This will add the user email and ip to the ban list"
+msgid "This will add the user ip to the ban list"
 msgstr ""
 
 #: admin/help.php:182 admin/security.php:43
@@ -1099,21 +1099,21 @@ msgstr ""
 msgid "Spam Protection - Too many false login attempts"
 msgstr ""
 
-#: classes/class.spamprotection.php:1088
+#: classes/class.spamprotection.php:1087
 msgid "False logins on {PAGE_NAME}"
 msgstr ""
 
-#: classes/class.spamprotection.php:1089
+#: classes/class.spamprotection.php:1088
 msgid "Hello {MAIL_USER},"
 msgstr ""
 
-#: classes/class.spamprotection.php:1090
+#: classes/class.spamprotection.php:1089
 msgid ""
 "We have detected some false logins for your account {MAIL_USED} on "
 "{PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}"
 msgstr ""
 
-#: classes/class.spamprotection.php:1091
+#: classes/class.spamprotection.php:1090
 msgid ""
 "In order to our security policy, we have temporarily disabled your account "
 "and banned the used IP in our System. You can use following link to unban "
@@ -1122,15 +1122,15 @@ msgid ""
 "don't remember your password."
 msgstr ""
 
-#: classes/class.spamprotection.php:1092
+#: classes/class.spamprotection.php:1091
 msgid "Unban your account: {UNBAN_LINK} "
 msgstr ""
 
-#: classes/class.spamprotection.php:1093
+#: classes/class.spamprotection.php:1092
 msgid "Password recovery: {PASSWORD_LINK} "
 msgstr ""
 
-#: classes/class.spamprotection.php:1094
+#: classes/class.spamprotection.php:1093
 msgid "Best regards"
 msgstr ""
 

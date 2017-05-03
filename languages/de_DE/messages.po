@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OSClass Spam Protection\n"
-"POT-Creation-Date: 2017-05-03 21:09+0200\n"
-"PO-Revision-Date: 2017-05-03 21:09+0200\n"
+"POT-Creation-Date: 2017-05-04 01:03+0200\n"
+"PO-Revision-Date: 2017-05-04 01:05+0200\n"
 "Last-Translator: \n"
 "Language-Team: Liath <amfearliath@gmx.de>\n"
 "Language: de_DE\n"
@@ -915,13 +915,12 @@ msgid "With this option, the user account will be disabled"
 msgstr "Diese Einstellung deaktiviert das Benutzerkonto"
 
 #: admin/help.php:181 admin/security.php:42
-msgid "Add Email and IP to Banlist"
-msgstr "Email und IP zur Sperrliste hinzufügen"
+msgid "Add IP to Banlist"
+msgstr "IP zur Sperrliste hinzufügen"
 
 #: admin/help.php:181
-msgid "This will add the user email and ip to the ban list"
-msgstr ""
-"Diese Einstellung fügt die E-Mail Adresse un die IP der Sperrliste hinzu"
+msgid "This will add the user ip to the ban list"
+msgstr "Diese Einstellung fügt die IP der Sperrliste hinzu"
 
 #: admin/help.php:182 admin/security.php:43
 msgid "Both"
@@ -1134,7 +1133,7 @@ msgid ""
 "To make this honeypot works for login and recover pages, you need to add one "
 "line of code in each of this files."
 msgstr ""
-"Damit das Honeypot funktioniert, muss auf folgenden Seiten eine Codezeile "
+"Damit der Honeypot funktioniert, muss auf folgenden Seiten eine Codezeile "
 "hinzugefügt werden."
 
 #: admin/security.php:90
@@ -1285,15 +1284,15 @@ msgstr "Spam Kontaktnachricht gefunden"
 msgid "Spam Protection - Too many false login attempts"
 msgstr "Spam Protection - Zuviele falsche Anmeldeversuche"
 
-#: classes/class.spamprotection.php:1088
+#: classes/class.spamprotection.php:1087
 msgid "False logins on {PAGE_NAME}"
 msgstr "Fehllogins auf {PAGE_NAME}"
 
-#: classes/class.spamprotection.php:1089
+#: classes/class.spamprotection.php:1088
 msgid "Hello {MAIL_USER},"
 msgstr "Hallo {MAIL_USER},"
 
-#: classes/class.spamprotection.php:1090
+#: classes/class.spamprotection.php:1089
 msgid ""
 "We have detected some false logins for your account {MAIL_USED} on "
 "{PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}"
@@ -1302,7 +1301,7 @@ msgstr ""
 "fehlgeschlagene Loginversuche aufgefallen. Der letzte Versuch war am "
 "{MAIL_DATE} von IP {MAIL_IP}"
 
-#: classes/class.spamprotection.php:1091
+#: classes/class.spamprotection.php:1090
 msgid ""
 "In order to our security policy, we have temporarily disabled your account "
 "and banned the used IP in our System. You can use following link to unban "
@@ -1317,15 +1316,15 @@ msgstr ""
 "Passwort vergessen Funktion verwenden, solltest Du Dein Passwort vergessen "
 "haben."
 
-#: classes/class.spamprotection.php:1092
+#: classes/class.spamprotection.php:1091
 msgid "Unban your account: {UNBAN_LINK} "
 msgstr "Account freischalten: {UNBAN_LINK} "
 
-#: classes/class.spamprotection.php:1093
+#: classes/class.spamprotection.php:1092
 msgid "Password recovery: {PASSWORD_LINK} "
 msgstr "Passwort wiederherstellen: {PASSWORD_LINK} "
 
-#: classes/class.spamprotection.php:1094
+#: classes/class.spamprotection.php:1093
 msgid "Best regards"
 msgstr "Mit freundlichen Grüßen"
 
@@ -1353,7 +1352,7 @@ msgid ""
 msgstr ""
 "Dieses Plugin ist und wird immer kostenlos bleiben! Solltest Du irgendwelche "
 "Fehler finden, kontaktiere mich bitte im OSClass Forum um die Fehler zu "
-"beheben. Bevor das Plugin bewertest."
+"beheben. Bevor Du das Plugin bewertest."
 
 #: index.php:165
 msgid ""
