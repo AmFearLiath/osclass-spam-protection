@@ -20,7 +20,7 @@ if ($htaccess_writable) {
         <li class="subtab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
     </ul>
     
-    <div id="sp_options" class="sp_options enabled">
+    <div id="sp_options" class="sp_options <?php echo (empty($data['sp_activate']) || $data['sp_activate'] == '0' ? 'disabled' : 'enabled'); ?>">
         <div id="sp_mainfeatures" class="subtab-content current">
         
             <div class="row form-group">

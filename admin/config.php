@@ -25,6 +25,8 @@ if (Params::getParam('tab') == 'settings') {
     $contact = true;    
 } elseif (Params::getParam('tab') == 'comments') {
     $comments = true;    
+} elseif (Params::getParam('tab') == 'security') {
+    $comments = true;    
 }
 
 if (Params::getParam('settings') == 'save') {
@@ -62,6 +64,7 @@ if (Params::getParam('settings') == 'save') {
             <li class="tab-link<?php if (isset($settings) && $settings) { echo ' current'; } ?>" data-tab="sp_settings"><a><?php _e('Ad Settings', 'spamprotection'); ?></a></li>
             <li class="tab-link<?php if (isset($comments) && $comments) { echo ' current'; } ?>" data-tab="sp_comments"><a><?php _e('Comment Settings', 'spamprotection'); ?></a></li>
             <li class="tab-link<?php if (isset($contact) && $contact) { echo ' current'; } ?>" data-tab="sp_contact"><a><?php _e('Contact Settings', 'spamprotection'); ?></a></li>
+            <li class="tab-link<?php if (isset($security) && $security) { echo ' current'; } ?>" data-tab="sp_security"><a><?php _e('Security Settings', 'spamprotection'); ?></a></li>
             <li class="tab-link<?php if (!$settings && !$comments) { echo ' current'; } ?>" data-tab="sp_help"><a><?php _e('Help', 'spamprotection'); ?></a></li>
         </ul>
         
@@ -82,6 +85,10 @@ if (Params::getParam('settings') == 'save') {
 
             <div id="sp_contact" class="tab-content<?php if (isset($contact) && $contact) { echo ' current'; } ?>">
                 <?php include_once(osc_plugin_path('spamprotection/admin/contact.php')); ?>    
+            </div>
+
+            <div id="sp_security" class="tab-content<?php if (isset($security) && $security) { echo ' current'; } ?>">
+                <?php include_once(osc_plugin_path('spamprotection/admin/security.php')); ?>    
             </div>
             
         </form>

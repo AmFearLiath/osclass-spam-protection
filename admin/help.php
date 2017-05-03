@@ -3,17 +3,17 @@ $info = osc_plugin_get_info("spamprotection/index.php");
 ?>
 <div class="help">
 
-    <ul class="helptabs sp_tabs">
-        <li class="helptab-link current" data-tab="sp_help_general"><a><?php _e('General', 'spamprotection'); ?></a></li>
-        <li class="helptab-link" data-tab="sp_help_ads"><a><?php _e('Ad Settings', 'spamprotection'); ?></a></li>
-        <li class="helptab-link" data-tab="sp_help_comments"><a><?php _e('Comment Settings', 'spamprotection'); ?></a></li>
-        <li class="helptab-link" data-tab="sp_help_contacts"><a><?php _e('Contact Settings', 'spamprotection'); ?></a></li>
-        <li class="helptab-link" data-tab="sp_help_about"><a><?php _e('About', 'spamprotection'); ?></a></li>
+    <ul class="subtabs sp_tabs">
+        <li class="subtab-link current" data-tab="sp_help_general"><a><?php _e('General', 'spamprotection'); ?></a></li>
+        <li class="subtab-link" data-tab="sp_help_ads"><a><?php _e('Ad Settings', 'spamprotection'); ?></a></li>
+        <li class="subtab-link" data-tab="sp_help_comments"><a><?php _e('Comment Settings', 'spamprotection'); ?></a></li>
+        <li class="subtab-link" data-tab="sp_help_contacts"><a><?php _e('Contact Settings', 'spamprotection'); ?></a></li>
+        <li class="subtab-link" data-tab="sp_help_about"><a><?php _e('About', 'spamprotection'); ?></a></li>
     </ul>
     
     <div id="sp_help_section" class="sp_help_section enabled">
     
-        <div id="sp_help_general" class="helptab-content current">        
+        <div id="sp_help_general" class="subtab-content current">        
             
             <h2><?php echo sprintf(__("Welcome to Spam Protection %s", "spamprotection"), "v".$info['version']); ?></h2>
             
@@ -66,7 +66,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
             <p><?php _e('Have fun with this little plugin', 'spamprotection'); ?></p>
         </div>
         
-        <div id="sp_help_ads" class="helptab-content">
+        <div id="sp_help_ads" class="subtab-content">
         
             <h2><?php _e("Main Features", "spamprotection"); ?></h2>
             
@@ -126,7 +126,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
 
         </div>
         
-        <div id="sp_help_comments" class="helptab-content">
+        <div id="sp_help_comments" class="subtab-content">
         
             <h2><?php _e("Main Settings", "spamprotection"); ?></h2>
             
@@ -160,7 +160,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
         
         </div>
         
-        <div id="sp_help_contacts" class="helptab-content">
+        <div id="sp_help_contacts" class="subtab-content">
         
             <h2><?php _e("Main Settings", "spamprotection"); ?></h2>
             
@@ -198,7 +198,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
                     
         </div>
         
-        <div id="sp_help_about" class="helptab-content">
+        <div id="sp_help_about" class="subtab-content">
             <h2><?php _e("About this plugin", "spamprotection"); ?></h2>
             <p><?php _e("This plugin I've developed at the request of the community in the OSClass forum. There I was given lots of ideas and some have participated in beta tests.<br /><br /><strong>Thanks to all for your help!</strong><br /><br />I hope this plugin will be useful to many of you and it helps you to reduce the spam on your pages to a minimum. Keep in mind, however, that it was never intended to fight spam automatically. It is just a tool to mark the spam and to check it manually.<br /><br />An automated system would always involve the risk that even realistic ads will be marked as spam and not published.<br /><br />If you find any errors, please report it in the forum and tell it to me. I will try to fix this immediately, so that everyone can use this plugin properly.", "spamprotection"); ?></p>
         </div>
