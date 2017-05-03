@@ -20,7 +20,7 @@ class spam_prot extends DAO {
         $this->_table_sp_comments       = '`'.DB_TABLE_PREFIX.'t_spam_protection_comments`';
         $this->_table_sp_contacts       = '`'.DB_TABLE_PREFIX.'t_spam_protection_contacts`';
         $this->_table_sp_logins         = '`'.DB_TABLE_PREFIX.'t_spam_protection_logins`';
-        
+
         parent::__construct();
     }
     
@@ -1012,10 +1012,10 @@ class spam_prot extends DAO {
         if ($action == '1') {
             $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));    
         } elseif ($action == '2') {
-            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_email' => $email, 's_ip' => $ip));    
+            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));    
         } elseif ($action == '3') {
             $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));
-            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_email' => $email, 's_ip' => $ip));    
+            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));    
         }
     }
     
@@ -1049,8 +1049,7 @@ class spam_prot extends DAO {
         $time = $this->_get('sp_security_login_time')*60;
         $ip = $this->_IpUserLogin();
         
-        $this->dao->update($this->_table_user, array('b_enabled' => '1'), array('s_email' => $email));                
-        $this->dao->delete($this->_table_bans, '`s_email` = "'.$email.'"');
+        $this->dao->update($this->_table_user, array('b_enabled' => '1'), array('s_email' => $email));
         $this->dao->delete($this->_table_bans, '`s_ip` = "'.$ip.'"');
         $this->dao->delete($this->_table_sp_logins, '`s_email` = "'.$email.'"');
         $this->dao->delete($this->_table_sp_logins, '`s_ip` = "'.$ip.'"');
@@ -1088,9 +1087,9 @@ class spam_prot extends DAO {
             $mail_title = __("False logins on {PAGE_NAME}", "spamprotection");
             $mail_body = __('Hello {MAIL_USER},','spamprotection').'<br /><br />
 '.__('We have detected some false logins for your account {MAIL_USED} on {PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}','spamprotection').'<br /><br />
-'.__('In order to our security policy, we have temporarily disabled your account and banned the used IP in our System. You can use following link to unban and reactivate your Account. If this was not you, please contact the support and change your password. You can use the password recovery function, if you don\'t remember your password.','spamprotection').'<br /><br />
-'.__('Unban your account: {UNBAN_LINK} ','spamprotection').'<br />
-'.__('Password recovery: {PASSWORD_LINK} ','spamprotection').'<br />
+'.__('In order to our security policy, we have temporarily disabled your account and banned the used IP in our System. You can use following link to unban and reactivate your Account. If this was not you, please contact the support and change your password. You can use the password recovery function, if you don\'t remember your password.','spamprotection').'<br /><br /><br />
+'.__('Unban your account: {UNBAN_LINK} ','spamprotection').'<br /><br />
+'.__('Password recovery: {PASSWORD_LINK} ','spamprotection').'<br /><br />
 '.__('Best regards','spamprotection').'<br />
 {PAGE_NAME}';
 
