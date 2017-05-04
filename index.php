@@ -57,8 +57,7 @@ Changelog
 1.5.1 - Removed Email ban for form protection
 
 1.5.2 - Added User ban to check ads page, fix problem with clicking id on check ads page, added time range for search in duplicates, added cron to automatically unban user after defined time 
-*/
-
+*/    
 require_once('classes/class.spamprotection.php');
 $sp = new spam_prot;
 
