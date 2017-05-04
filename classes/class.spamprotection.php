@@ -20,7 +20,7 @@ class spam_prot extends DAO {
         $this->_table_sp_comments       = '`'.DB_TABLE_PREFIX.'t_spam_protection_comments`';
         $this->_table_sp_contacts       = '`'.DB_TABLE_PREFIX.'t_spam_protection_contacts`';
         $this->_table_sp_logins         = '`'.DB_TABLE_PREFIX.'t_spam_protection_logins`';
-
+        
         parent::__construct();
     }
     
@@ -59,6 +59,7 @@ class spam_prot extends DAO {
             'sp_duplicates_as'          => array('1', 'BOOLEAN'),
             'sp_duplicate_type'         => array('0', 'BOOLEAN'),
             'sp_duplicate_perc'         => array('85', 'BOOLEAN'),
+            'sp_duplicates_time'        => array('30', 'BOOLEAN'),
             'sp_honeypot'               => array('0', 'BOOLEAN'),
             'sp_contact_honeypot'       => array('0', 'BOOLEAN'),
             'honeypot_name'             => array('sp_price_range', 'STRING'),
@@ -92,6 +93,8 @@ class spam_prot extends DAO {
             'sp_security_login_hp'      => array('0', 'BOOLEAN'),
             'sp_security_register_hp'   => array('0', 'BOOLEAN'),
             'sp_security_recover_hp'    => array('0', 'BOOLEAN'),
+            'sp_security_login_unban'   => array('0', 'STRING'),
+            'sp_security_login_cron'    => array('0', 'STRING'),
         );
         
         if ($key) { return $opts[$key]; }
@@ -117,6 +120,7 @@ class spam_prot extends DAO {
                 'sp_duplicates_as'          => osc_get_preference('sp_duplicates_as', $pref),
                 'sp_duplicate_type'         => osc_get_preference('sp_duplicate_type', $pref),
                 'sp_duplicate_perc'         => osc_get_preference('sp_duplicate_perc', $pref),
+                'sp_duplicates_time'        => osc_get_preference('sp_duplicates_time', $pref),
                 'sp_honeypot'               => osc_get_preference('sp_honeypot', $pref),
                 'sp_contact_honeypot'       => osc_get_preference('sp_contact_honeypot', $pref),
                 'honeypot_name'             => osc_get_preference('honeypot_name', $pref),
@@ -150,6 +154,8 @@ class spam_prot extends DAO {
                 'sp_security_login_hp'      => osc_get_preference('sp_security_login_hp', $pref),
                 'sp_security_register_hp'   => osc_get_preference('sp_security_login_hp', $pref),
                 'sp_security_recover_hp'    => osc_get_preference('sp_security_recover_hp', $pref),
+                'sp_security_login_unban'   => osc_get_preference('sp_security_login_unban', $pref),
+                'sp_security_login_cron'    => osc_get_preference('sp_security_login_cron', $pref),
             );
             return $opts;
         }
@@ -288,6 +294,7 @@ class spam_prot extends DAO {
             'sp_duplicates_as'          => (isset($params['sp_duplicates_as']) ? $params['sp_duplicates_as'] : ''),
             'sp_duplicate_type'         => (isset($params['sp_duplicate_type']) ? $params['sp_duplicate_type'] : ''),
             'sp_duplicate_perc'         => (isset($params['sp_duplicate_perc']) ? $params['sp_duplicate_perc'] : ''),
+            'sp_duplicates_time'        => (isset($params['sp_duplicates_time']) ? $params['sp_duplicates_time'] : ''),
             'sp_honeypot'               => (isset($params['sp_honeypot']) ? $params['sp_honeypot'] : ''),
             'sp_contact_honeypot'       => (isset($params['sp_contact_honeypot']) ? $params['sp_contact_honeypot'] : ''),
             'honeypot_name'             => (isset($params['honeypot_name']) ? $params['honeypot_name'] : ''),
@@ -312,15 +319,17 @@ class spam_prot extends DAO {
             'sp_stopwords'              => (isset($params['sp_stopwords']) ? $this->_sort($params['sp_stopwords']) : ''),
             'sp_comment_stopwords'      => (isset($params['sp_comment_stopwords']) ? $this->_sort($params['sp_comment_stopwords']) : ''),
             'sp_contact_stopwords'      => (isset($params['sp_contact_stopwords']) ? $this->_sort($params['sp_contact_stopwords']) : ''),
-            'sp_comment_links'          => (isset($params['sp_comment_links']) ? $this->_sort($params['sp_comment_links']) : ''),
-            'sp_contact_links'          => (isset($params['sp_contact_links']) ? $this->_sort($params['sp_contact_links']) : ''),
-            'sp_security_login_count'   => (isset($params['sp_security_login_count']) ? $this->_sort($params['sp_security_login_count']) : ''),
-            'sp_security_login_time'    => (isset($params['sp_security_login_time']) ? $this->_sort($params['sp_security_login_time']) : ''),
-            'sp_security_login_action'  => (isset($params['sp_security_login_action']) ? $this->_sort($params['sp_security_login_action']) : ''),
-            'sp_security_login_inform'  => (isset($params['sp_security_login_inform']) ? $this->_sort($params['sp_security_login_inform']) : ''),
-            'sp_security_login_hp'      => (isset($params['sp_security_login_hp']) ? $this->_sort($params['sp_security_login_hp']) : ''),
-            'sp_security_register_hp'   => (isset($params['sp_security_register_hp']) ? $this->_sort($params['sp_security_register_hp']) : ''),
-            'sp_security_recover_hp'    => (isset($params['sp_security_recover_hp']) ? $this->_sort($params['sp_security_recover_hp']) : ''),
+            'sp_comment_links'          => (isset($params['sp_comment_links']) ? $params['sp_comment_links'] : ''),
+            'sp_contact_links'          => (isset($params['sp_contact_links']) ? $params['sp_contact_links'] : ''),
+            'sp_security_login_count'   => (isset($params['sp_security_login_count']) ? $params['sp_security_login_count'] : ''),
+            'sp_security_login_time'    => (isset($params['sp_security_login_time']) ? $params['sp_security_login_time'] : ''),
+            'sp_security_login_action'  => (isset($params['sp_security_login_action']) ? $params['sp_security_login_action'] : ''),
+            'sp_security_login_inform'  => (isset($params['sp_security_login_inform']) ? $params['sp_security_login_inform'] : ''),
+            'sp_security_login_hp'      => (isset($params['sp_security_login_hp']) ? $params['sp_security_login_hp'] : ''),
+            'sp_security_register_hp'   => (isset($params['sp_security_register_hp']) ? $params['sp_security_register_hp'] : ''),
+            'sp_security_recover_hp'    => (isset($params['sp_security_recover_hp']) ? $params['sp_security_recover_hp'] : ''),
+            'sp_security_login_unban'   => (isset($params['sp_security_login_unban']) ? $params['sp_security_login_unban'] : ''),
+            'sp_security_login_cron'    => (isset($params['sp_security_login_cron']) ? $params['sp_security_login_cron'] : ''),
         );
         
         $pref = $this->_sect();
@@ -390,6 +399,9 @@ class spam_prot extends DAO {
             $this->dao->update($this->_table_item, array('b_spam' => '0', 'b_enabled' => '1', 'b_active' => '1'), array('pk_i_id' => $id));    
         } elseif ($type == 'block') {
             $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $id));    
+        } elseif ($type == 'ban') {
+            $reason = __("Spam Protection - Banned because of spam ads", "spamprotection");
+            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_email' => $id));    
         }        
         return false;
     }
@@ -828,10 +840,20 @@ class spam_prot extends DAO {
     }
     
     function _getItemData($item, $locale) {
-        $this->dao->select('*');
-        $this->dao->from($this->_table_desc);
-        $this->dao->where("fk_i_item_id", $item);
-        $this->dao->where("fk_c_locale_code", $locale);
+        
+        $time = $this->_get('sp_duplicates_time');
+        
+        $this->dao->select('d.*');
+        $this->dao->from($this->_table_desc.' as d');
+        
+        if ($time >= '0') {
+            $this->dao->join($this->_table_item.' as i','d.fk_i_item_id = i.pk_i_id','LEFT');
+            $this->dao->where("i.dt_pub_date >= '".date("Y-m-d H:i:s", (time()-($time*24*60*60)))."'");    
+            $this->dao->orWhere("i.dt_mod_date >= '".date("Y-m-d H:i:s", (time()-($time*24*60*60)))."'");    
+        }
+        
+        $this->dao->where("d.fk_i_item_id", $item);
+        $this->dao->where("d.fk_c_locale_code", $locale);
         
         $result = $this->dao->get();
         if (!$result) { return false; }
@@ -1054,6 +1076,26 @@ class spam_prot extends DAO {
         $this->dao->delete($this->_table_sp_logins, '`s_email` = "'.$email.'"');
         $this->dao->delete($this->_table_sp_logins, '`s_ip` = "'.$ip.'"');
         $this->dao->delete($this->_table_sp_logins, '`dt_date_login` < "'.(time()-$time).'"');
+    }
+    
+    function unbanUser() {
+        
+        $time = $this->_get('sp_security_login_unban')*60;
+        
+        $this->dao->select('*');
+        $this->dao->from($this->_table_sp_logins);
+        $this->dao->where("dt_date_login < ".(time()-$time));
+        
+        $result = $this->dao->get();
+        if ($result->numRows() <= 0) { return false; }
+        
+        $bans = $result->result();
+        
+        foreach ($bans AS $k => $v) {
+            $this->dao->update($this->_table_user, array('b_enabled' => '1'), array('s_email' => $v['s_email']));
+            $this->dao->delete($this->_table_bans, '`s_ip` = "'.$v['s_ip'].'"');
+            $this->dao->delete($this->_table_sp_logins, '`pk_i_id` < "'.$v['pk_i_id'].'"');    
+        }
     }
     
     function _IpUserLogin() {

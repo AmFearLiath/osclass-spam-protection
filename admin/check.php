@@ -90,8 +90,9 @@ if ($user_spams > 0) {
         <div class="actionbuttons">
             <a class="btn btn-submit" onclick="return confirm('Are you sure you want to activate this item?');" href="<?php echo osc_admin_base_url(true).'?page=items&spam=activate&item='.$id; ?>"><?php _e('Activate Ad', 'spamprotection'); ?></a>
             <a class="btn" onclick="return confirm('Are you sure you want to delete this item?');" href="<?php list($csrfname, $csrftoken) = osc_csrfguard_generate_token(); echo osc_admin_base_url(true).'?page=items&action=delete&id[]='.$id.'&CSRFName='.$csrfname.'&CSRFToken='.$csrftoken; ?>"><?php _e('Delete Ad', 'spamprotection'); ?></a>
+            <div style="clear: both; margin: 15px 0;"></div>
             <a class="btn btn-red" onclick="return confirm('Are you sure you want to block this user?');" href="<?php echo osc_admin_base_url(true).'?page=items&spam=block&mail='.$item['s_user_mail']; ?>"><?php _e('Block User', 'spamprotection'); ?></a>
-            <!--a class="btn btn-red" onclick="return confirm('Are you sure you want to ban this user completely?');" href="<?php echo osc_admin_base_url(true).'?page=items&spam=block&mail='.$item['s_user_mail']; ?>"><?php _e('Block User', 'spamprotection'); ?></a-->
+            <a class="btn btn-red" onclick="return confirm('Are you sure you want to ban this user completely?');" href="<?php echo osc_admin_base_url(true).'?page=items&spam=ban&mail='.$item['s_user_mail']; ?>"><?php _e('Ban User', 'spamprotection'); ?></a>
         </div>
     </div>
     <div class="infobox halfrow">
@@ -143,6 +144,8 @@ if ($user_spams > 0) {
 <?php if ($user_spams > 0) { ?>
 <div id="blocked_ads">
     <div id="blocked_ads_inner">
+        <div id="blocked_ads_close">x</div>
+    
         <table>
             <tr>
                 <td><?php _e('ID', 'spamprotection'); ?></td>
@@ -174,7 +177,7 @@ $(document).ready(function(){
         event.preventDefault();
         $("#blocked_ads").fadeToggle("slow");    
     });
-    $(document).on("click", "#blocked_ads", function(event){
+    $(document).on("click", "#blocked_ads_close", function(event){
         event.preventDefault();
         $("#blocked_ads").fadeToggle("slow");    
     });

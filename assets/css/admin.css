@@ -73,6 +73,14 @@ div#blocked_ads_inner {
     color: #000;
 }
 
+div#blocked_ads_close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
 div#blocked_ads_inner table {
     width: 100%;    
 }
@@ -127,6 +135,11 @@ input[name=honeypot_name].invalid {
     background: transparent; 
     border: none; 
 }
+#spamprot div.row.form-group {
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 20px;
+}
+
 div#sp_settings, 
 div#sp_comments, 
 div#sp_contact, 
@@ -296,6 +309,9 @@ div#sp_help {
 
 #spamprot .actionbuttons a {
     margin: 0 10px;
+    width: 150px;
+    padding: 10px;
+    text-align: center;
 }
 
 #sp_help ul li {

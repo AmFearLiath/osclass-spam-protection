@@ -24,13 +24,39 @@ $data = $sp->_get();
             </div>
 
             <div class="row form-group">
-                <label>
-                    <?php _e('Max amount of wrong logins', 'spamprotection'); ?>
-                </label><br />
-                <input type="text" name="sp_security_login_count" style="width: 50px;" value="<?php echo (empty($data['sp_security_login_count']) ? '5' : $data['sp_security_login_count']); ?>" />
-                <span style="display: inline-block;height: 28px;line-height: 28px;vertical-align: middle;">in</span>
-                <input type="text" name="sp_security_login_time" style="width: 50px;" value="<?php echo (empty($data['sp_security_login_time']) ? '5' : $data['sp_security_login_time']); ?>" />
-                <span style="display: inline-block;height: 28px;line-height: 28px;vertical-align: middle;">min</span>
+                <div class="halfrow" style="padding: 0;">
+                    <label>
+                        <?php _e('Max amount of wrong logins', 'spamprotection'); ?>
+                    </label><br />
+                    <input type="text" name="sp_security_login_count" style="width: 50px;" value="<?php echo (empty($data['sp_security_login_count']) ? '5' : $data['sp_security_login_count']); ?>" />
+                    <span style="display: inline-block;height: 28px;line-height: 28px;vertical-align: middle;">in</span>
+                    <input type="text" name="sp_security_login_time" style="width: 50px;" value="<?php echo (empty($data['sp_security_login_time']) ? '5' : $data['sp_security_login_time']); ?>" />
+                    <span style="display: inline-block;height: 28px;line-height: 28px;vertical-align: middle;">min</span>
+                </div>
+                <div class="halfrow" style="padding: 0;">
+                    <div class="floating">                        
+                        <label>
+                            <?php _e('Unban accounts after', 'spamprotection'); ?>
+                        </label><br />
+                        <input type="text" name="sp_security_login_unban" style="width: 50px;" value="<?php echo (empty($data['sp_security_login_unban']) ? '180' : $data['sp_security_login_unban']); ?>" />        
+                        <span style="display: inline-block;height: 28px;line-height: 28px;vertical-align: middle;">mins</span>
+                    </div>
+                    <div class="floating">
+                        <label>
+                            <?php _e('Run cron...', 'spamprotection'); ?>
+                        </label><br />
+                        <select id="sp_security_login_cron" name="sp_security_login_cron">
+                            <option value="1"<?php if (empty($data['sp_security_login_cron']) || $data['sp_security_login_cron'] == '1') { echo ' selected="selected"'; } ?>><?php _e('Every hour', 'spamprotection'); ?></option>
+                            <option value="2"<?php if (!empty($data['sp_security_login_cron']) && $data['sp_security_login_cron'] == '2') { echo ' selected="selected"'; } ?>><?php _e('One time per day', 'spamprotection'); ?></option>
+                            <option value="3"<?php if (!empty($data['sp_security_login_cron']) && $data['sp_security_login_cron'] == '3') { echo ' selected="selected"'; } ?>><?php _e('One time per week', 'spamprotection'); ?></option>
+                        </select>        
+                    </div>                
+                    <div style="clear: both;"></div>
+                    <small><?php _e('Use 0 minutes to disable auto unban', 'spamprotection'); ?></small>
+                </div>
+                
+                <div style="clear: both;"></div>
+                
             </div>
             
             <div class="row form-group">

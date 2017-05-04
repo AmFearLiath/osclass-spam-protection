@@ -51,6 +51,13 @@ if ($htaccess_writable) {
                         <option value="1"<?php if (!empty($data['sp_duplicates']) && $data['sp_duplicates'] == '1') { echo ' selected="selected"'; } ?>><?php _e('Title and description', 'spamprotection'); ?></option>
                     </select>                        
                 </div>
+                <div class="floating" id="sp_duplicates_time_cont"<?php if (empty($data['sp_duplicates_as']) || $data['sp_duplicates_as'] != '2') { echo ' style="display: none;"'; } ?>>
+                    <label><?php _e('Search in last x days', 'spamprotection'); ?> <small><em><?php _e('(0 to disable)', 'spamprotection'); ?></em></small></label><br />
+                    <input type="text" name="sp_duplicates_time" class="form-control" value="<?php echo (!empty($data['sp_duplicates_time']) ? $data['sp_duplicates_time'] : '30'); ?>" />                        
+                </div>
+                
+                <div style="clear: both; margin: 10px;"></div>
+                
                 <div class="floating" id="sp_duplicate_type_cont"<?php if (empty($data['sp_duplicates_as']) || $data['sp_duplicates_as'] == '0') { echo ' style="display: none;"'; } ?>>
                     <label>
                         <?php _e('Type of search', 'spamprotection'); ?>

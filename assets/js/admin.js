@@ -296,7 +296,15 @@ $(document).ready(function(){
             type  = $("#sp_duplicate_type").val();
         
         if (value && value == '1' || value == '2') {
+            
             $("#sp_duplicates_cont, #sp_duplicate_type_cont").fadeIn("slow");
+            
+            if (value && value == '2') {
+                $("#sp_duplicates_time_cont").fadeIn("slow");        
+            } else {
+                $("#sp_duplicates_time_cont").fadeOut("slow");    
+            }
+            
             if (type && type == '1') {
                 $("#sp_duplicate_percent_cont").fadeIn("slow");    
             }                

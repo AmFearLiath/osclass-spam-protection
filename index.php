@@ -3,7 +3,7 @@
 Plugin Name: Spam Protection
 Plugin URI: http://amfearliath.tk/osclass-spam-protection/
 Description: Spam Protection for Osclass. Checks in ads, comments and contact mails for duplicates, banned e-mail addresses and stopwords. Includes a honeypot and many other features. 
-Version: 1.5.1
+Version: 1.5.2
 Author: Liath
 Author URI: http://amfearliath.tk
 Short Name: spamprotection
@@ -54,7 +54,9 @@ Changelog
 
 1.5.0 - Security settings for login and form protection added
 
-1.5.1 - Removed Email ban for form protection 
+1.5.1 - Removed Email ban for form protection
+
+1.5.2 - Added User ban to check ads page, fix problem with clicking id on check ads page, added time range for search in duplicates, added cron to automatically unban user after defined time 
 */
 
 require_once('classes/class.spamprotection.php');
@@ -64,6 +66,8 @@ if (Params::getParam('spam') == 'activate') {
     $sp->_spamAction('activate', Params::getParam('item'));    
 } elseif (Params::getParam('spam') == 'block') {
     $sp->_spamAction('block', Params::getParam('mail'));    
+} elseif (Params::getParam('spam') == 'ban') {
+    $sp->_spamAction('ban', Params::getParam('mail'));    
 }
 
 if (Params::getParam('spamcomment') == 'activate') {
@@ -148,7 +152,18 @@ if ($sp->_get('sp_security_activate') == '1') {
     if (spam_prot::newInstance()->_get('sp_security_recover_hp') == '1') {
         osc_add_hook('user_recover_form', 'sp_add_honeypot_security');
     }
+    
+    if (spam_prot::newInstance()->_get('sp_security_login_unban') > '0') {
+        if (spam_prot::newInstance()->_get('sp_security_login_cron') == '1') {
+            osc_add_hook('cron_hourly', 'sp_unban_cron');
+        } elseif (spam_prot::newInstance()->_get('sp_security_login_cron') == '2') {
+            osc_add_hook('cron_daily', 'sp_unban_cron');
+        } elseif (spam_prot::newInstance()->_get('sp_security_login_cron') == '3') {
+            osc_add_hook('cron_weekly', 'sp_unban_cron');
+        }
+    }
 }
+
 
 /*
     FUNCTIONS
@@ -373,5 +388,9 @@ function sp_check_user_login() {
 
 function sp_add_honeypot_security() {
     echo '<input id="token" type="text" name="token" value="" class="form-control sp_form_field" autocomplete="off">';    
+}
+
+function sp_unban_cron() {
+    spam_prot::newInstance()->_unbanUser();    
 }
 ?>
