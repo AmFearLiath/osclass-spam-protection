@@ -7,7 +7,9 @@ $(document).ready(function(){
     } if ($("input[name=sp_contact_activate]").is(":checked")) {            
         $("#sp_contact_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
     } if ($("input[name=sp_security_activate]").is(":checked")) {            
-        $("#sp_security_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
+        $("#sp_security_mainfeatures_user").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
+    } if ($("input[name=sp_admin_activate]").is(":checked")) {            
+        $("#sp_security_mainfeatures_admin").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
     } if ($("input[name=sp_honeypot]").is(":checked")) {
         $("#honeypot").addClass("visible");        
     } if ($("input[name=sp_blocked]").is(":checked")) {
@@ -55,10 +57,19 @@ $(document).ready(function(){
     
     $(document).on("click", "input[name=sp_security_activate]", function(){
         if ($("input[name=sp_security_activate]").is(":checked")) {
-            $("#sp_security_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);        
+            $("#sp_security_mainfeatures_user").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);        
         } else {
-            $("#sp_security_options").removeClass("enabled").addClass("disabled").find("input, textarea").prop("disabled", true);
+            $("#sp_security_mainfeatures_user").removeClass("enabled").addClass("disabled").find("input, textarea").prop("disabled", true);
             $("input[name=sp_security_activate]").prop("disabled", false);
+        }  
+    });
+    
+    $(document).on("click", "input[name=sp_admin_activate]", function(){
+        if ($("input[name=sp_admin_activate]").is(":checked")) {
+            $("#sp_security_mainfeatures_admin").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);        
+        } else {
+            $("#sp_security_mainfeatures_admin").removeClass("enabled").addClass("disabled").find("input, textarea").prop("disabled", true);
+            $("input[name=sp_admin_activate]").prop("disabled", false);
         }  
     });
     
@@ -255,6 +266,16 @@ $(document).ready(function(){
         });    
     });
     
+    $(document).on("click", "#sp_review", function(event){
+        event.preventDefault();
+        $("#sp_review_wrap").fadeToggle("slow");  
+    });
+    
+    $(document).on("click", ".sp_review_close", function(event){
+        event.preventDefault();
+        $("#sp_review_wrap").fadeOut("slow");  
+    });
+    
     $(document).on("submit", "#sp_save_settings", function(event) {
         event.preventDefault();
         var changed = $("input[name=changed_htaccess]").val();
@@ -335,16 +356,6 @@ $(document).ready(function(){
         } else if (type && type == '0') {
             $("#sp_security_login_count_cont, #sp_security_login_action_cont").fadeOut("slow");    
         }    
-    });
-    
-    $(document).on("click", "#sp_review", function(event){
-        event.preventDefault();
-        $("#sp_review_wrap").fadeToggle("slow");  
-    });
-    
-    $(document).on("click", ".sp_review_close", function(event){
-        event.preventDefault();
-        $("#sp_review_wrap").fadeOut("slow");  
     });    
     
 });

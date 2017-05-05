@@ -202,7 +202,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
         </div>
         
         <div id="sp_help_security" class="subtab-content">
-            <h2><?php _e("Form Protection", "spamprotection"); ?></h2>
+            <h2><?php _e("User Protection", "spamprotection"); ?> / <?php _e("Admin Protection", "spamprotection"); ?></h2>
             
             <h3><?php _e("Activate the Form Protection", "spamprotection"); ?></h3>
             <p><?php _e("This Option activates the whole form protection. You can deactivate some features optionally, but deactivate this checkbox will deactivate the whole system.", "spamprotection"); ?></p>

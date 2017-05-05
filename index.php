@@ -3,7 +3,7 @@
 Plugin Name: Spam Protection
 Plugin URI: http://amfearliath.tk/osclass-spam-protection/
 Description: Spam Protection for Osclass. Checks in ads, comments and contact mails for duplicates, banned e-mail addresses and stopwords. Includes a honeypot and many other features. 
-Version: 1.5.3
+Version: 1.6.0
 Author: Liath
 Author URI: http://amfearliath.tk
 Short Name: spamprotection
@@ -58,10 +58,14 @@ Changelog
 
 1.5.2 - Added User ban to check ads page, fix problem with clicking id on check ads page, added time range for search in duplicates, added cron to automatically unban user after defined time 
 
-1.5.3 - Added Ban overview, some code cleanings, correcting translations 
+1.6.0 - Added Ban overview, some code cleanings, correcting translations 
 */    
 require_once('classes/class.spamprotection.php');
 $sp = new spam_prot;
+
+if (Params::getParam('sp_upgrade') == 'upgrade') {
+    $sp->_upgradeNow();   
+}
 
 if (Params::getParam('spam') == 'activate') {
     $ip = spam_prot::newInstance()->_IpUserLogin();
@@ -147,6 +151,9 @@ if ($sp->_get('sp_security_activate') == '1') {
 }
 
 if ($sp->_get('sp_security_activate') == '1') {
+        
+}
+if ($sp->_get('sp_security_activate') == '1') {
     if (spam_prot::newInstance()->_get('sp_security_login_hp') == '1') {
         osc_add_hook('user_login_form', 'sp_add_honeypot_security');
     }
@@ -167,6 +174,24 @@ if ($sp->_get('sp_security_activate') == '1') {
         }
     }
 }
+if ($sp->_get('sp_admin_activate') == '1') {
+    
+    osc_add_hook('before_login_admin', 'sp_check_admin_login');
+    
+    if (spam_prot::newInstance()->_get('sp_admin_login_hp') == '1') {
+        osc_add_hook('login_admin_form', 'sp_admin_login');
+    }
+    
+    if (spam_prot::newInstance()->_get('sp_admin_login_unban') > '0') {
+        if (spam_prot::newInstance()->_get('sp_admin_login_cron') == '1') {
+            osc_add_hook('cron_hourly', 'sp_unban_cron_admin');
+        } elseif (spam_prot::newInstance()->_get('sp_admin_login_cron') == '2') {
+            osc_add_hook('cron_daily', 'sp_unban_cron_admin');
+        } elseif (spam_prot::newInstance()->_get('sp_admin_login_cron') == '3') {
+            osc_add_hook('cron_weekly', 'sp_unban_cron_admin');
+        }
+    }    
+}
 
 
 /*
@@ -177,7 +202,7 @@ function sprot_admin_page_header($message = false) {
         echo '
         <h1>'.($message ? $message : __('Spam Protection', 'spamprotection'). ' <span style="float: right;">v'.$info['version']).'</span></h1>
         <div style="float: right;">
-            <a href="https://forums.osclass.org/plugins/(plugin)-spam-protection/msg148758/#msg148758" target="_blank">OSClass Forum</a> - <a id="sp_review" href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank">Please Review</a>
+            <a href="https://forums.osclass.org/plugins/(plugin)-spam-protection/msg148758/#msg148758" target="_blank">OSClass Forum</a> - <a id="sp_review" href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank">Please Review</a> - <a href="https://github.com/AmFearLiath/osclass-spam-protection" target="_blank">Github</a>
             <div id="sp_review_wrap" style="display: none;">
                 <div id="sp_review_inner">
                     <span class="sp_review_close">x</span>
@@ -218,7 +243,12 @@ function sprot_style() {
 }
 
 function sprot_style_admin() {
-    $params = Params::getParamsAsArray();    
+    $params = Params::getParamsAsArray();
+    
+    osc_enqueue_style('spam_protection-upgrade_css', osc_plugin_url('spamprotection/assets/css/upgrade.css').'upgrade.css');
+    osc_register_script('spam_protection-upgrade_js', osc_plugin_url('spamprotection/assets/js/upgrade.js') . 'upgrade.js', array('jquery'));
+    osc_enqueue_script('spam_protection-upgrade_js');
+        
     if (isset($params['file'])) {
         $plugin = explode("/", $params['file']);
         if ($plugin[0] == 'spamprotection') {
@@ -238,8 +268,13 @@ function sprot_configuration() {
     osc_admin_render_plugin(osc_plugin_path(dirname(__FILE__)) . '/admin/config.php&tab=settings');
 }
 
-function sprot_init() {
+function sprot_init() {      
     spam_prot::newInstance()->_admin_menu_draw();
+    $check = spam_prot::newInstance()->_upgradeCheck();
+        
+    if (!$check) {        
+        spam_prot::newInstance()->_upgradeDatabaseInfo($check);
+    }
 }
 
 function sprot_admin_menu_init() {
@@ -357,25 +392,25 @@ function sp_check_user_login() {
     $password = Params::getParam('password', false, false);
     
     if ($action == 'login_post' && !empty($email) && !empty($password)) {        
-        $logins = spam_prot::newInstance()->_countUserLogin($email);
+        $logins = spam_prot::newInstance()->_countLogin($email, 'user');
         $max_logins = spam_prot::newInstance()->_get('sp_security_login_count');
         
-        if (!empty($logins) && $logins >= $max_logins) {
+        if (!empty($logins) && ($logins >= $max_logins || ($max_logins-$logins) == '0')) {
             $ip = spam_prot::newInstance()->_IpUserLogin();
             spam_prot::newInstance()->_handleUserLogin($email, $logins, $ip);
             
             if (spam_prot::newInstance()->_get('sp_security_login_inform') == '1') {                
                 ob_get_clean();
-                osc_add_flash_error_message(sprintf(__('<strong>Information!</strong> Your account is suspended due to too much of false login attempts. Please contact support.', 'spamprotection'), ($max_logins-$logins)));
+                osc_add_flash_error_message(sprintf(__('<strong>Information!</strong> Your account is disabled due to too much of false login attempts. Please contact support.', 'spamprotection'), ($max_logins-$logins)));
             }
             
-            spam_prot::newInstance()->_informUser($email);
+            spam_prot::newInstance()->_informUser($email, 'user');
             header('Location: '.osc_user_login_url());
             exit;                
         } if (!spam_prot::newInstance()->_checkUserLogin($email, $password) || !empty($token)) {
             
-            spam_prot::newInstance()->_increaseUserLogin($email, $logins);
-            $logins = spam_prot::newInstance()->_countUserLogin($email);
+            spam_prot::newInstance()->_increaseUserLogin($email);
+            $logins = spam_prot::newInstance()->_countLogin($email, 'user');
             
             if (spam_prot::newInstance()->_get('sp_security_login_inform') == '1') {
                 ob_get_clean();
@@ -389,6 +424,77 @@ function sp_check_user_login() {
         }
     }
 }
+function sp_check_admin_login() {
+    
+    $params = Params::getParamsAsArray();
+    $token = Params::getParam('token');
+    $password = Params::getParam('password');
+    
+    $admin = Admin::newInstance()->findByUsername($params['user']);
+    $email = $admin['s_email'];
+    
+    $logins = spam_prot::newInstance()->_countLogin($admin['s_name'], 'admin');
+    $max_logins = spam_prot::newInstance()->_get('sp_admin_login_count');
+        
+    if (!empty($logins) && ($logins >= $max_logins || ($max_logins-$logins) == '0')) {
+        $ip = spam_prot::newInstance()->_IpUserLogin();
+        //spam_prot::newInstance()->_handleAdminLogin($email, $logins, $ip);
+        
+        if (spam_prot::newInstance()->_get('sp_admin_login_inform') == '1') {
+            $debug->do_log('debug', 'Flashmessage');                
+            ob_get_clean();
+            osc_add_flash_error_message(sprintf(__('<strong>Information!</strong> Your account is disabled due to too much of false login attempts. Please contact the webmaster.', 'spamprotection'), ($max_logins-$logins)));
+        }
+        
+        spam_prot::newInstance()->_informUser($params['user'], 'admin');
+        
+        //header('Location: '.osc_admin_base_url(true)."?page=login");
+        //exit;                
+    } if (!spam_prot::newInstance()->_checkAdminLogin($email, $password) || !empty($token)) {
+        
+        spam_prot::newInstance()->_increaseAdminLogin($params['user']);
+        $logins = spam_prot::newInstance()->_countLogin($admin['s_name'], 'admin');
+        
+        if (spam_prot::newInstance()->_get('sp_security_login_inform') == '1') {
+            ob_get_clean();
+            osc_add_flash_error_message(sprintf(__('<strong>Warning!</strong> Only %d login attempts remaining', 'spamprotection'), ($max_logins-$logins)));
+        }
+            
+        //header('Location: '.osc_admin_base_url(true)."?page=login");
+        //exit;    
+    } else {            
+        spam_prot::newInstance()->_resetAdminLogin($params['user']);    
+    }
+}
+
+function sp_admin_login() {
+    echo '
+    <style>
+    .sp_form_field {
+        z-index: 999;
+        position: absolute;
+        height: 0 !important;
+        width: 0 !important;
+        border: none;
+        background: none;
+        margin: 0;
+        top: -9999;
+        left: -9999;
+        clear: both;
+        font-size: 0px;
+        line-height: 0px;
+    }
+    </style>
+    <script>
+    jQuery(function($){
+        $(document).ready(function(){
+            $("#token").addClass("sp_form_field");
+        });
+    });
+    </script>
+    <input id="token" type="text" name="token" value="" class="form-control" autocomplete="off">
+';    
+}
 
 function sp_add_honeypot_security() {
     echo '<input id="token" type="text" name="token" value="" class="form-control sp_form_field" autocomplete="off">';    
@@ -396,5 +502,9 @@ function sp_add_honeypot_security() {
 
 function sp_unban_cron() {
     spam_prot::newInstance()->_unbanUser();    
+}
+
+function sp_unban_cron_admin() {
+    spam_prot::newInstance()->_unbanAdmin();    
 }
 ?>

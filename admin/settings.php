@@ -94,8 +94,7 @@ if ($htaccess_writable) {
                 <div id="honeypot" class="hiddeninput<?php if (!empty($data['sp_honeypot'])) { echo ' visible'; } ?>">
                     <label for="honeypot_name"><?php _e('Enter the name of the hidden honeypot field', 'spamprotection'); ?> <span id="validname"></span></label><br />
                     <input type="text" class="form-control" name="honeypot_name" value="<?php if (!empty($data['honeypot_name'])) { echo $data['honeypot_name']; } ?>" /><br />
-                    <small><?php _e('Good names would be "item_runtime, user_age, price_range or something else, dont name it honeypot ;)', 'spamprotection'); ?></small>
-                    
+                    <small><?php _e('Good names would be "item_runtime, user_age, price_range or something else, dont name it honeypot ;)', 'spamprotection'); ?></small>                    
                 </div>
             </div>        
         </div>

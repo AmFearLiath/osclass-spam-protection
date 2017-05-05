@@ -96,7 +96,9 @@ div#blocked_ads_inner table tr td {
 #sp_options,
 #sp_comment_options,
 #sp_contact_options,
-#sp_security_options {
+#sp_security_mainfeatures_user,
+#sp_security_mainfeatures_admin,
+#sp_config_options {
     color: #000;
     transition: ease all 0.6s;
 }
@@ -104,7 +106,8 @@ div#blocked_ads_inner table tr td {
 #sp_options.disabled *,
 #sp_comment_options.disabled *,
 #sp_contact_options.disabled *,
-#sp_security_options.disabled * {
+#sp_security_mainfeatures_user.disabled *,
+#sp_security_mainfeatures_admin.disabled * {
     color: #bbb;
 }
 
@@ -144,7 +147,8 @@ div#sp_settings,
 div#sp_comments, 
 div#sp_contact, 
 div#sp_security, 
-div#sp_help {
+div#sp_help,
+div#sp_config {
     position: relative;
     top: 50px;
     left: 0;
@@ -207,25 +211,23 @@ div#sp_help {
     float: left;
     padding: 0;
 }
-.sp_options, .sp_comment_options, .sp_contact_options, .sp_security_options, .sp_help_section {
+.sp_options, 
+.sp_comment_options, 
+.sp_contact_options, 
+.sp_security_options, 
+.sp_admin_options, 
+.sp_help_section, 
+.sp_config_options {
     width: calc(100% - 200px);
     float: left;
 } 
  
-#spamprot ul.subtabs, 
-#spamprot ul.commtabs,
-#spamprot ul.contacttabs,
-#spamprot ul.securitytabs,
-#spamprot ul.helptabs, {
+#spamprot ul.subtabs {
     background: transparent;
     border: none;
     padding: 0;
 }
-#spamprot ul.subtabs li, 
-#spamprot ul.commtabs li,  
-#spamprot ul.contacttabs li,  
-#spamprot ul.securitytabs li,  
-#spamprot ul.helptabs li { 
+#spamprot ul.subtabs li { 
     background: transparent;
     display: block;
     border: none;
@@ -235,56 +237,30 @@ div#sp_help {
     border-bottom: 0 !important;
     text-align: center;
 } 
-#spamprot ul.subtabs li a, 
-#spamprot ul.commtabs li a, 
-#spamprot ul.contacttabs li a, 
-#spamprot ul.securitytabs li a, 
-#spamprot ul.helptabs li a {
+#spamprot ul.subtabs li a {
     color: #c0c0c0 !important;
     display: block;
     text-decoration: none !important;
     cursor: pointer !important;
     padding: 1em;
 }
-#spamprot ul.subtabs li button, 
-#spamprot ul.commtabs li button, 
-#spamprot ul.contacttabs li button, 
-#spamprot ul.securitytabs li button, 
-#spamprot ul.helptabs li button {
+#spamprot ul.subtabs li button {
     margin-top: 20px;
 } 
-#spamprot ul.subtabs li.current, 
-#spamprot ul.commtabs li.current, 
-#spamprot ul.contacttabs li.current, 
-#spamprot ul.securitytabs li.current, 
-#spamprot ul.helptabs li.current {
+#spamprot ul.subtabs li.current {
     border: none;
 } 
-#spamprot ul.subtabs li.current a, 
-#spamprot ul.commtabs li.current a,  
-#spamprot ul.contacttabs li.current a, 
-#spamprot ul.securitytabs li.current a, 
-#spamprot ul.helptabs li.current a { 
+#spamprot ul.subtabs li.current a { 
     color: #459e00 !important; 
 }
  
 #spamprot .tab-content, 
-#spamprot .subtab-content, 
-#spamprot .commtab-content, 
-#spamprot .contacttab-content, 
-#spamprot .securitytab-content, 
-#spamprot .langtab-content, 
-#spamprot .helptab-content {
+#spamprot .subtab-content {
     display: none;
 }
 
 #spamprot .tab-content.current, 
-#spamprot .subtab-content.current, 
-#spamprot .commtab-content.current, 
-#spamprot .contacttab-content.current, 
-#spamprot .securitytab-content.current, 
-#spamprot .langtab-content.current, 
-#spamprot .helptab-content.current {
+#spamprot .subtab-content.current {
     display: inherit;
 }
 
@@ -351,7 +327,7 @@ div#attention {
     width: 350px;
     text-align: center;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(200, 200, 200, 0.95);
     border-radius: 3px;
     box-shadow: 6px 6px 8px #000;
 }
@@ -460,9 +436,11 @@ div#sp_review_wrap {
 div#sp_review_inner {
     position: relative;
     width: 400px;
-    padding: 10px;
+    padding: 25px;
     margin: 100px auto 0 auto;
-    background: #fff;
+    background: rgba(200, 200, 200, 0.95);
+    border-radius: 3px;
+    box-shadow: 6px 6px 8px #000;
     z-index: 2;
 }
 

@@ -12,6 +12,7 @@ class spam_prot extends DAO {
     
     function __construct() {
         $this->_table_user              = '`'.DB_TABLE_PREFIX.'t_user`';
+        $this->_table_admin             = '`'.DB_TABLE_PREFIX.'t_admin`';
         $this->_table_item              = '`'.DB_TABLE_PREFIX.'t_item`';
         $this->_table_comment           = '`'.DB_TABLE_PREFIX.'t_item_comment`';
         $this->_table_desc              = '`'.DB_TABLE_PREFIX.'t_item_description`';
@@ -50,12 +51,17 @@ class spam_prot extends DAO {
         $this->dao->query(sprintf('DROP TABLE %s', $this->_table_sp_contacts));    
     }
     
+    function _sect() {
+        return 'plugin_spamprotection';
+    }
+    
     function _opt($key = false) {                
         $opts = array(
             'sp_activate'               => array('1', 'BOOLEAN'),
             'sp_comment_activate'       => array('1', 'BOOLEAN'),
             'sp_contact_activate'       => array('1', 'BOOLEAN'),
             'sp_security_activate'      => array('1', 'BOOLEAN'),
+            'sp_admin_activate'         => array('1', 'BOOLEAN'),
             'sp_duplicates'             => array('1', 'BOOLEAN'),
             'sp_duplicates_as'          => array('1', 'BOOLEAN'),
             'sp_duplicate_type'         => array('0', 'BOOLEAN'),
@@ -88,23 +94,25 @@ class spam_prot extends DAO {
             'sp_comment_links'          => array('', 'STRING'),
             'sp_contact_links'          => array('', 'STRING'),
             'sp_security_login_count'   => array('', 'STRING'),
+            'sp_admin_login_count'      => array('', 'STRING'),
             'sp_security_login_time'    => array('', 'STRING'),
+            'sp_admin_login_time'       => array('', 'STRING'),
             'sp_security_login_action'  => array('', 'STRING'),
+            'sp_admin_login_action'     => array('', 'STRING'),
             'sp_security_login_inform'  => array('0', 'BOOLEAN'),
+            'sp_admin_login_inform'     => array('0', 'BOOLEAN'),
             'sp_security_login_hp'      => array('0', 'BOOLEAN'),
+            'sp_admin_login_hp'         => array('0', 'BOOLEAN'),
             'sp_security_register_hp'   => array('0', 'BOOLEAN'),
             'sp_security_recover_hp'    => array('0', 'BOOLEAN'),
             'sp_security_login_unban'   => array('0', 'STRING'),
-            'sp_security_login_cron'    => array('0', 'STRING'),
+            'sp_admin_login_unban'      => array('0', 'STRING'),
+            'sp_admin_login_cron'       => array('0', 'STRING'),
         );
         
         if ($key) { return $opts[$key]; }
                 
         return $opts;
-    }
-    
-    function _sect() {
-        return 'plugin_spamprotection';
     }
 
     function _get($opt = false) {
@@ -117,6 +125,7 @@ class spam_prot extends DAO {
                 'sp_comment_activate'       => osc_get_preference('sp_comment_activate', $pref),
                 'sp_contact_activate'       => osc_get_preference('sp_contact_activate', $pref),
                 'sp_security_activate'      => osc_get_preference('sp_security_activate', $pref),
+                'sp_admin_activate'         => osc_get_preference('sp_admin_activate', $pref),
                 'sp_duplicates'             => osc_get_preference('sp_duplicates', $pref),
                 'sp_duplicates_as'          => osc_get_preference('sp_duplicates_as', $pref),
                 'sp_duplicate_type'         => osc_get_preference('sp_duplicate_type', $pref),
@@ -149,14 +158,21 @@ class spam_prot extends DAO {
                 'sp_comment_links'          => osc_get_preference('sp_comment_links', $pref),
                 'sp_contact_links'          => osc_get_preference('sp_contact_links', $pref),
                 'sp_security_login_count'   => osc_get_preference('sp_security_login_count', $pref),
+                'sp_admin_login_count'      => osc_get_preference('sp_admin_login_count', $pref),
                 'sp_security_login_time'    => osc_get_preference('sp_security_login_time', $pref),
+                'sp_admin_login_time'       => osc_get_preference('sp_admin_login_time', $pref),
                 'sp_security_login_action'  => osc_get_preference('sp_security_login_action', $pref),
+                'sp_admin_login_action'     => osc_get_preference('sp_admin_login_action', $pref),
                 'sp_security_login_inform'  => osc_get_preference('sp_security_login_inform', $pref),
+                'sp_admin_login_inform'     => osc_get_preference('sp_admin_login_inform', $pref),
                 'sp_security_login_hp'      => osc_get_preference('sp_security_login_hp', $pref),
-                'sp_security_register_hp'   => osc_get_preference('sp_security_login_hp', $pref),
+                'sp_admin_login_hp'         => osc_get_preference('sp_admin_login_hp', $pref),
+                'sp_security_register_hp'   => osc_get_preference('sp_security_register_hp', $pref),
                 'sp_security_recover_hp'    => osc_get_preference('sp_security_recover_hp', $pref),
                 'sp_security_login_unban'   => osc_get_preference('sp_security_login_unban', $pref),
+                'sp_admin_login_unban'      => osc_get_preference('sp_admin_login_unban', $pref),
                 'sp_security_login_cron'    => osc_get_preference('sp_security_login_cron', $pref),
+                'sp_admin_login_cron'       => osc_get_preference('sp_admin_login_cron', $pref),
             );
             return $opts;
         }
@@ -304,7 +320,8 @@ class spam_prot extends DAO {
             'sp_activate'               => (isset($params['sp_activate']) ? $params['sp_activate'] : ''),
             'sp_comment_activate'       => (isset($params['sp_comment_activate']) ? $params['sp_comment_activate'] : ''),
             'sp_contact_activate'       => (isset($params['sp_contact_activate']) ? $params['sp_contact_activate'] : ''),
-            'sp_security_activate'      => (isset($params['sp_security_activate']) ? $this->_sort($params['sp_security_activate']) : ''),
+            'sp_security_activate'      => (isset($params['sp_security_activate']) ? $params['sp_security_activate'] : ''),
+            'sp_admin_activate'         => (isset($params['sp_admin_activate']) ? $params['sp_admin_activate'] : ''),
             'sp_duplicates'             => (isset($params['sp_duplicates']) ? $params['sp_duplicates'] : ''),
             'sp_duplicates_as'          => (isset($params['sp_duplicates_as']) ? $params['sp_duplicates_as'] : ''),
             'sp_duplicate_type'         => (isset($params['sp_duplicate_type']) ? $params['sp_duplicate_type'] : ''),
@@ -337,14 +354,21 @@ class spam_prot extends DAO {
             'sp_comment_links'          => (isset($params['sp_comment_links']) ? $params['sp_comment_links'] : ''),
             'sp_contact_links'          => (isset($params['sp_contact_links']) ? $params['sp_contact_links'] : ''),
             'sp_security_login_count'   => (isset($params['sp_security_login_count']) ? $params['sp_security_login_count'] : ''),
+            'sp_admin_login_count'      => (isset($params['sp_admin_login_count']) ? $params['sp_admin_login_count'] : ''),
             'sp_security_login_time'    => (isset($params['sp_security_login_time']) ? $params['sp_security_login_time'] : ''),
+            'sp_admin_login_time'       => (isset($params['sp_admin_login_time']) ? $params['sp_admin_login_time'] : ''),
             'sp_security_login_action'  => (isset($params['sp_security_login_action']) ? $params['sp_security_login_action'] : ''),
+            'sp_admin_login_action'     => (isset($params['sp_admin_login_action']) ? $params['sp_admin_login_action'] : ''),
             'sp_security_login_inform'  => (isset($params['sp_security_login_inform']) ? $params['sp_security_login_inform'] : ''),
+            'sp_admin_login_inform'     => (isset($params['sp_admin_login_inform']) ? $params['sp_admin_login_inform'] : ''),
             'sp_security_login_hp'      => (isset($params['sp_security_login_hp']) ? $params['sp_security_login_hp'] : ''),
+            'sp_admin_login_hp'         => (isset($params['sp_admin_login_hp']) ? $params['sp_admin_login_hp'] : ''),
             'sp_security_register_hp'   => (isset($params['sp_security_register_hp']) ? $params['sp_security_register_hp'] : ''),
             'sp_security_recover_hp'    => (isset($params['sp_security_recover_hp']) ? $params['sp_security_recover_hp'] : ''),
             'sp_security_login_unban'   => (isset($params['sp_security_login_unban']) ? $params['sp_security_login_unban'] : ''),
+            'sp_admin_login_unban'      => (isset($params['sp_admin_login_unban']) ? $params['sp_admin_login_unban'] : ''),
             'sp_security_login_cron'    => (isset($params['sp_security_login_cron']) ? $params['sp_security_login_cron'] : ''),
+            'sp_admin_login_cron'       => (isset($params['sp_admin_login_cron']) ? $params['sp_admin_login_cron'] : ''),
         );
         
         $pref = $this->_sect();
@@ -1018,10 +1042,17 @@ class spam_prot extends DAO {
     
     
     // Functions for login protection
-    function _checkEmail($email) {
+    function _checkAccount($search, $type = 'user') {
+        
         $this->dao->select('*');
-        $this->dao->from($this->_table_user);
-        $this->dao->where("s_email", $email);
+
+        if ($type == 'user') {
+            $this->dao->from($this->_table_user);
+            $this->dao->where("s_email", $search);    
+        } elseif ($type == 'admin') {
+            $this->dao->from($this->_table_admin);
+            $this->dao->where("s_username", $search);    
+        }
         
         $result = $this->dao->get();
         if ($result->numRows() > 0) { return true; }
@@ -1030,11 +1061,25 @@ class spam_prot extends DAO {
     }
     
     function _checkUserLogin($email, $password) {        
-        if (!$this->_checkEmail($email)) {
+        if (!$this->_checkAccount($email, 'user')) {
             return false;
         } else {
             $user = User::newInstance()->findByEmail($email);
             if (!osc_verify_password($password, (isset($user['s_password']) ? $user['s_password'] : ''))) {
+                return false;
+                
+            } else {
+                return true;
+            }
+        }        
+    }
+    
+    function _checkAdminLogin($name, $password) {        
+        if (!$this->_checkAccount($name, 'admin')) {
+            return false;
+        } else {
+            $admin = Admin::newInstance()->findByUsername($name);
+            if (!osc_verify_password($password, (isset($admin['s_password']) ? $admin['s_password'] : ''))) {
                 return false;
                 
             } else {
@@ -1063,14 +1108,22 @@ class spam_prot extends DAO {
         }
     }
     
-    function _countUserLogin($email) {    
+    function _countLogin($search, $type = 'user') {    
         $time = $this->_get('sp_security_login_time')*60;
         $ip = $this->_IpUserLogin();
             
         $this->dao->select('*');
         $this->dao->from($this->_table_sp_logins);
         $this->dao->where("dt_date_login > ".(time()-$time));
-        $this->dao->where("s_email", $email);
+        
+        if ($type == 'user') {    
+            $this->dao->where("s_type", $type);
+            $this->dao->where("s_email", $search);    
+        } elseif ($type == 'admin') {
+            $this->dao->where("s_type", $type);
+            $this->dao->where("s_name", $search);    
+        }        
+        
         $this->dao->orWhere("s_ip", $ip);
         
         $result = $this->dao->get();
@@ -1082,7 +1135,16 @@ class spam_prot extends DAO {
     
     function _increaseUserLogin($email) {        
         $ip = $this->_IpUserLogin();                
-        if ($this->dao->insert($this->_table_sp_logins, array('s_email' => $email, 's_ip' => $ip, 'dt_date_login' => time()))) {
+        if ($this->dao->insert($this->_table_sp_logins, array('s_email' => $email, 's_ip' => $ip, 's_type' => 'user', 'dt_date_login' => time()))) {
+            return true;    
+        } else {
+            return false;
+        }      
+    }
+    
+    function _increaseAdminLogin($name) {        
+        $ip = $this->_IpUserLogin();                
+        if ($this->dao->insert($this->_table_sp_logins, array('s_name' => $name, 's_ip' => $ip, 's_type' => 'admin', 'dt_date_login' => time()))) {
             return true;    
         } else {
             return false;
@@ -1100,7 +1162,7 @@ class spam_prot extends DAO {
         $this->dao->delete($this->_table_sp_logins, '`dt_date_login` < "'.(time()-$time).'"');
     }
     
-    function unbanUser() {
+    function _unbanUser() {
         
         $time = $this->_get('sp_security_login_unban')*60;
         
@@ -1118,6 +1180,27 @@ class spam_prot extends DAO {
             $this->dao->delete($this->_table_bans, '`s_ip` = "'.$v['s_ip'].'"');
             $this->dao->delete($this->_table_sp_logins, '`pk_i_id` < "'.$v['pk_i_id'].'"');    
         }
+    }
+    
+    function _unbanAdmin() {
+        /*
+        $time = $this->_get('sp_security_login_unban')*60;
+        
+        $this->dao->select('*');
+        $this->dao->from($this->_table_sp_logins);
+        $this->dao->where("dt_date_login < ".(time()-$time));
+        
+        $result = $this->dao->get();
+        if ($result->numRows() <= 0) { return false; }
+        
+        $bans = $result->result();
+        
+        foreach ($bans AS $k => $v) {
+            $this->dao->update($this->_table_user, array('b_enabled' => '1'), array('s_email' => $v['s_email']));
+            $this->dao->delete($this->_table_bans, '`s_ip` = "'.$v['s_ip'].'"');
+            $this->dao->delete($this->_table_sp_logins, '`pk_i_id` < "'.$v['pk_i_id'].'"');    
+        }
+        */
     }
     
     function _addBanLog($type, $reason, $email = false, $ip = false) {
@@ -1183,26 +1266,48 @@ class spam_prot extends DAO {
         return $ip;      
     }
     
-    function _informUser($email) {
-        if ($this->_checkEmail($email)) {
+    function _informUser($search, $type = 'user') {
+        
+        if ($this->_checkAccount($search, $type)) {
             $ip = $this->_IpUserLogin();
-            $user = User::newInstance()->findByEmail($email);
             
-            $content   = array();
-            $content[] = array('{PAGE_NAME}', '{MAIL_USER}', '{MAIL_USED}', '{MAIL_DATE}', '{MAIL_IP}', '{UNBAN_LINK}', '{PASSWORD_LINK}');
-            $content[] = array(osc_page_title(), $user['s_name'], $email, date("Y/m/d H:i", time()), $ip, osc_base_url(true).'?page=sp_activate_account&email='.$email.'&token='.md5($user['s_secret']), osc_recover_user_password_url());
+            if ($type == 'user') {
+                $user = User::newInstance()->findByEmail($search);
+                
+                $email = $search;
+                $content   = array();
+                $content[] = array('{PAGE_NAME}', '{MAIL_USER}', '{MAIL_USED}', '{MAIL_DATE}', '{MAIL_IP}', '{UNBAN_LINK}', '{PASSWORD_LINK}');
+                $content[] = array(osc_page_title(), $user['s_name'], $search, date("Y/m/d H:i", time()), $ip, osc_base_url(true).'?page=sp_activate_account&email='.$search.'&token='.md5($user['s_secret']), osc_recover_user_password_url());    
+            } elseif ($type == 'admin') {
+                $user = Admin::newInstance()->findByUsername($search);
+                
+                $email = $user['s_email'];
+                $content   = array();
+                $content[] = array('{PAGE_NAME}', '{MAIL_USER}', '{MAIL_USED}', '{MAIL_DATE}', '{MAIL_IP}', '{UNBAN_LINK}', '{PASSWORD_LINK}');
+                $content[] = array(osc_page_title(), $user['s_name'], $search, date("Y/m/d H:i", time()), $ip, osc_base_url(true).'?page=sp_activate_account&name='.$search.'&token='.md5($user['s_secret']), osc_admin_base_url(true).'?page=login&action=recover');    
+            }
             
             $mail_title = __("False logins on {PAGE_NAME}", "spamprotection");
-            $mail_body = __('Hello {MAIL_USER},','spamprotection').'<br /><br />
+            
+            $mail_body_plain = __('Hello {MAIL_USER},','spamprotection').'\r\n\r\n
+'.__('We have detected some false logins for your account {MAIL_USED} on {PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}','spamprotection').'\r\n\r\n
+'.__('In order to our security policy, we have temporarily disabled your account and banned the used IP in our System. You can use following link to unban and reactivate your Account. If this was not you, please contact the support and change your password. You can use the password recovery function, if you don\'t remember your password.','spamprotection').'\r\n\r\n\r\n
+'.__('Unban your account: {UNBAN_LINK} ','spamprotection').'\r\n\r\n
+'.__('Password recovery: {PASSWORD_LINK} ','spamprotection').'\r\n\r\n
+'.__('Best regards','spamprotection').'\r\n
+{PAGE_NAME}';
+            
+            $mail_body_html = __('Hello {MAIL_USER},','spamprotection').'<br /><br />
 '.__('We have detected some false logins for your account {MAIL_USED} on {PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}','spamprotection').'<br /><br />
 '.__('In order to our security policy, we have temporarily disabled your account and banned the used IP in our System. You can use following link to unban and reactivate your Account. If this was not you, please contact the support and change your password. You can use the password recovery function, if you don\'t remember your password.','spamprotection').'<br /><br /><br />
-'.__('Unban your account: {UNBAN_LINK} ','spamprotection').'<br /><br />
-'.__('Password recovery: {PASSWORD_LINK} ','spamprotection').'<br /><br />
+'.__('Unban your account: <a href="{UNBAN_LINK}">{UNBAN_LINK}</a> ','spamprotection').'<br /><br />
+'.__('Password recovery: <a href="{PASSWORD_LINK}">{PASSWORD_LINK}</a> ','spamprotection').'<br /><br />
 '.__('Best regards','spamprotection').'<br />
 {PAGE_NAME}';
 
             $title = osc_mailBeauty($mail_title, $content);
-            $body  = osc_mailBeauty($mail_body, $content);
+            $body_plain  = osc_mailBeauty($mail_body_plain, $content);
+            $body_html  = osc_mailBeauty($mail_body_html, $content);
 
             $params = array(
                 'from'      => osc_contact_email(),
@@ -1210,8 +1315,8 @@ class spam_prot extends DAO {
                 'subject'   => $title,
                 'to'        => $email,
                 'to_name'   => $user['s_name'],
-                'body'      => $body,
-                'alt_body'  => $body,
+                'body'      => $body_html,
+                'alt_body'  => $body_plain,
                 'reply_to'  => osc_contact_email()
             );
             
@@ -1222,6 +1327,97 @@ class spam_prot extends DAO {
             
             return $return;
         }    
-    }   
+    }
+    
+    function _upgradeDatabaseInfo($version) {
+        $params = Params::getParamsAsArray();
+        if (isset($params['file'])) { }
+        $file = osc_plugin_resource('spamprotection/assets/create_table.sql');
+        
+        $tables = file_get_contents($file);
+        $tables = str_replace( '/*TABLE_PREFIX*/', DB_TABLE_PREFIX, $tables);
+        $tables = preg_replace('#/\*(?:[^*]*(?:\*(?!/))*)*\*/#','',($tables));
+        
+        echo '
+            <div id="spamprot_upgrade_overlay" style="display: none;">
+                <div id="spamprot_upgrade" style="display: none;">
+                    <div id="spamprot_upgrade_close">x</div>
+                    <div id="spamprot_upgrade_info">
+                        <h3>'.__("Spam Protection - Database need upgrade!", "spamprotection").'</h3>    
+                        <p>'.__("Since you have upgraded this plugin, the database need an upgrade also.<br />To upgrade it now, press the button below.", "spamprotection").'</p>    
+                        <p>'.__("If you want to backup your data before, you can use the export function.<br />You will find an import function in the plugin settings.", "spamprotection").'</p>    
+                        <p>'.__("Of course you can do the upgrade manually. For this case you will find the database tables here", "spamprotection").'</p>
+                        
+                        <div style="height: 180px; overflow: auto; text-align: left; margin: 15px 0;">
+                            <div id="spamprot_upgrade_tables">
+                                <pre style="margin: 0;"><small><strong>'.$tables.'</strong></small></pre>
+                            </div>                            
+                        </div>                            
+                    </div>
+                    
+                    <div id="spamprot_upgrade_buttons">
+                        <a class="btn btn-blue" href="?sp_upgrade=export">'.__("Export Data", "spamprotection").'</a>
+                        <a class="btn btn-green" href="?sp_upgrade=upgrade">'.__("Upgrade now", "spamprotection").'</a>
+                        <a class="btn btn-red" href="">'.__("Test again", "spamprotection").'</a>
+                        <div style="clear: both;"></div>
+                    </div>
+                    
+                    <p><small>'.__("This message is only shown once. If you close this window, remember to do the upgrade manually!", "spamprotection").'</small></p>    
+                </div>
+            </div>
+        ';        
+    }
+    
+    function _upgradeNow() {
+        $file = osc_plugin_resource('spamprotection/assets/create_table.sql');        
+        $sql = file_get_contents($file);
+        
+        if (!$this->dao->importSQL($sql)) {
+            throw new Exception( "Error importSQL::spam_prot<br>".$file ) ;
+        }    
+    }
+    
+    function _upgradeCheck() {        
+        $file = osc_plugin_resource('spamprotection/assets/upgrade_check.sql');
+        
+        $sql = file_get_contents($file);
+        $sql = str_replace( '/*TABLE_PREFIX*/', DB_TABLE_PREFIX, $sql);
+        $sql = preg_replace('#/\*(?:[^*]*(?:\*(?!/))*)*\*/#','',($sql));
+        
+        $queries = $this->_upgradeCheckSplit($sql, ';');
+        $exec = array(); $return = true;
+        
+        foreach($queries as $query) {
+            $query = trim($query);
+            
+            if (!empty($query)) {
+                $execute = $this->dao->_execute($query);
+                if (!$execute) {
+                    //$regex = '^.*`\/\*TABLE_PREFIX\*\/(.*)`$';
+                    //$exec[] = preg_match($regex, $execute, &$matches);
+                    $return = false;
+                }
+            }
+        }
+        
+        if (!$return) {
+            return false;
+        }
+        
+        return true;    
+    }
+    
+    private function _upgradeCheckSplit($sql, $explodeChars)
+        {
+            if (preg_match('|^(.*)DELIMITER (\S+)\s(.*)$|isU', $sql, $matches)) {
+                $queries = explode($explodeChars, $matches[1]);
+                $recursive = $this->splitSQL($matches[3], $matches[2]);
+
+                return array_merge($queries, $recursive);
+            }
+            else {
+                return explode($explodeChars, $sql);
+            }
+        }   
 }
 ?>
