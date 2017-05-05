@@ -3,7 +3,7 @@
 Plugin Name: Spam Protection
 Plugin URI: http://amfearliath.tk/osclass-spam-protection/
 Description: Spam Protection for Osclass. Checks in ads, comments and contact mails for duplicates, banned e-mail addresses and stopwords. Includes a honeypot and many other features. 
-Version: 1.5.2
+Version: 1.5.3
 Author: Liath
 Author URI: http://amfearliath.tk
 Short Name: spamprotection
@@ -57,16 +57,21 @@ Changelog
 1.5.1 - Removed Email ban for form protection
 
 1.5.2 - Added User ban to check ads page, fix problem with clicking id on check ads page, added time range for search in duplicates, added cron to automatically unban user after defined time 
+
+1.5.3 - Added Ban overview, some code cleanings, correcting translations 
 */    
 require_once('classes/class.spamprotection.php');
 $sp = new spam_prot;
 
 if (Params::getParam('spam') == 'activate') {
+    $ip = spam_prot::newInstance()->_IpUserLogin();
     $sp->_spamAction('activate', Params::getParam('item'));    
 } elseif (Params::getParam('spam') == 'block') {
-    $sp->_spamAction('block', Params::getParam('mail'));    
+    $ip = spam_prot::newInstance()->_IpUserLogin();
+    $sp->_spamAction('block', Params::getParam('mail'), $ip);    
 } elseif (Params::getParam('spam') == 'ban') {
-    $sp->_spamAction('ban', Params::getParam('mail'));    
+    $ip = spam_prot::newInstance()->_IpUserLogin();
+    $sp->_spamAction('ban', Params::getParam('mail'), $ip);    
 }
 
 if (Params::getParam('spamcomment') == 'activate') {
@@ -350,14 +355,14 @@ function sp_check_user_login() {
     $action = Params::getParam('action');
     $email = Params::getParam('email');
     $password = Params::getParam('password', false, false);
-
+    
     if ($action == 'login_post' && !empty($email) && !empty($password)) {        
         $logins = spam_prot::newInstance()->_countUserLogin($email);
         $max_logins = spam_prot::newInstance()->_get('sp_security_login_count');
         
         if (!empty($logins) && $logins >= $max_logins) {
-            
-            spam_prot::newInstance()->_handleUserLogin($email, $logins);
+            $ip = spam_prot::newInstance()->_IpUserLogin();
+            spam_prot::newInstance()->_handleUserLogin($email, $logins, $ip);
             
             if (spam_prot::newInstance()->_get('sp_security_login_inform') == '1') {                
                 ob_get_clean();

@@ -40,3 +40,14 @@ CREATE TABLE IF NOT EXISTS `/*TABLE_PREFIX*/t_spam_protection_logins` (
   `dt_date_login` int(20) DEFAULT NULL,
   PRIMARY KEY (`pk_i_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `/*TABLE_PREFIX*/t_spam_protection_ban_log` ( 
+  `pk_i_id` INT(10) NOT NULL AUTO_INCREMENT,
+  `i_user_id` int(10) DEFAULT NULL,
+  `s_user_email` varchar(100) DEFAULT NULL,
+  `s_user_ip` int(11) DEFAULT NULL,
+  `s_reason` text DEFAULT NULL,
+  `dt_date_banned` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dt_date_released` datetime DEFAULT NULL 
+  PRIMARY KEY (`pk_i_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

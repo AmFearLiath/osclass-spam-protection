@@ -16,6 +16,7 @@ class spam_prot extends DAO {
         $this->_table_comment           = '`'.DB_TABLE_PREFIX.'t_item_comment`';
         $this->_table_desc              = '`'.DB_TABLE_PREFIX.'t_item_description`';
         $this->_table_bans              = '`'.DB_TABLE_PREFIX.'t_ban_rule`';
+        $this->_table_sp_ban_log        = '`'.DB_TABLE_PREFIX.'t_spam_protection_ban_log`';
         $this->_table_sp_items          = '`'.DB_TABLE_PREFIX.'t_spam_protection_items`';
         $this->_table_sp_comments       = '`'.DB_TABLE_PREFIX.'t_spam_protection_comments`';
         $this->_table_sp_contacts       = '`'.DB_TABLE_PREFIX.'t_spam_protection_contacts`';
@@ -165,6 +166,7 @@ class spam_prot extends DAO {
         $count = $this->_countRows('t_item', array('key' => 'b_spam', 'value' => '1'));
         $comments = $this->_countRows('t_comment', array('key' => 'b_spam', 'value' => '1'));
         $contacts = $this->_countRows('t_sp_contacts');
+        $bans = $this->_countRows('t_sp_ban_log');
         
         if ($count > 0) {
             AdminToolbar::newInstance()->add_menu( array(
@@ -193,6 +195,15 @@ class spam_prot extends DAO {
                  'target'    => '_self'
              ));
         }
+        if ($bans > 0) {
+            AdminToolbar::newInstance()->add_menu( array(
+                 'id'        => 'spamprotection_bans',
+                 'title'     => '<i class="circle circle-gray">'.$bans.'</i>'.__('Banned user', 'spamprotection'),
+                 'href'      => osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php'),
+                 'meta'      => array('class' => 'action-btn action-btn-black'),
+                 'target'    => '_self'
+             ));
+        }
     }
     
     function _getRow($table, $where = false, $orderBy = false, $orderDir = 'DESC') {
@@ -201,6 +212,7 @@ class spam_prot extends DAO {
         elseif ($table == 't_desc') { $table = $this->_table_desc; }
         elseif ($table == 't_user')  { $table = $this->_table_user; }
         elseif ($table == 't_comment')  { $table = $this->_table_comment; }
+        elseif ($table == 't_sp_ban_log')  { $table = $this->_table_sp_ban_log; }
         elseif ($table == 't_sp_items')  { $table = $this->_table_sp_items; }
         elseif ($table == 't_sp_comments')  { $table = $this->_table_sp_comments; }
         elseif ($table == 't_sp_contacts')  { $table = $this->_table_sp_contacts; }
@@ -228,6 +240,7 @@ class spam_prot extends DAO {
         elseif ($table == 't_item_description')  { $table = $this->_table_desc; }
         elseif ($table == 't_user')  { $table = $this->_table_user; }
         elseif ($table == 't_comment')  { $table = $this->_table_comment; }
+        elseif ($table == 't_sp_ban_log')  { $table = $this->_table_sp_ban_log; }
         elseif ($table == 't_sp_items')  { $table = $this->_table_sp_items; }
         elseif ($table == 't_sp_comments')  { $table = $this->_table_sp_comments; }
         elseif ($table == 't_sp_contacts')  { $table = $this->_table_sp_contacts; }
@@ -244,7 +257,7 @@ class spam_prot extends DAO {
         }                
         
         $result = $this->dao->get();
-        if (!$result) { return false; }
+        if ($result->numRows() <= 0) { return false; }
         
         return $result->result();
     }
@@ -253,8 +266,10 @@ class spam_prot extends DAO {
         
         if ($table == 't_item') { $table = $this->_table_item; }
         elseif ($table == 't_user')  { $table = $this->_table_user; }
+        elseif ($table == 't_bans')  { $table = $this->_table_bans; }
         elseif ($table == 't_sp_items')  { $table = $this->_table_sp_items; }
         elseif ($table == 't_comment')  { $table = $this->_table_comment; }
+        elseif ($table == 't_sp_ban_log')  { $table = $this->_table_sp_ban_log; }
         elseif ($table == 't_sp_contacts')  { $table = $this->_table_sp_contacts; }
         
         $this->dao->select('count(*) as count');
@@ -394,14 +409,16 @@ class spam_prot extends DAO {
         );       
     }
     
-    function _spamAction($type, $id) {        
+    function _spamAction($type, $id, $ip = false) {        
         if ($type == 'activate') {
             $this->dao->update($this->_table_item, array('b_spam' => '0', 'b_enabled' => '1', 'b_active' => '1'), array('pk_i_id' => $id));    
         } elseif ($type == 'block') {
-            $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $id));    
+            $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $id));
+            $this->_addBanLog('block', 'spam', $id, $ip);    
         } elseif ($type == 'ban') {
             $reason = __("Spam Protection - Banned because of spam ads", "spamprotection");
-            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_email' => $id));    
+            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_email' => $id));
+            $this->_addBanLog('ban', 'spam', $id, $ip);    
         }        
         return false;
     }
@@ -1026,18 +1043,23 @@ class spam_prot extends DAO {
         }        
     }
     
-    function _handleUserLogin($email) {
-        $ip = $this->_IpUserLogin();
+    function _handleUserLogin($email, $ip = false) {
+        
+        if (!$ip) { $ip = $this->_IpUserLogin(); }
+        
         $action = $this->_get('sp_security_login_action');
         $reason = __("Spam Protection - Too many false login attempts", "spamprotection");
         
         if ($action == '1') {
-            $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));    
+            $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));            
+            $this->_addBanLog('block', 'falselogin', $email, $ip);    
         } elseif ($action == '2') {
-            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));    
+            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
+            $this->_addBanLog('ban', 'falselogin', $email, $ip);    
         } elseif ($action == '3') {
             $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));
-            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));    
+            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
+            $this->_addBanLog('blockban', 'falselogin', $email, $ip);    
         }
     }
     
@@ -1095,6 +1117,50 @@ class spam_prot extends DAO {
             $this->dao->update($this->_table_user, array('b_enabled' => '1'), array('s_email' => $v['s_email']));
             $this->dao->delete($this->_table_bans, '`s_ip` = "'.$v['s_ip'].'"');
             $this->dao->delete($this->_table_sp_logins, '`pk_i_id` < "'.$v['pk_i_id'].'"');    
+        }
+    }
+    
+    function _addBanLog($type, $reason, $email = false, $ip = false) {
+        
+        if (!$ip) { $ip = $this->_IpUserLogin(); }
+        if ($email) { $user = User::newInstance()->findByEmail($email); }
+        
+        if ($type == 'block') {
+            $reason_sql = __("User was blocked because of", "spamprotection");
+        } elseif ($type == 'blockban') {
+            $reason_sql = __("User was blocked and banned because of", "spamprotection");
+        } else {
+            $reason_sql = __("User was banned because of", "spamprotection");
+        } if ($reason == 'falselogin') {
+            $reason_sql = $reason_sql.'&nbsp;'.__("too many false logins", "spamprotection");
+        } elseif ($reason == 'spam') {
+            $reason_sql = $reason_sql.'&nbsp;'.__("spam ads", "spamprotection");
+        }
+        
+        if ($this->dao->insert($this->_table_sp_ban_log, array('i_user_id' => (isset($user['pk_i_id']) ? $user['pk_i_id'] : false), 's_user_email' => $email, 's_user_ip' => $ip, 's_reason' => $reason_sql))) {
+            return true;    
+        } else {
+            return false;
+        }  
+    }
+    
+    function _handleBanLog($action, $id) {        
+        if ($action == 'activate') {
+            $log = $this->_getRow('t_sp_ban_log', array('key' => 'pk_i_id', 'value' => $id));                        
+            if (isset($log['s_user_email'])) {
+                $this->dao->update($this->_table_user, array('b_enabled' => '1'), array('s_email' => $log['s_user_email']));
+                $this->dao->delete($this->_table_bans, '`s_email` = "'.$log['s_user_email'].'"');    
+                $this->dao->delete($this->_table_sp_logins, '`s_email` = "'.$log['s_user_email'].'"');    
+            } if (isset($log['s_user_ip'])) {
+                $this->dao->delete($this->_table_bans, '`s_ip` = "'.$log['s_user_ip'].'"');
+                $this->dao->delete($this->_table_sp_logins, '`s_ip` = "'.$log['s_user_ip'].'"');
+            }  if (isset($id)) {
+                $this->dao->delete($this->_table_sp_ban_log, '`pk_i_id` = "'.$id.'"');
+            }
+        } elseif ($action == 'delete') {
+            if (isset($id)) {
+                $this->dao->delete($this->_table_sp_ban_log, '`pk_i_id` = "'.$id.'"');
+            }                
         }
     }
     

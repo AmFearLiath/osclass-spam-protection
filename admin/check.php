@@ -118,21 +118,23 @@ if ($user_spams > 0) {
                 $current = ''; 
                 if (osc_locale_code() == $v['pk_c_code']) {
                     $current = ' current';
-                }                          
-                foreach($item_spam as $ik => $iv) {
-                    if ($v['pk_c_code'] == $iv['fk_c_locale_code']) { ?>
-                    
-                    <div id="tab-<?php echo $v['pk_c_code']; ?>" class="langtab-content<?php echo $current; ?>">                           
-                        <div class="form-group">
-                            <h3><?php echo osc_esc_html($iv['s_title']); ?></h3>
+                }
+                if (is_array($item_spam) || is_object($item_spam)) {                          
+                    foreach($item_spam as $ik => $iv) {
+                        if ($v['pk_c_code'] == $iv['fk_c_locale_code']) { ?>
+                        
+                        <div id="tab-<?php echo $v['pk_c_code']; ?>" class="langtab-content<?php echo $current; ?>">                           
+                            <div class="form-group">
+                                <h3><?php echo osc_esc_html($iv['s_title']); ?></h3>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label"><?php _e('Description', 'spamprotection'); ?></label><br />
+                                <textarea id="descriptionCode" class="form-control" readonly="readonly"><?php echo osc_esc_html($iv['s_description']); ?></textarea>
+                                <div id="descriptionHTML"><?php echo $iv['s_description']; ?></div>
+                            </div>       
                         </div>
-                        <div class="form-group">
-                            <label class="control-label"><?php _e('Description', 'spamprotection'); ?></label><br />
-                            <textarea id="descriptionCode" class="form-control" readonly="readonly"><?php echo osc_esc_html($iv['s_description']); ?></textarea>
-                            <div id="descriptionHTML"><?php echo $iv['s_description']; ?></div>
-                        </div>       
-                    </div>
             <?php
+                        } 
                     } 
                 } 
             } ?>

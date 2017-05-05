@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OSClass Spam Protection\n"
-"POT-Creation-Date: 2017-05-04 21:50+0200\n"
-"PO-Revision-Date: 2017-05-04 21:56+0200\n"
+"POT-Creation-Date: 2017-05-05 04:38+0200\n"
+"PO-Revision-Date: 2017-05-05 04:41+0200\n"
 "Last-Translator: \n"
 "Language-Team: Liath <amfearliath@gmx.de>\n"
 "Language: de_DE\n"
@@ -17,6 +17,36 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: assets/fonts\n"
 "X-Poedit-SearchPathExcluded-1: assets/css\n"
 "X-Poedit-SearchPathExcluded-2: assets/img\n"
+
+#: admin/ban_log.php:18
+msgid "User"
+msgstr "Benutzer"
+
+#: admin/ban_log.php:19 admin/check.php:154 admin/comments_check.php:19
+#: admin/contact_check.php:19
+msgid "Reason"
+msgstr "Begründung"
+
+#: admin/ban_log.php:20
+msgid "IP"
+msgstr "IP"
+
+#: admin/ban_log.php:21
+msgid "Email"
+msgstr "E-Mail"
+
+#: admin/ban_log.php:22 admin/check.php:155 admin/comments_check.php:20
+#: admin/contact_check.php:20
+msgid "Date"
+msgstr "Datum"
+
+#: admin/ban_log.php:44
+msgid "Delete entry"
+msgstr "Eintrag löschen"
+
+#: admin/ban_log.php:47
+msgid "Activate user"
+msgstr "Benutzer ktivieren"
 
 #: admin/check.php:27
 msgid "Registered User"
@@ -78,21 +108,13 @@ msgstr "Benutzer blockieren"
 msgid "Ban User"
 msgstr "Benutzer blockieren"
 
-#: admin/check.php:130
+#: admin/check.php:131
 msgid "Description"
 msgstr "Beschreibung"
 
-#: admin/check.php:151
+#: admin/check.php:153
 msgid "ID"
 msgstr "ID"
-
-#: admin/check.php:152 admin/comments_check.php:19 admin/contact_check.php:19
-msgid "Reason"
-msgstr "Begründung"
-
-#: admin/check.php:153 admin/comments_check.php:20 admin/contact_check.php:20
-msgid "Date"
-msgstr "Datum"
 
 #: admin/comments.php:12 admin/contact.php:12 admin/help.php:134
 #: admin/help.php:168
@@ -351,7 +373,7 @@ msgstr "Kontakt Einstellungen"
 msgid "Security Settings"
 msgstr "Sicherheits Einstellungen"
 
-#: admin/config.php:55 index.php:249
+#: admin/config.php:55 index.php:253
 msgid "Help"
 msgstr "Hilfe"
 
@@ -1192,7 +1214,7 @@ msgstr "Suchen in"
 
 #: admin/settings.php:55
 msgid "Search in last x days"
-msgstr "Suche i den letzten x Tagen"
+msgstr "Suche in den letzten x Tagen"
 
 #: admin/settings.php:55
 msgid "(0 to disable)"
@@ -1309,35 +1331,59 @@ msgstr "(Datei nicht beschreibbar)"
 msgid "Beware of editing this file, unless you know what you're doing!!!"
 msgstr "Diese Datei nicht bearbeiten, wenn Du nicht weisst was Du tust!!!"
 
-#: classes/class.spamprotection.php:172
+#: classes/class.spamprotection.php:176
 msgid "Spam found"
 msgstr "Spam gefunden"
 
-#: classes/class.spamprotection.php:181
+#: classes/class.spamprotection.php:185
 msgid "Spam comment found"
 msgstr "Spamkommentar gefunden"
 
-#: classes/class.spamprotection.php:190
+#: classes/class.spamprotection.php:194
 msgid "Spam Contact Mail found"
 msgstr "Spam Kontaktnachricht gefunden"
 
-#: classes/class.spamprotection.php:403
+#: classes/class.spamprotection.php:203
+msgid "Banned user"
+msgstr "Gesperrte Benutzer"
+
+#: classes/class.spamprotection.php:421
 msgid "Spam Protection - Banned because of spam ads"
 msgstr "Spam Protection - Wegen Spam gebannt"
 
-#: classes/class.spamprotection.php:1032
+#: classes/class.spamprotection.php:1053
 msgid "Spam Protection - Too many false login attempts"
 msgstr "Spam Protection - Zuviele falsche Anmeldeversuche"
 
-#: classes/class.spamprotection.php:1129
+#: classes/class.spamprotection.php:1131
+msgid "User was blocked because of"
+msgstr "Benutzer wurde blockiert wegen"
+
+#: classes/class.spamprotection.php:1133
+msgid "User was blocked and banned because of"
+msgstr "Benutzer wurde blockiert und gesperrt wegen"
+
+#: classes/class.spamprotection.php:1135
+msgid "User was banned because of"
+msgstr "Benutzer wurde blockiert wegen"
+
+#: classes/class.spamprotection.php:1137
+msgid "too many false logins"
+msgstr "zu vielen Falschanmeldungen"
+
+#: classes/class.spamprotection.php:1139
+msgid "spam ads"
+msgstr "Spamanzeigen"
+
+#: classes/class.spamprotection.php:1197
 msgid "False logins on {PAGE_NAME}"
 msgstr "Fehllogins auf {PAGE_NAME}"
 
-#: classes/class.spamprotection.php:1130
+#: classes/class.spamprotection.php:1198
 msgid "Hello {MAIL_USER},"
 msgstr "Hallo {MAIL_USER},"
 
-#: classes/class.spamprotection.php:1131
+#: classes/class.spamprotection.php:1199
 msgid ""
 "We have detected some false logins for your account {MAIL_USED} on "
 "{PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}"
@@ -1346,7 +1392,7 @@ msgstr ""
 "fehlgeschlagene Loginversuche aufgefallen. Der letzte Versuch war am "
 "{MAIL_DATE} von IP {MAIL_IP}"
 
-#: classes/class.spamprotection.php:1132
+#: classes/class.spamprotection.php:1200
 msgid ""
 "In order to our security policy, we have temporarily disabled your account "
 "and banned the used IP in our System. You can use following link to unban "
@@ -1361,19 +1407,19 @@ msgstr ""
 "Passwort vergessen Funktion verwenden, solltest Du Dein Passwort vergessen "
 "haben."
 
-#: classes/class.spamprotection.php:1133
+#: classes/class.spamprotection.php:1201
 msgid "Unban your account: {UNBAN_LINK} "
 msgstr "Account freischalten: {UNBAN_LINK} "
 
-#: classes/class.spamprotection.php:1134
+#: classes/class.spamprotection.php:1202
 msgid "Password recovery: {PASSWORD_LINK} "
 msgstr "Passwort wiederherstellen: {PASSWORD_LINK} "
 
-#: classes/class.spamprotection.php:1135
+#: classes/class.spamprotection.php:1203
 msgid "Best regards"
 msgstr "Mit freundlichen Grüßen"
 
-#: index.php:88
+#: index.php:92
 msgid ""
 "<strong>Info!</strong> Your account has been reactivated, you can login as "
 "usual."
@@ -1381,15 +1427,15 @@ msgstr ""
 "<strong>Info!</strong> Account wieder hergestellt. Du kannst Dich wie "
 "gewöhnlich anmelden."
 
-#: index.php:174 index.php:242 index.php:246
+#: index.php:178 index.php:246 index.php:250
 msgid "Spam Protection"
 msgstr "Spam Schutz"
 
-#: index.php:180
+#: index.php:184
 msgid "Thank you for rating this plugin"
 msgstr "Danke dass Du das Plugin bewerten möchtest"
 
-#: index.php:181
+#: index.php:185
 msgid ""
 "This plugin is and will always be free of charge! If you found any errors, "
 "please contact me in OSClass Forum to solve your problems before rating this "
@@ -1399,7 +1445,7 @@ msgstr ""
 "Fehler finden, kontaktiere mich bitte im OSClass Forum um die Fehler zu "
 "beheben. Bevor Du das Plugin bewertest."
 
-#: index.php:182
+#: index.php:186
 msgid ""
 "If you are happy with this plugin and love to use it, please rate it now on "
 "OSClass Market!"
@@ -1407,31 +1453,31 @@ msgstr ""
 "Wenn Dir das Plugin gefällt und Du es gerne benutzt, bewerte es bitte jetzt "
 "im OSClass Marktplatz!"
 
-#: index.php:183
+#: index.php:187
 msgid "Thanks in advance.<br />Liath"
 msgstr "Danke im Voraus.<br />Liath"
 
-#: index.php:187
+#: index.php:191
 msgid "Rate now"
 msgstr "Jetzt bewerten"
 
-#: index.php:190
+#: index.php:194
 msgid "OSClass Forum"
 msgstr "OSClass Forum"
 
-#: index.php:192
+#: index.php:196
 msgid "Not now"
 msgstr "Nicht jetzt"
 
-#: index.php:248
+#: index.php:252
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: index.php:313
+#: index.php:317
 msgid "Check Spam"
 msgstr "Spam überprüfen"
 
-#: index.php:331
+#: index.php:335
 #, php-format
 msgid ""
 "Your email must be verified by a moderator because it has been identified as "
@@ -1444,7 +1490,7 @@ msgstr ""
 "den Empfänger weitergeleitet. Möchtest Du nicht, dass Deine E-Mail moderiert "
 "wird, klicke hier auf <a href='%s'>Löschen</a>"
 
-#: index.php:365
+#: index.php:369
 msgid ""
 "<strong>Information!</strong> Your account is suspended due to too much of "
 "false login attempts. Please contact support."
@@ -1452,7 +1498,7 @@ msgstr ""
 "<strong>Information!</strong> Dein Account wurde wegen zuvieler falscher "
 "Anmeldeversuche gesperrt. Bitte kontaktiere den Support."
 
-#: index.php:378
+#: index.php:382
 #, php-format
 msgid "<strong>Warning!</strong> Only %d login attempts remaining"
 msgstr "<strong>Achtung!</strong> Nur noch %d Anmeldeversuche verbleibend."

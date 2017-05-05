@@ -522,3 +522,15 @@ span.sp_review_close {
     color: #555;
     border: 0;    
 }
+
+.spamprot_bans > table > tbody > tr {
+    position: relative;
+}
+
+.spamprot_bans > table > tbody > tr > td > div.actions {
+    position: absolute;
+    background: #ccc;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
