@@ -1043,7 +1043,6 @@ class spam_prot extends DAO {
     
     // Functions for login protection
     function _checkAccount($search, $type = 'user') {
-        
         $this->dao->select('*');
 
         if ($type == 'user') {
@@ -1074,22 +1073,28 @@ class spam_prot extends DAO {
         }        
     }
     
-    function _checkAdminLogin($name, $password) {        
-        if (!$this->_checkAccount($name, 'admin')) {
+    function _checkAdminLogin($admin, $password) {
+        if (!osc_verify_password($password, (isset($admin['s_password']) ? $admin['s_password'] : ''))) {
             return false;
+            
         } else {
-            $admin = Admin::newInstance()->findByUsername($name);
-            if (!osc_verify_password($password, (isset($admin['s_password']) ? $admin['s_password'] : ''))) {
-                return false;
-                
-            } else {
-                return true;
-            }
+            return true;
         }        
     }
     
-    function _handleUserLogin($email, $ip = false) {
+    function _checkAdminBan($ip) {        
+        $this->dao->select('*');
+        $this->dao->from($this->_table_sp_logins);
+        $this->dao->where("s_name LIKE '%Admin/Mod%'");
+        $this->dao->where("s_ip", $ip);
         
+        $result = $this->dao->get();
+        if ($result->numRows() > 0) { return false; }
+        
+        return true;        
+    }
+    
+    function _handleUserLogin($email, $ip = false) {        
         if (!$ip) { $ip = $this->_IpUserLogin(); }
         
         $action = $this->_get('sp_security_login_action');
@@ -1105,6 +1110,22 @@ class spam_prot extends DAO {
             $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));
             $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
             $this->_addBanLog('blockban', 'falselogin', $email, $ip);    
+        }
+    }
+    
+    function _handleAdminLogin($name, $ip) {
+        $action = $this->_get('sp_admin_login_action');
+        $reason = sprintf(__("Spam Protection - Admin/Mod %s blocked in due to too many false login attempts", "spamprotection"), $name);
+        
+        if ($action == '1') {            
+            $this->_addBanLog('block', 'falselogin', $name, $ip, 'admin');    
+        } elseif ($action == '2') {
+            $this->dao->delete($this->_table_sp_logins, '`s_name` = "'.$name.'"');
+            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
+            $this->_addBanLog('ban', 'falselogin', $name, $ip, 'admin');    
+        } elseif ($action == '3') {
+            $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
+            $this->_addBanLog('blockban', 'falselogin', $name, $ip, 'admin');    
         }
     }
     
@@ -1142,7 +1163,8 @@ class spam_prot extends DAO {
         }      
     }
     
-    function _increaseAdminLogin($name) {        
+    function _increaseAdminLogin($name) {
+                
         $ip = $this->_IpUserLogin();                
         if ($this->dao->insert($this->_table_sp_logins, array('s_name' => $name, 's_ip' => $ip, 's_type' => 'admin', 'dt_date_login' => time()))) {
             return true;    
@@ -1158,6 +1180,16 @@ class spam_prot extends DAO {
         $this->dao->update($this->_table_user, array('b_enabled' => '1'), array('s_email' => $email));
         $this->dao->delete($this->_table_bans, '`s_ip` = "'.$ip.'"');
         $this->dao->delete($this->_table_sp_logins, '`s_email` = "'.$email.'"');
+        $this->dao->delete($this->_table_sp_logins, '`s_ip` = "'.$ip.'"');
+        $this->dao->delete($this->_table_sp_logins, '`dt_date_login` < "'.(time()-$time).'"');
+    }
+    
+    function _resetAdminLogin($name) {
+        $time = $this->_get('sp_security_login_time')*60;
+        $ip = $this->_IpUserLogin();
+        
+        $this->dao->delete($this->_table_bans, '`s_ip` = "'.$ip.'"');
+        $this->dao->delete($this->_table_sp_logins, '`s_name` = "'.$name.'"');
         $this->dao->delete($this->_table_sp_logins, '`s_ip` = "'.$ip.'"');
         $this->dao->delete($this->_table_sp_logins, '`dt_date_login` < "'.(time()-$time).'"');
     }
@@ -1203,10 +1235,11 @@ class spam_prot extends DAO {
         */
     }
     
-    function _addBanLog($type, $reason, $email = false, $ip = false) {
+    function _addBanLog($type, $reason, $email = false, $ip = false, $type = 'user') {
         
         if (!$ip) { $ip = $this->_IpUserLogin(); }
-        if ($email) { $user = User::newInstance()->findByEmail($email); }
+        if ($email && $type == 'user') { $user = User::newInstance()->findByEmail($email); }
+        elseif ($email && $type == 'admin') { $user = Admin::newInstance()->findByUsername($email); }
         
         if ($type == 'block') {
             $reason_sql = __("User was blocked because of", "spamprotection");
@@ -1343,14 +1376,14 @@ class spam_prot extends DAO {
                 <div id="spamprot_upgrade" style="display: none;">
                     <div id="spamprot_upgrade_close">x</div>
                     <div id="spamprot_upgrade_info">
-                        <h3>'.__("Spam Protection - Database need upgrade!", "spamprotection").'</h3>    
-                        <p>'.__("Since you have upgraded this plugin, the database need an upgrade also.<br />To upgrade it now, press the button below.", "spamprotection").'</p>    
+                        <h2>'.__("Spam Protection - Database need upgrade!", "spamprotection").'</h2>    
+                        <p>'.__("Since you have upgraded this plugin, the database need an upgrade also.<br /><strong>To upgrade it now, press the button below.</strong>", "spamprotection").'</p>    
                         <p>'.__("If you want to backup your data before, you can use the export function.<br />You will find an import function in the plugin settings.", "spamprotection").'</p>    
-                        <p>'.__("Of course you can do the upgrade manually. For this case you will find the database tables here", "spamprotection").'</p>
+                        <p>'.__("Of course you can do the upgrade manually.<br /><em>For this case you will find the database tables here</em>", "spamprotection").'</p>
                         
-                        <div style="height: 180px; overflow: auto; text-align: left; margin: 15px 0;">
+                        <div style="height: 180px; text-align: left; margin: 15px 0;">
                             <div id="spamprot_upgrade_tables">
-                                <pre style="margin: 0;"><small><strong>'.$tables.'</strong></small></pre>
+                                <small><strong><textarea style="width: 100%; height: 100%; resize: none; overflow: overlay;">'.$tables.'</textarea></strong></small>
                             </div>                            
                         </div>                            
                     </div>
@@ -1360,9 +1393,7 @@ class spam_prot extends DAO {
                         <a class="btn btn-green" href="?sp_upgrade=upgrade">'.__("Upgrade now", "spamprotection").'</a>
                         <a class="btn btn-red" href="">'.__("Test again", "spamprotection").'</a>
                         <div style="clear: both;"></div>
-                    </div>
-                    
-                    <p><small>'.__("This message is only shown once. If you close this window, remember to do the upgrade manually!", "spamprotection").'</small></p>    
+                    </div>    
                 </div>
             </div>
         ';        

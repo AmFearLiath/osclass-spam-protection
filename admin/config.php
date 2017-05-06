@@ -27,8 +27,10 @@ if (Params::getParam('tab') == 'sp_contact') {
     $comments = true;    
 } elseif (Params::getParam('tab') == 'sp_security') {
     $security = true;    
-} elseif (Params::getParam('tab') == 'sp_shelp') {
+} elseif (Params::getParam('tab') == 'sp_help') {
     $help = true;    
+} elseif (Params::getParam('tab') == 'sp_config') {
+    $config = true;    
 } else {
     $settings = true;    
 }
@@ -84,11 +86,11 @@ if (Params::getParam('settings') == 'save') {
             <div id="sp_help" class="tab-content<?php if (isset($help) && $help) { echo ' current'; } ?>">
                 <?php include_once(osc_plugin_path('spamprotection/admin/help.php')); ?>
             </div>
-
-            <div id="sp_config" class="tab-content<?php if (isset($config) && $config) { echo ' current'; } ?>">
-                <?php include_once(osc_plugin_path('spamprotection/admin/plugin.php')); ?>
-            </div>
             
-        </form>        
+        </form>
+
+        <div id="sp_config" class="tab-content<?php if (isset($config) && $config) { echo ' current'; } ?>">
+            <?php include_once(osc_plugin_path('spamprotection/admin/plugin.php')); ?>
+        </div>        
     </div>   
 </div>
