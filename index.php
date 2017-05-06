@@ -44,7 +44,7 @@ Changelog
 
 1.3.2 - Added optional search for duplicates in descriptions. Searchalgorythm improved. Configuration page changed.
 
-1.3.3 â€“ Global var changed, to prevent error messages
+1.3.3 – Global var changed, to prevent error messages
 
 1.3.4 - Stopwords now shown, if ad was blocked for this reason, Search for duplicates improved, translations corrected
 
@@ -58,9 +58,7 @@ Changelog
 
 1.5.2 - Added User ban to check ads page, fix problem with clicking id on check ads page, added time range for search in duplicates, added cron to automatically unban user after defined time 
 
-1.5.3 - Added Ban overview, some code cleanings, correcting translations
-
-1.6.0 - Added admin login protection, upgrade check, import/export for settings and data
+1.6.0 - Added Ban overview, some code cleanings, correcting translations 
 */    
 require_once('classes/class.spamprotection.php');
 $sp = new spam_prot;
@@ -442,8 +440,7 @@ function sp_check_admin_login() {
         $ip = spam_prot::newInstance()->_IpUserLogin();
         //spam_prot::newInstance()->_handleAdminLogin($email, $logins, $ip);
         
-        if (spam_prot::newInstance()->_get('sp_admin_login_inform') == '1') {
-            $debug->do_log('debug', 'Flashmessage');                
+        if (spam_prot::newInstance()->_get('sp_admin_login_inform') == '1') {                
             ob_get_clean();
             osc_add_flash_error_message(sprintf(__('<strong>Information!</strong> Your account is disabled due to too much of false login attempts. Please contact the webmaster.', 'spamprotection'), ($max_logins-$logins)));
         }
