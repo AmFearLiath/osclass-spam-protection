@@ -1,7 +1,9 @@
 <?php
-require_once(ABS_PATH.'/oc-load.php');
-require_once(osc_plugin_path('spamprotection/classes/class.spamprotection.php'));
-
+if (!defined('OC_ADMIN'))
+    exit('Direct access is not allowed.');
+	 if (!osc_is_admin_user_logged_in()) {
+    die;
+}
 $sp = new spam_prot;
 $data = $sp->_get();
 
@@ -14,11 +16,11 @@ $data = $sp->_get();
         <li class="contacttab-link " data-tab="sp_contact_stopwords"><a><?php _e('Stopwords', 'spamprotection'); ?></a></li>
         <li class="contacttab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
     </ul>
-    
+
     <div id="sp_contact_options" class="sp_contact_options enabled">
-    
+
         <div id="sp_contact_mainfeatures" class="contacttab-content current">
-        
+
             <div class="row form-group">
                 <label>
                     <input type="checkbox" name="sp_contact_activate" value="1"<?php if (!empty($data['sp_contact_activate'])) { echo ' checked="checked"'; } ?> />
@@ -26,7 +28,7 @@ $data = $sp->_get();
                 </label><br />
                 <small><?php _e('This Option activates the Contact Form Spam Protection. Some features are optional and can be de/activated separetely', 'spamprotection'); ?></small>
             </div>
-        
+
             <div class="row form-group">
                 <div>
                     <label>
@@ -39,7 +41,7 @@ $data = $sp->_get();
                     <small><?php _e('This Option enables the System to check for links in contacts and if found, marks mail as spam', 'spamprotection'); ?></small>
                 </div>
             </div>
-            
+
             <div class="row form-group">
                 <label>
                     <input type="checkbox" name="sp_contact_honeypot" value="1"<?php if (!empty($data['sp_contact_honeypot'])) { echo ' checked="checked"'; } ?> />
@@ -57,12 +59,12 @@ $data = $sp->_get();
                     </div>
                     <div style="clear: both;"></div>
                     <small><?php _e('Good names would be "address, time, date or something else, dont name it honeypot ;)', 'spamprotection'); ?></small>
-                    
+
                 </div>
             </div>
-                    
+
         </div>
-        
+
         <div id="sp_contact_emailblock" class="contacttab-content">
             <div class="row form-group">
                 <label>
@@ -87,9 +89,9 @@ $data = $sp->_get();
                     <label for="contact_blocked_tld"><?php _e('Enter the blocked E-Mail TLD, separated by ,', 'spamprotection'); ?></label><br />
                     <textarea class="form-control" name="contact_blocked_tld" style="height: 150px;"><?php if (!empty($data['contact_blocked_tld'])) { echo $data['contact_blocked_tld']; } ?></textarea>
                 </div>
-            </div>        
+            </div>
         </div>
-        
+
         <div id="sp_contact_stopwords" class="contacttab-content">
             <div class="row form-group">
                 <h3><?php _e('Stop Words', 'spamprotection'); ?></h3>
@@ -113,9 +115,9 @@ $data = $sp->_get();
                 <br /><br />
                 <?php _e('<strong>Enter here the words to be blocked in title or contacts (separated by ,)</strong>', 'spamprotection'); ?>
                 <textarea class="form-control" name="sp_contact_stopwords" style="height: 200px;"><?php if (!empty($data['sp_contact_stopwords'])) { echo $data['sp_contact_stopwords']; } ?></textarea>
-            </div>         
-        </div>            
-        
-    </div> 
+            </div>
+        </div>
+
+    </div>
 
 </div>

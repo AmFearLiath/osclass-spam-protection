@@ -1,12 +1,14 @@
 <?php
-require_once(ABS_PATH.'/oc-load.php');
-require_once(osc_plugin_path('spamprotection/classes/class.spamprotection.php'));
-
+if (!defined('OC_ADMIN'))
+    exit('Direct access is not allowed.');
+	 if (!osc_is_admin_user_logged_in()) {
+    die;
+}
 $sp = new spam_prot;
 $params = Params::getParamsAsArray();
 
 if (isset($params['action']) && is_numeric($params['id'])) {
-    $sp->_spamActionComments($params['action'], $params['id']);    
+    $sp->_spamActionComments($params['action'], $params['id']);
 }
 ?>
 <div class="compare table-contains-actions" id="spamprot">
@@ -17,16 +19,16 @@ if (isset($params['action']) && is_numeric($params['id'])) {
                 <th class="col-status "><?php _e('Status', 'spamprotection'); ?></th>
                 <th class="col-author "><?php _e('Author', 'spamprotection'); ?></th>
                 <th class="col-comment "><?php _e('Reason', 'spamprotection'); ?></th>
-                <th class="col-date sorting_desc"><?php _e('Date', 'spamprotection'); ?></th>                    
+                <th class="col-date sorting_desc"><?php _e('Date', 'spamprotection'); ?></th>
             </tr>
         </thead>
         <tbody>
-        
+
             <?php
                 $comments = $sp->_getResult('t_sp_comments');
-                
-                foreach($comments as $key => $value) {                    
-                    $user = User::newInstance()->findByPrimaryKey($value['fk_i_user_id']);                    
+
+                foreach($comments as $key => $value) {
+                    $user = User::newInstance()->findByPrimaryKey($value['fk_i_user_id']);
                     echo '
                     <tr class="status-blocked">
                         <td class="col-status-border"></td>
@@ -44,7 +46,7 @@ if (isset($params['action']) && is_numeric($params['id'])) {
                         <td class="col-comment">'.$value['s_reason'].'</td>
                         <td class="col-date">'.$value['dt_date'].'</td>
                     </tr>
-                    ';    
+                    ';
                 }
             ?>
         </tbody>

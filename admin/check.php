@@ -1,7 +1,9 @@
 <?php
-require_once(ABS_PATH.'/oc-load.php');
-require_once(osc_plugin_path('spamprotection/classes/class.spamprotection.php'));
-            
+if (!defined('OC_ADMIN'))
+    exit('Direct access is not allowed.');
+	 if (!osc_is_admin_user_logged_in()) {
+    die;
+}
 $sp = new spam_prot;
 $id = Params::getParam('itemid');
 
@@ -18,9 +20,9 @@ if ($user_spams > 0) {
 <div class="compare" id="spamprot">
 
     <h2><?php if (isset($item['s_reason'])) { echo $item['s_reason']; } ?></h2>
-    
-    <div class="infobox halfrow">        
-        
+
+    <div class="infobox halfrow">
+
         <table style="width: 100%">
             <?php if (!empty($item['fk_i_user_id'])) { ?>
             <tr>
@@ -30,7 +32,7 @@ if ($user_spams > 0) {
              <tr>
                 <td colspan="2"><strong><?php _e('User is not registered', 'spamprotection'); ?></strong></td>
             </tr>
-            <?php } ?> 
+            <?php } ?>
             <tr>
                 <td class="key"><?php _e('Blocked ads summary', 'spamprotection'); ?></td>
                 <td class="value"><button id="info_blocked_ads"><?php echo $user_spams; ?></button></td>
@@ -80,13 +82,13 @@ if ($user_spams > 0) {
                 <td class="value"><?php echo $user['s_access_ip']; ?></td>
             </tr>
             <?php } ?>
-            <tr><td colspan="2">&nbsp;</td></tr>            
+            <tr><td colspan="2">&nbsp;</td></tr>
             <tr>
                 <td class="key"><?php _e('Ad Date', 'spamprotection'); ?></td>
                 <td class="value"><?php if (isset($item['dt_date'])) { echo $item['dt_date']; } ?></td>
             </tr>
         </table>
-        
+
         <div class="actionbuttons">
             <a class="btn btn-submit" onclick="return confirm('Are you sure you want to activate this item?');" href="<?php echo osc_admin_base_url(true).'?page=items&spam=activate&item='.$id; ?>"><?php _e('Activate Ad', 'spamprotection'); ?></a>
             <a class="btn" onclick="return confirm('Are you sure you want to delete this item?');" href="<?php list($csrfname, $csrftoken) = osc_csrfguard_generate_token(); echo osc_admin_base_url(true).'?page=items&action=delete&id[]='.$id.'&CSRFName='.$csrfname.'&CSRFToken='.$csrftoken; ?>"><?php _e('Delete Ad', 'spamprotection'); ?></a>
@@ -96,32 +98,32 @@ if ($user_spams > 0) {
     </div>
     <div class="infobox halfrow">
         <div class="container">
-        
+
             <div class="viewToggle" title="Toggle view of description between HTML/Code">
                 <i class="fa fa-code"></i>
             </div>
-                            
+
             <ul class="langtabs">
                 <?php foreach(osc_get_locales() as $k => $v) {
-                $current = ''; 
+                $current = '';
                 if (osc_locale_code() == $v['pk_c_code']) {
                     $current = ' current';
-                }    
+                }
                 ?>
                 <li class="langtab-link<?php echo $current; ?>" data-tab="tab-<?php echo $v['pk_c_code']; ?>"><a><?php echo $v['s_name']; ?></a></li>
                 <?php } ?>
             </ul>
 
-            <?php 
-            foreach(osc_get_locales() as $k => $v) { 
-                $current = ''; 
+            <?php
+            foreach(osc_get_locales() as $k => $v) {
+                $current = '';
                 if (osc_locale_code() == $v['pk_c_code']) {
                     $current = ' current';
-                }                          
+                }
                 foreach($item_spam as $ik => $iv) {
                     if ($v['pk_c_code'] == $iv['fk_c_locale_code']) { ?>
-                    
-                    <div id="tab-<?php echo $v['pk_c_code']; ?>" class="langtab-content<?php echo $current; ?>">                           
+
+                    <div id="tab-<?php echo $v['pk_c_code']; ?>" class="langtab-content<?php echo $current; ?>">
                         <div class="form-group">
                             <h3><?php echo osc_esc_html($iv['s_title']); ?></h3>
                         </div>
@@ -129,13 +131,13 @@ if ($user_spams > 0) {
                             <label class="control-label"><?php _e('Description', 'spamprotection'); ?></label><br />
                             <textarea id="descriptionCode" class="form-control" readonly="readonly"><?php echo osc_esc_html($iv['s_description']); ?></textarea>
                             <div id="descriptionHTML"><?php echo $iv['s_description']; ?></div>
-                        </div>       
+                        </div>
                     </div>
             <?php
-                    } 
-                } 
+                    }
+                }
             } ?>
-        
+
         </div>
     </div>
 </div>
@@ -150,19 +152,19 @@ if ($user_spams > 0) {
                 <td><?php _e('Date', 'spamprotection'); ?></td>
             </tr>
             <?php
-            foreach($item_spams as $k => $v) { ?>            
+            foreach($item_spams as $k => $v) { ?>
             <tr>
                 <td><?php
                     $vItem = $sp->_getRow('t_item', array('key' => 'pk_i_id', 'value' => $v['fk_i_item_id']));
                     if ($vItem) {
-                        echo '<a href="'.osc_admin_base_url(true).'?page=items&action=item_edit&id='.$v['fk_i_item_id'].'">'.$v['fk_i_item_id'].'</a>';    
+                        echo '<a href="'.osc_admin_base_url(true).'?page=items&action=item_edit&id='.$v['fk_i_item_id'].'">'.$v['fk_i_item_id'].'</a>';
                     } else {
-                        echo $v['fk_i_item_id'];    
+                        echo $v['fk_i_item_id'];
                     }
                 ?></td>
                 <td><?php echo $v['s_reason']; ?></td>
                 <td><?php echo $v['dt_date']; ?></td>
-            </tr>    
+            </tr>
             <?php }
         ?>
         </table>
@@ -172,11 +174,11 @@ if ($user_spams > 0) {
 $(document).ready(function(){
     $(document).on("click", "#info_blocked_ads", function(event){
         event.preventDefault();
-        $("#blocked_ads").fadeToggle("slow");    
+        $("#blocked_ads").fadeToggle("slow");
     });
     $(document).on("click", "#blocked_ads", function(event){
         event.preventDefault();
-        $("#blocked_ads").fadeToggle("slow");    
+        $("#blocked_ads").fadeToggle("slow");
     });
 });
 </script>

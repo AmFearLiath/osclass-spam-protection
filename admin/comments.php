@@ -1,7 +1,9 @@
 <?php
-require_once(ABS_PATH.'/oc-load.php');
-require_once(osc_plugin_path('spamprotection/classes/class.spamprotection.php'));
-
+if (!defined('OC_ADMIN'))
+    exit('Direct access is not allowed.');
+	 if (!osc_is_admin_user_logged_in()) {
+    die;
+}
 $sp = new spam_prot;
 $data = $sp->_get();
 
@@ -14,11 +16,11 @@ $data = $sp->_get();
         <li class="commtab-link " data-tab="sp_comm_stopwords"><a><?php _e('Stopwords', 'spamprotection'); ?></a></li>
         <li class="commtab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
     </ul>
-    
+
     <div id="sp_comment_options" class="sp_comment_options enabled">
-    
+
         <div id="sp_comm_mainfeatures" class="commtab-content current">
-        
+
             <div class="row form-group">
                 <label>
                     <input type="checkbox" name="sp_comment_activate" value="1"<?php if (!empty($data['sp_comment_activate'])) { echo ' checked="checked"'; } ?> />
@@ -26,7 +28,7 @@ $data = $sp->_get();
                 </label><br />
                 <small><?php _e('This Option activates the Comment Spam Protection. Some features are optional and can be de/activated separetely', 'spamprotection'); ?></small>
             </div>
-        
+
             <div class="row form-group">
                 <div>
                     <label>
@@ -40,9 +42,9 @@ $data = $sp->_get();
                     <small><?php _e('This Option enables the System to check for links in comments and if found, disable it', 'spamprotection'); ?></small>
                 </div>
             </div>
-                    
+
         </div>
-        
+
         <div id="sp_comm_emailblock" class="commtab-content">
             <div class="row form-group">
                 <label>
@@ -67,9 +69,9 @@ $data = $sp->_get();
                     <label for="comment_blocked_tld"><?php _e('Enter the blocked E-Mail TLD, separated by ,', 'spamprotection'); ?></label><br />
                     <textarea class="form-control" name="comment_blocked_tld" style="height: 150px;"><?php if (!empty($data['comment_blocked_tld'])) { echo $data['comment_blocked_tld']; } ?></textarea>
                 </div>
-            </div>        
+            </div>
         </div>
-        
+
         <div id="sp_comm_stopwords" class="commtab-content">
             <div class="row form-group">
                 <h3><?php _e('Stop Words', 'spamprotection'); ?></h3>
@@ -93,9 +95,9 @@ $data = $sp->_get();
                 <br /><br />
                 <?php _e('<strong>Enter here the words to be blocked in title or comments (separated by ,)</strong>', 'spamprotection'); ?>
                 <textarea class="form-control" name="sp_comment_stopwords" style="height: 200px;"><?php if (!empty($data['sp_comment_stopwords'])) { echo $data['sp_comment_stopwords']; } ?></textarea>
-            </div>         
-        </div>            
-        
-    </div> 
+            </div>
+        </div>
+
+    </div>
 
 </div>

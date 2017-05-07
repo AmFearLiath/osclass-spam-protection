@@ -1,13 +1,15 @@
 <?php
-require_once(ABS_PATH.'/oc-load.php');
-require_once(osc_plugin_path('spamprotection/classes/class.spamprotection.php'));
-
+if (!defined('OC_ADMIN'))
+    exit('Direct access is not allowed.');
+	 if (!osc_is_admin_user_logged_in()) {
+    die;
+}
 $sp = new spam_prot;
 $data = $sp->_get();
 $htaccess_file = ABS_PATH.'/.htaccess';
 $htaccess_writable = is_writable($htaccess_file);
 if ($htaccess_writable) {
-    $htaccess_content = file_get_contents($htaccess_file);     
+    $htaccess_content = file_get_contents($htaccess_file);
 }
 ?>
 <div class="settings">
@@ -19,10 +21,10 @@ if ($htaccess_writable) {
         <li class="subtab-link" data-tab="sp_htaccess"><a><?php _e('.htaccess Editor', 'spamprotection'); ?></a></li>
         <li class="subtab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
     </ul>
-    
+
     <div id="sp_options" class="sp_options enabled">
         <div id="sp_mainfeatures" class="subtab-content current">
-        
+
             <div class="row form-group">
                 <label>
                     <input type="checkbox" name="sp_activate" value="1"<?php if (!empty($data['sp_activate'])) { echo ' checked="checked"'; } ?> />
@@ -30,7 +32,7 @@ if ($htaccess_writable) {
                 </label><br />
                 <small><?php _e('This Option activates the whole Spam Protection. Some features are optional and can be de/activated separately', 'spamprotection'); ?></small>
             </div>
-        
+
             <div class="row form-group">
                 <div class="floating">
                     <label>
@@ -40,7 +42,7 @@ if ($htaccess_writable) {
                         <option value="0"<?php if (empty($data['sp_duplicates_as']) || $data['sp_duplicates_as'] == '0') { echo ' selected="selected"'; } ?>><?php _e('Deactivated', 'spamprotection'); ?></option>
                         <option value="1"<?php if (!empty($data['sp_duplicates_as']) && $data['sp_duplicates_as'] == '1') { echo ' selected="selected"'; } ?>><?php _e('Per user', 'spamprotection'); ?></option>
                         <option value="2"<?php if (!empty($data['sp_duplicates_as']) && $data['sp_duplicates_as'] == '2') { echo ' selected="selected"'; } ?>><?php _e('All items', 'spamprotection'); ?></option>
-                    </select>                        
+                    </select>
                 </div>
                 <div class="floating" id="sp_duplicates_cont"<?php if (empty($data['sp_duplicates_as']) || $data['sp_duplicates_as'] == '0') { echo ' style="display: none;"'; } ?>>
                     <label>
@@ -49,7 +51,7 @@ if ($htaccess_writable) {
                     <select id="sp_duplicates" name="sp_duplicates">
                         <option value="0"<?php if (empty($data['sp_duplicates']) || $data['sp_duplicates'] == '0') { echo ' selected="selected"'; } ?>><?php _e('Only title', 'spamprotection'); ?></option>
                         <option value="1"<?php if (!empty($data['sp_duplicates']) && $data['sp_duplicates'] == '1') { echo ' selected="selected"'; } ?>><?php _e('Title and description', 'spamprotection'); ?></option>
-                    </select>                        
+                    </select>
                 </div>
                 <div class="floating" id="sp_duplicate_type_cont"<?php if (empty($data['sp_duplicates_as']) || $data['sp_duplicates_as'] == '0') { echo ' style="display: none;"'; } ?>>
                     <label>
@@ -69,15 +71,15 @@ if ($htaccess_writable) {
                 <div style="clear: both;"></div>
                 <small><?php _e('This Option enables the System to check new ads for duplicates and mark them as spam', 'spamprotection'); ?></small>
             </div>
-        
-            <div class="row form-group">                    
+
+            <div class="row form-group">
                 <label>
                     <input type="checkbox" name="sp_mxr" value="1"<?php if (!empty($data['sp_mxr'])) { echo ' checked="checked"'; } ?> />
                     <?php _e('Check MX Record of used Mail', 'spamprotection'); ?>
                 </label><br />
                 <small><?php _e('This option enables the System to check the MX Record of the submitted Email address', 'spamprotection'); ?></small>
             </div>
-            
+
             <div class="row form-group">
                 <label>
                     <input type="checkbox" name="sp_honeypot" value="1"<?php if (!empty($data['sp_honeypot'])) { echo ' checked="checked"'; } ?> />
@@ -88,11 +90,11 @@ if ($htaccess_writable) {
                     <label for="honeypot_name"><?php _e('Enter the name of the hidden honeypot field', 'spamprotection'); ?> <span id="validname"></span></label><br />
                     <input type="text" class="form-control" name="honeypot_name" value="<?php if (!empty($data['honeypot_name'])) { echo $data['honeypot_name']; } ?>" /><br />
                     <small><?php _e('Good names would be "item_runtime, user_age, price_range or something else, dont name it honeypot ;)', 'spamprotection'); ?></small>
-                    
+
                 </div>
-            </div>        
+            </div>
         </div>
-        
+
         <div id="sp_emailblock" class="subtab-content">
             <div class="row form-group">
                 <label>
@@ -117,9 +119,9 @@ if ($htaccess_writable) {
                     <label for="blocked"><?php _e('Enter the blocked E-Mail TLD, separated by ,', 'spamprotection'); ?></label><br />
                     <textarea class="form-control" name="blocked_tld" style="height: 150px;"><?php if (!empty($data['blocked_tld'])) { echo $data['blocked_tld']; } ?></textarea>
                 </div>
-            </div>        
+            </div>
         </div>
-        
+
         <div id="sp_stopwords" class="subtab-content">
             <div class="row form-group">
                 <h3><?php _e('Stop Words', 'spamprotection'); ?></h3>
@@ -143,10 +145,10 @@ if ($htaccess_writable) {
                 <br /><br />
                 <?php _e('<strong>Enter here the words to be blocked in title or descriptions (separated by ,)</strong>', 'spamprotection'); ?>
                 <textarea class="form-control" name="sp_stopwords" style="height: 200px;"><?php if (!empty($data['sp_stopwords'])) { echo $data['sp_stopwords']; } ?></textarea>
-            </div>         
+            </div>
         </div>
-        
-        <div id="sp_htaccess" class="subtab-content">            
+
+        <div id="sp_htaccess" class="subtab-content">
             <div class="row form-group">
                 <div id="attention">
                     <div id="attention_content">
@@ -162,9 +164,9 @@ if ($htaccess_writable) {
                 <small><?php _e('Beware of editing this file, unless you know what you\'re doing!!!', 'spamprotection'); ?></small>
                 <textarea class="form-control" name="sp_htaccess" style="height: 200px;"<?php //if (!$htaccess_writable) { echo ' disabled="disabled"'; } ?>><?php if (!empty($htaccess_content)) { echo $htaccess_content; } ?></textarea>
                 <?php if (osc_get_preference('htaccess_warning', 'plugin_spamprotection') == '1') { echo '<input type="hidden" name="attention_htaccess" value="1" />'; } ?>
-                
-            </div>        
+
+            </div>
         </div>
-    </div> 
-    
+    </div>
+
 </div>

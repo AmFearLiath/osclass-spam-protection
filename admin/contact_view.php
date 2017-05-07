@@ -1,7 +1,9 @@
 <?php
-require_once(ABS_PATH.'/oc-load.php');
-require_once(osc_plugin_path('spamprotection/classes/class.spamprotection.php'));
-
+if (!defined('OC_ADMIN'))
+    exit('Direct access is not allowed.');
+	 if (!osc_is_admin_user_logged_in()) {
+    die;
+}
 $sp = new spam_prot;
 $params = Params::getParamsAsArray();
 
@@ -11,14 +13,14 @@ $item = $sp->_getRow('t_desc', array('key' => 'fk_i_item_id', 'value' => $contac
 if ($contact['fk_i_user_id']) {
     $user = User::newInstance()->findByPrimaryKey($contact['fk_i_user_id']);
     View::newInstance()->_exportVariableToView('users', $user);
-    $user_link = '<a href="'.osc_admin_base_url(true).'?page=users&action=edit&id='.$user['pk_i_id'].'">'.$user['s_name'].'</a>';    
-}    
+    $user_link = '<a href="'.osc_admin_base_url(true).'?page=users&action=edit&id='.$user['pk_i_id'].'">'.$user['s_name'].'</a>';
+}
 ?>
 
 <div id="view_contact">
 
     <h3><?php echo $contact['s_reason']; ?></h3>
-    
+
     <div class="contact_wrapper">
         <div class="author_info infobox halfrow">
             <h4><?php _e("About the Author", "spamprotection"); ?></h4>
@@ -35,9 +37,9 @@ if ($contact['fk_i_user_id']) {
             <p class="contact_body"><?php echo sprintf(__("Comment: %s", "spamprotection"), $contact['s_user_message']); ?></p>
         </div>
     </div>
-    
+
     <div style="clear: both;"></div>
-    
+
     <div class="contact_actions halfrow">
         <a class="btn btn-submit" onclick="return confirm('<?php _e("Are you sure you want to forward this mail to the user?", "spamprotection"); ?>');" href="<?php echo osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/contact_check.php?action=forward&id='.$params['id']); ?>"><?php _e('Forward mail', 'spamprotection'); ?></a>
         <a class="btn" onclick="return confirm('<?php _e("Are you sure you want to delete this mail?", "spamprotection"); ?>');" href="<?php echo osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/contact_check.php?action=delete&id='.$params['id']); ?>"><?php _e('Delete mail', 'spamprotection'); ?></a>
