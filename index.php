@@ -61,8 +61,14 @@ Changelog
 1.5.3 - Added Ban overview, some code cleanings, correcting translations 
 
 1.6.0 - Redesign configuration area, added admin login protection (need some fixes), Import/Export for settings and database (import need to be completed) 
-*/    
-require_once('classes/class.spamprotection.php');
+*/
+    
+if (!defined('OC_ADMIN')) {
+    exit('Direct access is not allowed.');
+} if (!osc_is_admin_user_logged_in()) {
+    die;
+}
+
 $sp = new spam_prot;
 
 if (Params::getParam('sp_upgrade') == 'upgrade') {
