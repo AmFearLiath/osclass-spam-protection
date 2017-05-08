@@ -58,7 +58,9 @@ Changelog
 
 1.5.2 - Added User ban to check ads page, fix problem with clicking id on check ads page, added time range for search in duplicates, added cron to automatically unban user after defined time 
 
-1.6.0 - Added Ban overview, some code cleanings, correcting translations 
+1.5.3 - Added Ban overview, some code cleanings, correcting translations 
+
+1.6.0 - Redesign configuration area, added admin login protection (need some fixes), Import/Export for settings and database (import need to be completed) 
 */    
 require_once('classes/class.spamprotection.php');
 $sp = new spam_prot;
