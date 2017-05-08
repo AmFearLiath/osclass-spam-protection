@@ -62,13 +62,13 @@ Changelog
 
 1.6.0 - Redesign configuration area, added admin login protection (need some fixes), Import/Export for settings and database (import need to be completed) 
 */
-    
-if (!defined('OC_ADMIN')) {
-    exit('Direct access is not allowed.');
-} if (!osc_is_admin_user_logged_in()) {
-    die;
-}
 
+define('SPP_PATH', dirname(__FILE__) . '/');
+define('SPP_URL', osc_plugin_url(__FILE__));
+
+require('classes/class.spamprotection.php'); 
+require('functions/index.php');
+ 
 $sp = new spam_prot;
 
 if (Params::getParam('sp_upgrade') == 'upgrade') {
