@@ -17,11 +17,15 @@ class spam_prot extends DAO {
         $this->_table_comment           = '`'.DB_TABLE_PREFIX.'t_item_comment`';
         $this->_table_desc              = '`'.DB_TABLE_PREFIX.'t_item_description`';
         $this->_table_bans              = '`'.DB_TABLE_PREFIX.'t_ban_rule`';
+        $this->_table_pref              = '`'.DB_TABLE_PREFIX.'t_preference`';
         $this->_table_sp_ban_log        = '`'.DB_TABLE_PREFIX.'t_spam_protection_ban_log`';
         $this->_table_sp_items          = '`'.DB_TABLE_PREFIX.'t_spam_protection_items`';
         $this->_table_sp_comments       = '`'.DB_TABLE_PREFIX.'t_spam_protection_comments`';
         $this->_table_sp_contacts       = '`'.DB_TABLE_PREFIX.'t_spam_protection_contacts`';
         $this->_table_sp_logins         = '`'.DB_TABLE_PREFIX.'t_spam_protection_logins`';
+        
+        include_once('class.debugger.php');
+        $this->debug                    = new sp_debug;
         
         parent::__construct();
     }
@@ -1362,7 +1366,7 @@ class spam_prot extends DAO {
         }    
     }
     
-    function _upgradeDatabaseInfo($version) {
+    function _upgradeDatabaseInfo($error) {
         $params = Params::getParamsAsArray();
         if (isset($params['file'])) { }
         $file = osc_plugin_resource('spamprotection/assets/create_table.sql');
@@ -1376,7 +1380,8 @@ class spam_prot extends DAO {
                 <div id="spamprot_upgrade" style="display: none;">
                     <div id="spamprot_upgrade_close">x</div>
                     <div id="spamprot_upgrade_info">
-                        <h2>'.__("Spam Protection - Database need upgrade!", "spamprotection").'</h2>    
+                        <h2>'.__("Spam Protection - Database need upgrade!", "spamprotection").'</h2>
+                        '.$error.'    
                         <p>'.__("Since you have upgraded this plugin, the database need an upgrade also.<br /><strong>To upgrade it now, press the button below.</strong>", "spamprotection").'</p>    
                         <p>'.__("If you want to backup your data before, you can use the export function.<br />You will find an import function in the plugin settings.", "spamprotection").'</p>    
                         <p>'.__("Of course you can do the upgrade manually.<br /><em>For this case you will find the database tables here</em>", "spamprotection").'</p>
@@ -1438,17 +1443,127 @@ class spam_prot extends DAO {
         return true;    
     }
     
-    private function _upgradeCheckSplit($sql, $explodeChars)
-        {
-            if (preg_match('|^(.*)DELIMITER (\S+)\s(.*)$|isU', $sql, $matches)) {
-                $queries = explode($explodeChars, $matches[1]);
-                $recursive = $this->splitSQL($matches[3], $matches[2]);
+    private function _upgradeCheckSplit($sql, $explodeChars) {
+        if (preg_match('|^(.*)DELIMITER (\S+)\s(.*)$|isU', $sql, $matches)) {
+            $queries = explode($explodeChars, $matches[1]);
+            $recursive = $this->splitSQL($matches[3], $matches[2]);
 
-                return array_merge($queries, $recursive);
+            return array_merge($queries, $recursive);
+        }
+        else {
+            return explode($explodeChars, $sql);
+        }
+    }
+    
+    function _selectExport($table, $where = false) {
+        $this->dao->select('*');
+        $this->dao->from($table);
+        
+        if (is_array($where)) { $this->dao->where($where['key'], $where['value']); }
+        
+        $result = $this->dao->get();
+        if ($result->numRows() <= 0) { return false; }
+        
+        return $result->result();    
+    }
+    
+    function _prepareExport($type = 'database') {
+        if ($type == 'database') {
+            $export = array(
+                'bans'      => $this->_selectExport($this->_table_bans),
+                'ban_log'   => $this->_selectExport($this->_table_sp_ban_log),
+                'items'     => $this->_selectExport($this->_table_sp_items),
+                'comments'  => $this->_selectExport($this->_table_sp_comments),
+                'contacts'  => $this->_selectExport($this->_table_sp_contacts),
+                'logins'    => $this->_selectExport($this->_table_sp_logins)
+            );
+        } else {
+            $export = $this->_selectExport($this->_table_pref, array('key' => 's_section', 'value' => $this->_sect()));    
+        }
+        
+        return $export;    
+    }
+    function _export($type = 'database') {
+        
+        if ($type == 'database') {
+            $xmlFile = osc_plugin_path(dirname(dirname(__FILE__))) . '/export/database.xml';
+            $xml_info = new SimpleXMLElement("<?xml version=\"1.0\"?><database />");
+            $this->array_to_xml($this->_prepareExport('database'),$xml_info);
+            $xml_file = $xml_info->asXML($xmlFile);    
+        } else {
+            $xmlFile = osc_plugin_path(dirname(dirname(__FILE__))) . '/export/settings.xml';
+            $xml_info = new SimpleXMLElement("<?xml version=\"1.0\"?><settings />");
+            $this->array_to_xml($this->_prepareExport('settings'),$xml_info);
+            $xml_file = $xml_info->asXML($xmlFile);
+        }        
+        
+        if (file_exists($xmlFile)) {
+            $dom = new DOMDocument('1.0');
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            $dl = $dom->load($xmlFile);
+            
+            if (!$dl) { return __("The export file could not be created", "spamprotection"); }
+            $dom->save($xmlFile);
+        }
+        
+        if ($xml_file){
+            return sprintf(__("Export file %s was created succesfully", "spamprotection"), ($type == 'database' ? __("for database", "spamprotection") : __("for plugin settings", "spamprotection")));
+        } else{
+            return __("There was an error while creating the export file", "spamprotection");
+        }
+    }
+    
+    function _import($data) {
+        /*            
+            $return = array(
+                'bans' => $v->bans,
+                'bans_log' => (array)$v->ban_log,
+                'items' => $v->items,
+                'comments' => (array)$v->comments,
+                'contacts' => (array)$v->contacts,
+                'logins' => (array)$v->logins
+            );
+        */   
+           
+        $xmlFile = osc_plugin_path(dirname(dirname(__FILE__))).'/export/'.$data.'.xml';
+        $xml = simplexml_load_file($xmlFile); $return = array();
+        
+        foreach ($xml->children() as $child) {
+            //table
+            //echo '(string)$child->getName() = '.(string)$child->getName().'<br />';
+            
+            foreach ($child->children() as $subchild) {
+                //data
+                //echo '$subchild->getName() = '.$subchild->getName().'<br />';
+                
+                foreach ($subchild->children() as $data) {
+                    //table row
+                    //echo '$data->getName() = '.$data->getName().'<br />';    
+                    //echo '$data->getName() = '.(string)$data->getName().'<br />';    
+                }
             }
-            else {
-                return explode($explodeChars, $sql);
+         
+           
+        }
+        //return simplexml_load_string($xml);;
+        //return $xml->getName();
+    }
+    
+    function array_to_xml($array, &$xml_info) {
+        foreach($array as $key => $value) {
+            if(is_array($value)) {
+                if(!is_numeric($key)){
+                    $subnode = $xml_info->addChild("$key");
+                    $this->array_to_xml($value, $subnode);
+                }else{
+                    $subnode = $xml_info->addChild("data");
+                    $this->array_to_xml($value, $subnode);
+                }
+            }else {
+                $xml_info->addChild("$key",htmlspecialchars("$value"));
             }
-        }   
+        }
+    }   
 }
 ?>

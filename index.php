@@ -251,6 +251,7 @@ function sprot_style_admin() {
         
     if (isset($params['file'])) {
         $plugin = explode("/", $params['file']);
+        $file = explode(".", $plugin[2]);
         if ($plugin[0] == 'spamprotection') {
             
             osc_enqueue_style('spam_protection-styles_admin', osc_plugin_url('spamprotection/assets/css/admin.css').'admin.css');
@@ -260,7 +261,15 @@ function sprot_style_admin() {
             
             osc_add_hook('admin_page_header','sprot_admin_page_header');
             osc_remove_hook('admin_page_header', 'customPageHeader');    
-        }    
+        }
+        
+        if ($file[0] == 'config') {
+            /*osc_enqueue_style('spam_protection-uploader', osc_plugin_url('spamprotection/assets/css/filedrop.css').'filedrop.css');
+            osc_register_script('spam_protection-uploader', osc_plugin_url('spamprotection/assets/js/custom-file-input.js') . 'custom-file-input.js', array('jquery'));
+            osc_enqueue_script('spam_protection-uploader');
+            osc_register_script('spam_protection-uploader_jquery', osc_plugin_url('spamprotection/assets/js/jquery.custom-file-input.js') . 'jquery.custom-file-input.js', array('jquery'));
+            osc_enqueue_script('spam_protection-uploader_jquery');*/       
+        }   
     }    
 }
 

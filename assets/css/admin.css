@@ -1,8 +1,23 @@
+/* OSClass overrides */
 #content-head {
     border-bottom: solid 1px #ddd;
     background-color: #f3f3f3;
     padding: 24px 30px;
 }
+
+#content-page {
+    padding: 0 !important;
+}
+
+.grid-row {
+    margin: 0;
+}
+
+.grid-row .row-wrapper {
+    margin: 0;
+}
+
+/* Coming soon */
 
 .row.form-group.comingsoon {
     position: relative;
@@ -22,6 +37,7 @@
     transform: rotate(-45deg);
 }
 
+/* Standards */
 .row {
     margin: 20px 0 !important;   
 }
@@ -35,6 +51,8 @@
 .compare {
     width: 100%;
 }
+
+/* Spam Protection */
 
 .settings input[type='text'], .settings textarea {
     width: 100%;    
@@ -150,20 +168,24 @@ div#sp_security,
 div#sp_help,
 div#sp_config {
     position: relative;
-    top: 50px;
+    top: 35px;
     left: 0;
-    width: calc(100% - 40px);
+    width: 100%;
 }
- 
+
+#spamprot div.settings > div > div, #spamprot div.help > div > div {
+    padding: 20px;
+}
+
 #spamprot ul.tabs {
     position: absolute;
     top: -15px;
     left: 0;
-    width: calc(100% - 40px);
+    width: calc(100% - 15px);
+    padding-left: 15px;
     line-height: 35px;
     background: #000;
     border: none;
-    margin-bottom: 20px;
 }
 
 #spamprot ul.langtabs { 
@@ -174,7 +196,7 @@ div#sp_config {
     -webkit-border-radius: 0px; 
     border-radius: 0px; 
 }
- 
+
 #spamprot ul.tabs li,
 #spamprot ul.langtabs li { 
     background: transparent;
@@ -185,7 +207,7 @@ div#sp_config {
     top: 1px;
     border-bottom: 0 !important;
 } 
- 
+
 #spamprot ul.tabs li a,
 #spamprot ul.langtabs li a {
     color: #c0c0c0 !important;
@@ -194,13 +216,13 @@ div#sp_config {
     cursor: pointer !important;
     padding: .5em 1em;
 } 
- 
+
 #spamprot ul.tabs li.current,
 #spamprot ul.langtabs li.current { 
     background: transparent url(../img/uiTabsArrow.png) no-repeat bottom center; 
     border: none;
 }
- 
+
 #spamprot ul.tabs li.current a, 
 #spamprot ul.langtabs li.current a { 
     color: #459e00 !important; 
@@ -221,9 +243,9 @@ div#sp_config {
     width: calc(100% - 200px);
     float: left;
 } 
- 
+
 #spamprot ul.subtabs {
-    background: transparent;
+    background: #000;
     border: none;
     padding: 0;
 }
@@ -253,7 +275,7 @@ div#sp_config {
 #spamprot ul.subtabs li.current a { 
     color: #459e00 !important; 
 }
- 
+
 #spamprot .tab-content, 
 #spamprot .subtab-content {
     display: none;
@@ -332,16 +354,16 @@ div#attention {
     box-shadow: 6px 6px 8px #000;
 }
 .viewToggle {
-  position: absolute;
-  right: 50px;
-  top: 100px;
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  cursor: pointer;
+    position: absolute;
+    right: 50px;
+    top: 100px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
 }
 .viewToggle:hover {
-  background: #eee;
+    background: #eee;
 }
 textarea#descriptionCode {
     display: none;
@@ -511,4 +533,113 @@ span.sp_review_close {
     bottom: 0;
     left: 0;
     width: 100%;
+}
+
+.file-button {
+    background-image: url(../img/bnt-overlay.png);    
+}
+.file-upload-override-button {
+    position: relative;
+    float: left;
+    padding: 0 10px;
+    line-height: 35px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #00bed6;
+    border: solid 1px #ddd;
+    color: #fff;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+.file-upload-override-button:hover {
+    background-color: #00b3c1;
+    border-color: #2f96b4;
+}
+.file-upload-override-button:active {
+    position:relative; top:1px;
+}
+.file-upload-button {
+    position: absolute;
+    height: 50px;
+    top: -25px;
+    left: -10px;
+    cursor: pointer;
+    opacity: 0;
+    filter:alpha(opacity=0);
+}
+.file-upload-filename {
+    float: left;
+    margin-left: 10px;
+    height: auto;
+    padding: 10px;
+}
+
+
+
+
+#spamprot fieldset {
+    border: 1px solid #bbb; 
+    padding: 0 15px; 
+    margin: 25px 0;
+    transition: ease all .4s;
+}
+
+#spamprot fieldset:hover {
+    background: #efefef;
+}
+
+#spamprot fieldset legend {
+    font-size: 16px;
+    font-weight: bold;
+    font-style: italic;
+    transition: ease all .4s;
+}
+
+#spamprot fieldset:hover legend {
+    margin-left: 10px;
+}
+
+#spamprot fieldset .row {
+    margin: 10px 0 !important;
+}
+
+#spamprot fieldset div.row.form-group {
+    border-bottom: none;
+    padding-bottom: 0px;
+}
+
+#spamprot fieldset input[type=text], #spamprot fieldset textarea {
+    width: calc(100% - 15px);
+}
+
+
+
+
+.sp-icon {
+    background-image: url(../img/icons.png);
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+}
+.sp-icon.float-left {
+    float: left;
+}
+.sp-icon.float-right {
+    float: right;
+}
+.sp-icon.padding {
+    padding: 5px;
+}
+.sp-icon.margin-right {
+    margin-right: 10px;
+}
+.sp-icon.margin-left {
+    margin-left: 10px;
+}
+.sp-icon.attention {
+  background-position: -0px -0px;
+}
+.sp-icon.attention:hover {
+  background-position: -36px -0px;
 }

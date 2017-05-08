@@ -1,5 +1,14 @@
 $(document).ready(function(){
     
+    $("#spamprot ul.subtabs").each(function(index, element){
+        var height      = $(element).closest("div.tab-content").height(),
+            minheight   = $(document).height()-180;;
+        $(element).css({
+            "minHeight": minheight,
+            "height": height    
+        });
+    });
+    
     if ($("input[name=sp_activate]").is(":checked")) {            
         $("#sp_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
     } if ($("input[name=sp_comment_activate]").is(":checked")) {            
@@ -176,13 +185,24 @@ $(document).ready(function(){
     
     $(document).on("click", "ul.subtabs li", function(){
         var tab_id      = $(this).attr('data-tab'),
-            currentid   = $(this).closest('div').parent().prop('id');
-        
+            div         = $(this).closest('div'),
+            currentid   = div.parent().prop('id');
+            
         $('#'+currentid+' ul.subtabs li').removeClass('current');
         $('#'+currentid+' .subtab-content').removeClass('current');
 
         $(this).addClass('current');
         $("#"+tab_id).addClass('current');
+        
+        var child       = div.children("div"),
+            height      = child.height(),
+            minheight   = screen.height;    
+        
+        $(this).closest("ul").css({
+            "minHeight": minheight-180,
+            "height": height    
+        });
+        
     });
     
     $(document).on("focusout", "input[name=honeypot_name]", function(){
