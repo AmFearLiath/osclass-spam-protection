@@ -26,7 +26,7 @@ if (Params::getParam('chmod_path') == 'true') {
     $import = spam_prot::newInstance()->_import(Params::getParam('import'));
 }
 
-$import_files = array_diff(scandir($path), array('..', '.'));
+$import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
  
 ?>
 <div class="settings">

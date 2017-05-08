@@ -1,10 +1,9 @@
 <?php
-if (!defined('OC_ADMIN')) {
+if (!defined('ABS_PATH')) {
     exit('Direct access is not allowed.');
-} if (!osc_is_admin_user_logged_in()) {
-    die;
 }
 
-require('functions/backend.php');
-require('functions/frontend.php');
+require('backend.php');
+require('frontend.php');
+require('params.php');
 ?>
