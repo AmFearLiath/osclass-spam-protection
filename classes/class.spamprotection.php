@@ -24,9 +24,6 @@ class spam_prot extends DAO {
         $this->_table_sp_contacts       = '`'.DB_TABLE_PREFIX.'t_spam_protection_contacts`';
         $this->_table_sp_logins         = '`'.DB_TABLE_PREFIX.'t_spam_protection_logins`';
         
-        include_once('class.debugger.php');
-        $this->debug                    = new sp_debug;
-        
         parent::__construct();
     }
     
