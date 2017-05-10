@@ -112,6 +112,10 @@ class spam_prot extends DAO {
             'sp_security_login_unban'   => array('0', 'STRING'),
             'sp_admin_login_unban'      => array('0', 'STRING'),
             'sp_admin_login_cron'       => array('0', 'STRING'),
+            'sp_activate_topbar'        => array('1', 'BOOLEAN'),
+            'sp_activate_menu'          => array('1', 'BOOLEAN'),
+            'sp_menu_after'             => array('menu_dash', 'STRING'),
+            'sp_update_check'           => array('1', 'BOOLEN'),
         );
         
         if ($key) { return $opts[$key]; }
@@ -119,65 +123,74 @@ class spam_prot extends DAO {
         return $opts;
     }
 
-    function _get($opt = false) {
+    function _get($opt = false, $type = false) {
         $pref = $this->_sect();
         if ($opt) {        
             return osc_get_preference($opt, $pref);
         } else {
-            $opts = array(
-                'sp_activate'               => osc_get_preference('sp_activate', $pref),
-                'sp_comment_activate'       => osc_get_preference('sp_comment_activate', $pref),
-                'sp_contact_activate'       => osc_get_preference('sp_contact_activate', $pref),
-                'sp_security_activate'      => osc_get_preference('sp_security_activate', $pref),
-                'sp_admin_activate'         => osc_get_preference('sp_admin_activate', $pref),
-                'sp_duplicates'             => osc_get_preference('sp_duplicates', $pref),
-                'sp_duplicates_as'          => osc_get_preference('sp_duplicates_as', $pref),
-                'sp_duplicate_type'         => osc_get_preference('sp_duplicate_type', $pref),
-                'sp_duplicate_perc'         => osc_get_preference('sp_duplicate_perc', $pref),
-                'sp_duplicates_time'        => osc_get_preference('sp_duplicates_time', $pref),
-                'sp_honeypot'               => osc_get_preference('sp_honeypot', $pref),
-                'sp_contact_honeypot'       => osc_get_preference('sp_contact_honeypot', $pref),
-                'honeypot_name'             => osc_get_preference('honeypot_name', $pref),
-                'contact_honeypot_name'     => osc_get_preference('contact_honeypot_name', $pref),
-                'contact_honeypot_value'    => osc_get_preference('contact_honeypot_value', $pref),
-                'sp_blocked'                => osc_get_preference('sp_blocked', $pref),
-                'sp_blocked_tld'            => osc_get_preference('sp_blocked_tld', $pref),
-                'sp_blockedtype'            => osc_get_preference('sp_blockedtype', $pref),
-                'sp_comment_blocked'        => osc_get_preference('sp_comment_blocked', $pref),
-                'sp_comment_blocked_tld'    => osc_get_preference('sp_comment_blocked_tld', $pref),
-                'sp_comment_blockedtype'    => osc_get_preference('sp_comment_blockedtype', $pref),
-                'sp_contact_blocked'        => osc_get_preference('sp_contact_blocked', $pref),
-                'sp_contact_blocked_tld'    => osc_get_preference('sp_contact_blocked_tld', $pref),
-                'sp_contact_blockedtype'    => osc_get_preference('sp_contact_blockedtype', $pref),
-                'sp_mxr'                    => osc_get_preference('sp_mxr', $pref),
-                'blocked'                   => osc_get_preference('blocked', $pref),
-                'blocked_tld'               => osc_get_preference('blocked_tld', $pref),
-                'comment_blocked'           => osc_get_preference('comment_blocked', $pref),
-                'comment_blocked_tld'       => osc_get_preference('comment_blocked_tld', $pref),
-                'contact_blocked'           => osc_get_preference('contact_blocked', $pref),
-                'contact_blocked_tld'       => osc_get_preference('contact_blocked_tld', $pref),
-                'sp_stopwords'              => osc_get_preference('sp_stopwords', $pref),
-                'sp_comment_stopwords'      => osc_get_preference('sp_comment_stopwords', $pref),
-                'sp_contact_stopwords'      => osc_get_preference('sp_contact_stopwords', $pref),
-                'sp_comment_links'          => osc_get_preference('sp_comment_links', $pref),
-                'sp_contact_links'          => osc_get_preference('sp_contact_links', $pref),
-                'sp_security_login_count'   => osc_get_preference('sp_security_login_count', $pref),
-                'sp_admin_login_count'      => osc_get_preference('sp_admin_login_count', $pref),
-                'sp_security_login_time'    => osc_get_preference('sp_security_login_time', $pref),
-                'sp_admin_login_time'       => osc_get_preference('sp_admin_login_time', $pref),
-                'sp_security_login_action'  => osc_get_preference('sp_security_login_action', $pref),
-                'sp_admin_login_action'     => osc_get_preference('sp_admin_login_action', $pref),
-                'sp_security_login_inform'  => osc_get_preference('sp_security_login_inform', $pref),
-                'sp_admin_login_inform'     => osc_get_preference('sp_admin_login_inform', $pref),
-                'sp_security_login_hp'      => osc_get_preference('sp_security_login_hp', $pref),
-                'sp_admin_login_hp'         => osc_get_preference('sp_admin_login_hp', $pref),
-                'sp_security_register_hp'   => osc_get_preference('sp_security_register_hp', $pref),
-                'sp_security_recover_hp'    => osc_get_preference('sp_security_recover_hp', $pref),
-                'sp_security_login_unban'   => osc_get_preference('sp_security_login_unban', $pref),
-                'sp_admin_login_unban'      => osc_get_preference('sp_admin_login_unban', $pref),
-                'sp_security_login_cron'    => osc_get_preference('sp_security_login_cron', $pref),
-                'sp_admin_login_cron'       => osc_get_preference('sp_admin_login_cron', $pref),
-            );
+            if (!$type) {
+                $opts = array(
+                    'sp_activate'               => osc_get_preference('sp_activate', $pref),
+                    'sp_comment_activate'       => osc_get_preference('sp_comment_activate', $pref),
+                    'sp_contact_activate'       => osc_get_preference('sp_contact_activate', $pref),
+                    'sp_security_activate'      => osc_get_preference('sp_security_activate', $pref),
+                    'sp_admin_activate'         => osc_get_preference('sp_admin_activate', $pref),
+                    'sp_duplicates'             => osc_get_preference('sp_duplicates', $pref),
+                    'sp_duplicates_as'          => osc_get_preference('sp_duplicates_as', $pref),
+                    'sp_duplicate_type'         => osc_get_preference('sp_duplicate_type', $pref),
+                    'sp_duplicate_perc'         => osc_get_preference('sp_duplicate_perc', $pref),
+                    'sp_duplicates_time'        => osc_get_preference('sp_duplicates_time', $pref),
+                    'sp_honeypot'               => osc_get_preference('sp_honeypot', $pref),
+                    'sp_contact_honeypot'       => osc_get_preference('sp_contact_honeypot', $pref),
+                    'honeypot_name'             => osc_get_preference('honeypot_name', $pref),
+                    'contact_honeypot_name'     => osc_get_preference('contact_honeypot_name', $pref),
+                    'contact_honeypot_value'    => osc_get_preference('contact_honeypot_value', $pref),
+                    'sp_blocked'                => osc_get_preference('sp_blocked', $pref),
+                    'sp_blocked_tld'            => osc_get_preference('sp_blocked_tld', $pref),
+                    'sp_blockedtype'            => osc_get_preference('sp_blockedtype', $pref),
+                    'sp_comment_blocked'        => osc_get_preference('sp_comment_blocked', $pref),
+                    'sp_comment_blocked_tld'    => osc_get_preference('sp_comment_blocked_tld', $pref),
+                    'sp_comment_blockedtype'    => osc_get_preference('sp_comment_blockedtype', $pref),
+                    'sp_contact_blocked'        => osc_get_preference('sp_contact_blocked', $pref),
+                    'sp_contact_blocked_tld'    => osc_get_preference('sp_contact_blocked_tld', $pref),
+                    'sp_contact_blockedtype'    => osc_get_preference('sp_contact_blockedtype', $pref),
+                    'sp_mxr'                    => osc_get_preference('sp_mxr', $pref),
+                    'blocked'                   => osc_get_preference('blocked', $pref),
+                    'blocked_tld'               => osc_get_preference('blocked_tld', $pref),
+                    'comment_blocked'           => osc_get_preference('comment_blocked', $pref),
+                    'comment_blocked_tld'       => osc_get_preference('comment_blocked_tld', $pref),
+                    'contact_blocked'           => osc_get_preference('contact_blocked', $pref),
+                    'contact_blocked_tld'       => osc_get_preference('contact_blocked_tld', $pref),
+                    'sp_stopwords'              => osc_get_preference('sp_stopwords', $pref),
+                    'sp_comment_stopwords'      => osc_get_preference('sp_comment_stopwords', $pref),
+                    'sp_contact_stopwords'      => osc_get_preference('sp_contact_stopwords', $pref),
+                    'sp_comment_links'          => osc_get_preference('sp_comment_links', $pref),
+                    'sp_contact_links'          => osc_get_preference('sp_contact_links', $pref),
+                    'sp_security_login_count'   => osc_get_preference('sp_security_login_count', $pref),
+                    'sp_admin_login_count'      => osc_get_preference('sp_admin_login_count', $pref),
+                    'sp_security_login_time'    => osc_get_preference('sp_security_login_time', $pref),
+                    'sp_admin_login_time'       => osc_get_preference('sp_admin_login_time', $pref),
+                    'sp_security_login_action'  => osc_get_preference('sp_security_login_action', $pref),
+                    'sp_admin_login_action'     => osc_get_preference('sp_admin_login_action', $pref),
+                    'sp_security_login_inform'  => osc_get_preference('sp_security_login_inform', $pref),
+                    'sp_admin_login_inform'     => osc_get_preference('sp_admin_login_inform', $pref),
+                    'sp_security_login_hp'      => osc_get_preference('sp_security_login_hp', $pref),
+                    'sp_admin_login_hp'         => osc_get_preference('sp_admin_login_hp', $pref),
+                    'sp_security_register_hp'   => osc_get_preference('sp_security_register_hp', $pref),
+                    'sp_security_recover_hp'    => osc_get_preference('sp_security_recover_hp', $pref),
+                    'sp_security_login_unban'   => osc_get_preference('sp_security_login_unban', $pref),
+                    'sp_admin_login_unban'      => osc_get_preference('sp_admin_login_unban', $pref),
+                    'sp_security_login_cron'    => osc_get_preference('sp_security_login_cron', $pref),
+                    'sp_admin_login_cron'       => osc_get_preference('sp_admin_login_cron', $pref),
+                );
+            } else {
+                $opts = array(                
+                    'sp_activate_topbar'        => osc_get_preference('sp_activate_topbar', $pref),
+                    'sp_activate_menu'          => osc_get_preference('sp_activate_menu', $pref),
+                    'sp_menu_after'             => osc_get_preference('sp_menu_after', $pref),
+                    'sp_update_check'           => osc_get_preference('sp_update_check', $pref),
+                );    
+            }
             return $opts;
         }
     }
@@ -187,42 +200,64 @@ class spam_prot extends DAO {
         $comments = $this->_countRows('t_comment', array('key' => 'b_spam', 'value' => '1'));
         $contacts = $this->_countRows('t_sp_contacts');
         $bans = $this->_countRows('t_sp_ban_log');
+        $topbar = false;
         
+        if ($count > 0 || $comments > 0 || $contacts > 0 || $bans > 0) {
+            osc_add_admin_submenu_divider('spamprotection', __('Actions', 'spamprotection'), 'spamprotection_separator', 'administrator');    
+        } if (spam_prot::newInstance()->_get('sp_activate_topbar') == '1') {
+            $topbar = true;   
+        }
         if ($count > 0) {
-            AdminToolbar::newInstance()->add_menu( array(
-                 'id'        => 'spamprotection',
-                 'title'     => '<i class="circle circle-gray">'.$count.'</i>'.__('Spam found', 'spamprotection'),
-                 'href'      => osc_admin_base_url(true).'?page=items&b_spam=1',
-                 'meta'      => array('class' => 'action-btn action-btn-black'),
-                 'target'    => '_self'
-             ));
+            osc_add_admin_submenu_page('spamprotection', sprintf(__('%s Spam found', 'spamprotection'), $count), osc_admin_base_url(true).'?page=items&b_spam=1', 'spamprotection_spam_found', 'administrator');
+            
+            if ($topbar) {
+                AdminToolbar::newInstance()->add_menu( array(
+                     'id'        => 'spamprotection',
+                     'title'     => '<i class="circle circle-gray">'.$count.'</i>'.__('Spam found', 'spamprotection'),
+                     'href'      => osc_admin_base_url(true).'?page=items&b_spam=1',
+                     'meta'      => array('class' => 'action-btn action-btn-black'),
+                     'target'    => '_self'
+                 ));
+            }
         }
         if ($comments > 0) {
-            AdminToolbar::newInstance()->add_menu( array(
-                 'id'        => 'spamprotection_comments',
-                 'title'     => '<i class="circle circle-gray">'.$comments.'</i>'.__('Spam comment found', 'spamprotection'),
-                 'href'      => osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/comments_check.php'),
-                 'meta'      => array('class' => 'action-btn action-btn-black'),
-                 'target'    => '_self'
-             ));
+            osc_add_admin_submenu_page('spamprotection', sprintf(__('%s Spam comment found', 'spamprotection'), $comments), osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/comments_check.php'), 'spamprotection_spamcomment_found', 'administrator');
+            
+            if ($topbar) {
+                AdminToolbar::newInstance()->add_menu( array(
+                     'id'        => 'spamprotection_comments',
+                     'title'     => '<i class="circle circle-gray">'.$comments.'</i>'.__('Spam comment found', 'spamprotection'),
+                     'href'      => osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/comments_check.php'),
+                     'meta'      => array('class' => 'action-btn action-btn-black'),
+                     'target'    => '_self'
+                 ));
+            }
         }
         if ($contacts > 0) {
-            AdminToolbar::newInstance()->add_menu( array(
-                 'id'        => 'spamprotection_contacts',
-                 'title'     => '<i class="circle circle-gray">'.$contacts.'</i>'.__('Spam Contact Mail found', 'spamprotection'),
-                 'href'      => osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/contact_check.php'),
-                 'meta'      => array('class' => 'action-btn action-btn-black'),
-                 'target'    => '_self'
-             ));
+            osc_add_admin_submenu_page('spamprotection', sprintf(__('%s Spam Contact Mail found', 'spamprotection'), $contacts), osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/contact_check.php'), 'spamprotection_spamcontact_found', 'administrator');
+            
+            if ($topbar) {
+                AdminToolbar::newInstance()->add_menu( array(
+                     'id'        => 'spamprotection_contacts',
+                     'title'     => '<i class="circle circle-gray">'.$contacts.'</i>'.__('Spam Contact Mail found', 'spamprotection'),
+                     'href'      => osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/contact_check.php'),
+                     'meta'      => array('class' => 'action-btn action-btn-black'),
+                     'target'    => '_self'
+                 ));
+            }
         }
         if ($bans > 0) {
-            AdminToolbar::newInstance()->add_menu( array(
-                 'id'        => 'spamprotection_bans',
-                 'title'     => '<i class="circle circle-gray">'.$bans.'</i>'.__('Banned user', 'spamprotection'),
-                 'href'      => osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php'),
-                 'meta'      => array('class' => 'action-btn action-btn-black'),
-                 'target'    => '_self'
-             ));
+            osc_add_admin_submenu_page('spamprotection', sprintf(__('%s Banned user', 'spamprotection'), $bans), osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php'), 'spamprotection_bans_found', 'administrator');
+            
+            if ($topbar) {
+                AdminToolbar::newInstance()->add_menu( array(
+                     'id'        => 'spamprotection_bans',
+                     'title'     => '<i class="circle circle-gray">'.$bans.'</i>'.__('Banned user', 'spamprotection'),
+                     'href'      => osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php'),
+                     'meta'      => array('class' => 'action-btn action-btn-black'),
+                     'target'    => '_self'
+                 ));
+            }
         }
     }
     
@@ -312,80 +347,83 @@ class spam_prot extends DAO {
         return implode(",", $sort);    
     }
     
-    function _saveSettings($params) {
-        
-        if (isset($params['sp_stopwords'])) {
-            $sort = explode(",", $params['sp_stopwords']);
-            sort($sort);
-            $params['sp_stopwords'] = implode(",", $sort);
-        }
-        
-        $data = array(
-            'sp_activate'               => (isset($params['sp_activate']) ? $params['sp_activate'] : ''),
-            'sp_comment_activate'       => (isset($params['sp_comment_activate']) ? $params['sp_comment_activate'] : ''),
-            'sp_contact_activate'       => (isset($params['sp_contact_activate']) ? $params['sp_contact_activate'] : ''),
-            'sp_security_activate'      => (isset($params['sp_security_activate']) ? $params['sp_security_activate'] : ''),
-            'sp_admin_activate'         => (isset($params['sp_admin_activate']) ? $params['sp_admin_activate'] : ''),
-            'sp_duplicates'             => (isset($params['sp_duplicates']) ? $params['sp_duplicates'] : ''),
-            'sp_duplicates_as'          => (isset($params['sp_duplicates_as']) ? $params['sp_duplicates_as'] : ''),
-            'sp_duplicate_type'         => (isset($params['sp_duplicate_type']) ? $params['sp_duplicate_type'] : ''),
-            'sp_duplicate_perc'         => (isset($params['sp_duplicate_perc']) ? $params['sp_duplicate_perc'] : ''),
-            'sp_duplicates_time'        => (isset($params['sp_duplicates_time']) ? $params['sp_duplicates_time'] : ''),
-            'sp_honeypot'               => (isset($params['sp_honeypot']) ? $params['sp_honeypot'] : ''),
-            'sp_contact_honeypot'       => (isset($params['sp_contact_honeypot']) ? $params['sp_contact_honeypot'] : ''),
-            'honeypot_name'             => (isset($params['honeypot_name']) ? $params['honeypot_name'] : ''),
-            'contact_honeypot_name'     => (isset($params['contact_honeypot_name']) ? $params['contact_honeypot_name'] : ''),
-            'contact_honeypot_value'    => (isset($params['contact_honeypot_value']) ? $params['contact_honeypot_value'] : ''),
-            'sp_blocked'                => (isset($params['sp_blocked']) ? $params['sp_blocked'] : ''),
-            'sp_blocked_tld'            => (isset($params['sp_blocked_tld']) ? $params['sp_blocked_tld'] : ''),
-            'sp_blockedtype'            => (isset($params['sp_blockedtype']) ? $params['sp_blockedtype'] : ''),
-            'sp_comment_blocked'        => (isset($params['sp_comment_blocked']) ? $params['sp_comment_blocked'] : ''),
-            'sp_comment_blocked_tld'    => (isset($params['sp_comment_blocked_tld']) ? $params['sp_comment_blocked_tld'] : ''),
-            'sp_comment_blockedtype'    => (isset($params['sp_comment_blockedtype']) ? $params['sp_comment_blockedtype'] : ''),
-            'sp_contact_blocked'        => (isset($params['sp_contact_blocked']) ? $params['sp_contact_blocked'] : ''),
-            'sp_contact_blocked_tld'    => (isset($params['sp_contact_blocked_tld']) ? $params['sp_contact_blocked_tld'] : ''),
-            'sp_contact_blockedtype'    => (isset($params['sp_contact_blockedtype']) ? $params['sp_contact_blockedtype'] : ''),
-            'sp_mxr'                    => (isset($params['sp_mxr']) ? $params['sp_mxr'] : ''),
-            'blocked'                   => (isset($params['blocked']) ? $this->_sort($params['blocked']) : ''),
-            'blocked_tld'               => (isset($params['blocked_tld']) ? $this->_sort($params['blocked_tld']) : ''),
-            'comment_blocked'           => (isset($params['comment_blocked']) ? $this->_sort($params['comment_blocked']) : ''),
-            'comment_blocked_tld'       => (isset($params['comment_blocked_tld']) ? $this->_sort($params['comment_blocked_tld']) : ''),
-            'contact_blocked'           => (isset($params['contact_blocked']) ? $this->_sort($params['contact_blocked']) : ''),
-            'contact_blocked_tld'       => (isset($params['contact_blocked_tld']) ? $this->_sort($params['contact_blocked_tld']) : ''),
-            'sp_stopwords'              => (isset($params['sp_stopwords']) ? $this->_sort($params['sp_stopwords']) : ''),
-            'sp_comment_stopwords'      => (isset($params['sp_comment_stopwords']) ? $this->_sort($params['sp_comment_stopwords']) : ''),
-            'sp_contact_stopwords'      => (isset($params['sp_contact_stopwords']) ? $this->_sort($params['sp_contact_stopwords']) : ''),
-            'sp_comment_links'          => (isset($params['sp_comment_links']) ? $params['sp_comment_links'] : ''),
-            'sp_contact_links'          => (isset($params['sp_contact_links']) ? $params['sp_contact_links'] : ''),
-            'sp_security_login_count'   => (isset($params['sp_security_login_count']) ? $params['sp_security_login_count'] : ''),
-            'sp_admin_login_count'      => (isset($params['sp_admin_login_count']) ? $params['sp_admin_login_count'] : ''),
-            'sp_security_login_time'    => (isset($params['sp_security_login_time']) ? $params['sp_security_login_time'] : ''),
-            'sp_admin_login_time'       => (isset($params['sp_admin_login_time']) ? $params['sp_admin_login_time'] : ''),
-            'sp_security_login_action'  => (isset($params['sp_security_login_action']) ? $params['sp_security_login_action'] : ''),
-            'sp_admin_login_action'     => (isset($params['sp_admin_login_action']) ? $params['sp_admin_login_action'] : ''),
-            'sp_security_login_inform'  => (isset($params['sp_security_login_inform']) ? $params['sp_security_login_inform'] : ''),
-            'sp_admin_login_inform'     => (isset($params['sp_admin_login_inform']) ? $params['sp_admin_login_inform'] : ''),
-            'sp_security_login_hp'      => (isset($params['sp_security_login_hp']) ? $params['sp_security_login_hp'] : ''),
-            'sp_admin_login_hp'         => (isset($params['sp_admin_login_hp']) ? $params['sp_admin_login_hp'] : ''),
-            'sp_security_register_hp'   => (isset($params['sp_security_register_hp']) ? $params['sp_security_register_hp'] : ''),
-            'sp_security_recover_hp'    => (isset($params['sp_security_recover_hp']) ? $params['sp_security_recover_hp'] : ''),
-            'sp_security_login_unban'   => (isset($params['sp_security_login_unban']) ? $params['sp_security_login_unban'] : ''),
-            'sp_admin_login_unban'      => (isset($params['sp_admin_login_unban']) ? $params['sp_admin_login_unban'] : ''),
-            'sp_security_login_cron'    => (isset($params['sp_security_login_cron']) ? $params['sp_security_login_cron'] : ''),
-            'sp_admin_login_cron'       => (isset($params['sp_admin_login_cron']) ? $params['sp_admin_login_cron'] : ''),
-        );
-        
+    function _saveSettings($params, $type = false) {
+            
         $pref = $this->_sect();
-        $forbidden = array('CSRFName', 'CSRFToken', 'page', 'file', 'action');
-        
-        if (!empty($params['sp_htaccess'])) {
-            $htaccess_file = ABS_PATH.'/.htaccess';
-            $htaccess_writable = is_writable($htaccess_file);
-            if ($htaccess_writable) {
-                if (!file_put_contents($htaccess_file, $params['sp_htaccess'])) {
-                    return false;                       
-                }    
+        $forbidden = array('CSRFName', 'CSRFToken', 'page', 'file', 'action', 'tab', 'subtab', 'settings', 'plugin_settings');
+    
+        if (!$type) {        
+            $data = array(
+                'sp_activate'               => (isset($params['sp_activate']) ? $params['sp_activate'] : ''),
+                'sp_comment_activate'       => (isset($params['sp_comment_activate']) ? $params['sp_comment_activate'] : ''),
+                'sp_contact_activate'       => (isset($params['sp_contact_activate']) ? $params['sp_contact_activate'] : ''),
+                'sp_security_activate'      => (isset($params['sp_security_activate']) ? $params['sp_security_activate'] : ''),
+                'sp_admin_activate'         => (isset($params['sp_admin_activate']) ? $params['sp_admin_activate'] : ''),
+                'sp_duplicates'             => (isset($params['sp_duplicates']) ? $params['sp_duplicates'] : ''),
+                'sp_duplicates_as'          => (isset($params['sp_duplicates_as']) ? $params['sp_duplicates_as'] : ''),
+                'sp_duplicate_type'         => (isset($params['sp_duplicate_type']) ? $params['sp_duplicate_type'] : ''),
+                'sp_duplicate_perc'         => (isset($params['sp_duplicate_perc']) ? $params['sp_duplicate_perc'] : ''),
+                'sp_duplicates_time'        => (isset($params['sp_duplicates_time']) ? $params['sp_duplicates_time'] : ''),
+                'sp_honeypot'               => (isset($params['sp_honeypot']) ? $params['sp_honeypot'] : ''),
+                'sp_contact_honeypot'       => (isset($params['sp_contact_honeypot']) ? $params['sp_contact_honeypot'] : ''),
+                'honeypot_name'             => (isset($params['honeypot_name']) ? $params['honeypot_name'] : ''),
+                'contact_honeypot_name'     => (isset($params['contact_honeypot_name']) ? $params['contact_honeypot_name'] : ''),
+                'contact_honeypot_value'    => (isset($params['contact_honeypot_value']) ? $params['contact_honeypot_value'] : ''),
+                'sp_blocked'                => (isset($params['sp_blocked']) ? $params['sp_blocked'] : ''),
+                'sp_blocked_tld'            => (isset($params['sp_blocked_tld']) ? $params['sp_blocked_tld'] : ''),
+                'sp_blockedtype'            => (isset($params['sp_blockedtype']) ? $params['sp_blockedtype'] : ''),
+                'sp_comment_blocked'        => (isset($params['sp_comment_blocked']) ? $params['sp_comment_blocked'] : ''),
+                'sp_comment_blocked_tld'    => (isset($params['sp_comment_blocked_tld']) ? $params['sp_comment_blocked_tld'] : ''),
+                'sp_comment_blockedtype'    => (isset($params['sp_comment_blockedtype']) ? $params['sp_comment_blockedtype'] : ''),
+                'sp_contact_blocked'        => (isset($params['sp_contact_blocked']) ? $params['sp_contact_blocked'] : ''),
+                'sp_contact_blocked_tld'    => (isset($params['sp_contact_blocked_tld']) ? $params['sp_contact_blocked_tld'] : ''),
+                'sp_contact_blockedtype'    => (isset($params['sp_contact_blockedtype']) ? $params['sp_contact_blockedtype'] : ''),
+                'sp_mxr'                    => (isset($params['sp_mxr']) ? $params['sp_mxr'] : ''),
+                'blocked'                   => (isset($params['blocked']) ? $this->_sort($params['blocked']) : ''),
+                'blocked_tld'               => (isset($params['blocked_tld']) ? $this->_sort($params['blocked_tld']) : ''),
+                'comment_blocked'           => (isset($params['comment_blocked']) ? $this->_sort($params['comment_blocked']) : ''),
+                'comment_blocked_tld'       => (isset($params['comment_blocked_tld']) ? $this->_sort($params['comment_blocked_tld']) : ''),
+                'contact_blocked'           => (isset($params['contact_blocked']) ? $this->_sort($params['contact_blocked']) : ''),
+                'contact_blocked_tld'       => (isset($params['contact_blocked_tld']) ? $this->_sort($params['contact_blocked_tld']) : ''),
+                'sp_stopwords'              => (isset($params['sp_stopwords']) ? $this->_sort($params['sp_stopwords']) : ''),
+                'sp_comment_stopwords'      => (isset($params['sp_comment_stopwords']) ? $this->_sort($params['sp_comment_stopwords']) : ''),
+                'sp_contact_stopwords'      => (isset($params['sp_contact_stopwords']) ? $this->_sort($params['sp_contact_stopwords']) : ''),
+                'sp_comment_links'          => (isset($params['sp_comment_links']) ? $params['sp_comment_links'] : ''),
+                'sp_contact_links'          => (isset($params['sp_contact_links']) ? $params['sp_contact_links'] : ''),
+                'sp_security_login_count'   => (isset($params['sp_security_login_count']) ? $params['sp_security_login_count'] : ''),
+                'sp_admin_login_count'      => (isset($params['sp_admin_login_count']) ? $params['sp_admin_login_count'] : ''),
+                'sp_security_login_time'    => (isset($params['sp_security_login_time']) ? $params['sp_security_login_time'] : ''),
+                'sp_admin_login_time'       => (isset($params['sp_admin_login_time']) ? $params['sp_admin_login_time'] : ''),
+                'sp_security_login_action'  => (isset($params['sp_security_login_action']) ? $params['sp_security_login_action'] : ''),
+                'sp_admin_login_action'     => (isset($params['sp_admin_login_action']) ? $params['sp_admin_login_action'] : ''),
+                'sp_security_login_inform'  => (isset($params['sp_security_login_inform']) ? $params['sp_security_login_inform'] : ''),
+                'sp_admin_login_inform'     => (isset($params['sp_admin_login_inform']) ? $params['sp_admin_login_inform'] : ''),
+                'sp_security_login_hp'      => (isset($params['sp_security_login_hp']) ? $params['sp_security_login_hp'] : ''),
+                'sp_admin_login_hp'         => (isset($params['sp_admin_login_hp']) ? $params['sp_admin_login_hp'] : ''),
+                'sp_security_register_hp'   => (isset($params['sp_security_register_hp']) ? $params['sp_security_register_hp'] : ''),
+                'sp_security_recover_hp'    => (isset($params['sp_security_recover_hp']) ? $params['sp_security_recover_hp'] : ''),
+                'sp_security_login_unban'   => (isset($params['sp_security_login_unban']) ? $params['sp_security_login_unban'] : ''),
+                'sp_admin_login_unban'      => (isset($params['sp_admin_login_unban']) ? $params['sp_admin_login_unban'] : ''),
+                'sp_security_login_cron'    => (isset($params['sp_security_login_cron']) ? $params['sp_security_login_cron'] : ''),
+                'sp_admin_login_cron'       => (isset($params['sp_admin_login_cron']) ? $params['sp_admin_login_cron'] : ''),
+            );
+            
+            if (!empty($params['sp_htaccess'])) {
+                $htaccess_file = ABS_PATH.'/.htaccess';
+                $htaccess_writable = is_writable($htaccess_file);
+                if ($htaccess_writable) {
+                    if (!file_put_contents($htaccess_file, $params['sp_htaccess'])) {
+                        return false;                       
+                    }    
+                }
             }
+        } else {
+            $data = array(
+                'sp_activate_topbar'        => (isset($params['sp_activate_topbar']) ? $params['sp_activate_topbar'] : ''),
+                'sp_activate_menu'          => (isset($params['sp_activate_menu']) ? $params['sp_activate_menu'] : ''),
+                'sp_menu_after'             => (isset($params['sp_menu_after']) ? $params['sp_menu_after'] : ''),
+                'sp_update_check'           => (isset($params['sp_update_check']) ? $params['sp_update_check'] : ''),
+            );    
         }
         
         foreach($data as $k => $v) {
@@ -1300,7 +1338,10 @@ class spam_prot extends DAO {
         } else {
             return false;
         }
-        return $ip;      
+        
+        //localhost fix
+        return getenv('REMOTE_ADDR');      
+        //return $ip;      
     }
     
     function _informUser($search, $type = 'user') {
@@ -1429,8 +1470,12 @@ class spam_prot extends DAO {
             if (!empty($query)) {
                 $execute = $this->dao->_execute($query);
                 if (!$execute) {
-                    //$regex = '^.*`\/\*TABLE_PREFIX\*\/(.*)`$';
+                    //$regex = '^.*`\/\*TABLE_PREFIX\*\/(.*)`.*^';  //this
+                    //$regex = '^(.*)`\/\*TABLE_PREFIX\*\/(.*)`.*$';  //or this
                     //$exec[] = preg_match($regex, $execute, &$matches);
+                    
+                    // return table
+                    //$matches[1]
                     $return = false;
                 }
             }
@@ -1468,14 +1513,14 @@ class spam_prot extends DAO {
     }
     
     function _prepareExport($type = 'database') {
-        if ($type == 'database') {
+        if ($type == 'database') {        
             $export = array(
-                'bans'      => $this->_selectExport($this->_table_bans),
-                'ban_log'   => $this->_selectExport($this->_table_sp_ban_log),
-                'items'     => $this->_selectExport($this->_table_sp_items),
-                'comments'  => $this->_selectExport($this->_table_sp_comments),
-                'contacts'  => $this->_selectExport($this->_table_sp_contacts),
-                'logins'    => $this->_selectExport($this->_table_sp_logins)
+                DB_TABLE_PREFIX.'t_ban_rule'                  => $this->_selectExport($this->_table_bans),
+                DB_TABLE_PREFIX.'t_spam_protection_ban_log'   => $this->_selectExport($this->_table_sp_ban_log),
+                DB_TABLE_PREFIX.'t_spam_protection_items'     => $this->_selectExport($this->_table_sp_items),
+                DB_TABLE_PREFIX.'t_spam_protection_comments'  => $this->_selectExport($this->_table_sp_comments),
+                DB_TABLE_PREFIX.'t_spam_protection_contacts'  => $this->_selectExport($this->_table_sp_contacts),
+                DB_TABLE_PREFIX.'t_spam_protection_logins'    => $this->_selectExport($this->_table_sp_logins)
             );
         } else {
             $export = $this->_selectExport($this->_table_pref, array('key' => 's_section', 'value' => $this->_sect()));    
@@ -1514,53 +1559,69 @@ class spam_prot extends DAO {
         }
     }
     
-    function _import($data) {
-        /*            
-            $return = array(
-                'bans' => $v->bans,
-                'bans_log' => (array)$v->ban_log,
-                'items' => $v->items,
-                'comments' => (array)$v->comments,
-                'contacts' => (array)$v->contacts,
-                'logins' => (array)$v->logins
-            );
-        */   
-           
-        $xmlFile = osc_plugin_path(dirname(dirname(__FILE__))).'/export/'.$data.'.xml';
-        $xml = simplexml_load_file($xmlFile); $return = array();
+    function _import($data, $type = 'server') {   
         
-        foreach ($xml->children() as $child) {
-            //table
-            //echo '(string)$child->getName() = '.(string)$child->getName().'<br />';
-            
-            foreach ($child->children() as $subchild) {
-                //data
-                //echo '$subchild->getName() = '.$subchild->getName().'<br />';
-                
-                foreach ($subchild->children() as $data) {
-                    //table row
-                    //echo '$data->getName() = '.$data->getName().'<br />';    
-                    //echo '$data->getName() = '.(string)$data->getName().'<br />';    
+        if ($type == 'upload') {
+            $xmlFile = $data;    
+        } else {
+            $xmlFile = osc_plugin_path(dirname(dirname(__FILE__))).'/export/'.$data.'.xml';    
+        } 
+        
+        $xml = simplexml_load_file($xmlFile); $return = array();
+        $type = $xml->getName();
+        
+        if (!in_array($type, array('settings', 'database'))) { return __("This is not a valid import file", "spamprotection"); }
+        
+        $json = json_encode($xml);    
+        $array = json_decode($json, TRUE);
+        $error = '';
+        
+        if ($type == 'settings') {
+            if (!empty($array['data'])) {
+                foreach($array['data'] as $v) {
+                    if (!osc_set_preference($v['s_name'], $v['s_value'], $v['s_section'], $v['e_type'])) {
+                        $error .= sprintf(__("Error while importing settings: %s cannot be saved correctly", "spamprotection"), $v['s_name']);    
+                    }    
                 }
-            }
-         
-           
+            }                
+        } elseif ($type == 'database') {
+            foreach($array as $table => $data) {
+                if (!empty($data['data'])) {
+                    $insert = '';
+                    foreach($data['data'] as $row) {
+                        $insert = array();
+                        foreach($row as $k => $v) {
+                            if ($k != 'pk_i_id') {
+                                if (empty($v)) { $v = ''; }
+                                $insert[$k] = $v;
+                            }
+                        }
+                        if (!$this->dao->insert($table, $insert)) {
+                            $error .= sprintf(__("Error while importing data to table %s", "spamprotection"), $table)."\n";
+                        }
+                    }    
+                }
+            }                
         }
-        //return simplexml_load_string($xml);;
-        //return $xml->getName();
+            
+        if (!empty($error)) {
+            return $error;    
+        }
+                    
+        return __("Import done", "spamprotection");
     }
     
     function array_to_xml($array, &$xml_info) {
         foreach($array as $key => $value) {
-            if(is_array($value)) {
-                if(!is_numeric($key)){
+            if (is_array($value)) {
+                if (!is_numeric($key)){
                     $subnode = $xml_info->addChild("$key");
                     $this->array_to_xml($value, $subnode);
-                }else{
+                } else {
                     $subnode = $xml_info->addChild("data");
                     $this->array_to_xml($value, $subnode);
                 }
-            }else {
+            } else {
                 $xml_info->addChild("$key",htmlspecialchars("$value"));
             }
         }

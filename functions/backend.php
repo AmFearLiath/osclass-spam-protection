@@ -7,30 +7,32 @@ if (!defined('OC_ADMIN')) {
 
 function sprot_admin_page_header($message = false) {
     $info = osc_plugin_get_info("spamprotection/index.php");   
-        echo '
-        <h1>'.($message ? $message : __('Spam Protection', 'spamprotection'). ' <span style="float: right;">v'.$info['version']).'</span></h1>
-        <div style="float: right;">
-            <a href="https://forums.osclass.org/plugins/(plugin)-spam-protection/msg148758/#msg148758" target="_blank">OSClass Forum</a> - <a id="sp_review" href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank">Please Review</a> - <a href="https://github.com/AmFearLiath/osclass-spam-protection" target="_blank">Github</a>
-            <div id="sp_review_wrap" style="display: none;">
-                <div id="sp_review_inner">
-                    <span class="sp_review_close">x</span>
-                    <h3 style="text-align: center;">'.__("Thank you for rating this plugin", "spamprotection").'</h3>
-                    <p>'.__("This plugin is and will always be free of charge! If you found any errors, please contact me in OSClass Forum to solve your problems before rating this plugin.", "spamprotection").'</p>    
-                    <p>'.__("If you are happy with this plugin and love to use it, please rate it now on OSClass Market!", "spamprotection").'</p>    
-                    <p>'.__("Thanks in advance.<br />Liath", "spamprotection").'</p>
-                    <br />    
-                    <p style="text-align: center;">
-                        <a href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank">
-                            <button class="btn btn-submit">'.__("Rate now", "spamprotection").'</button>
-                        </a>
-                        <a href="https://forums.osclass.org/plugins/(plugin)-spam-protection/msg148758/#msg148758" target="_blank">
-                            <button class="btn">'.__("OSClass Forum", "spamprotection").'</button>
-                        </a>
-                        <button class="btn btn-red sp_review_close">'.__("Not now", "spamprotection").'</button>
-                    </p>                        
-                </div>
+    echo '
+    <h1 style="display: inline-block;font-size: 28px;line-height: 50px;">'.($message ? $message : '<i class="sp_header_icon"></i>'.sprintf(__('Spam Protection', 'spamprotection'). ' v'.$info['version'])).'</h1>
+    <div style="line-height: 36px; float: right;">
+        <a href="https://forums.osclass.org/plugins/(plugin)-spam-protection/msg148758/#msg148758" target="_blank"><button class="btn">OSClass Forum</button></a>
+        <a id="sp_review" href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank"><button class="btn">Please Review</button></a>
+        <a href="https://github.com/AmFearLiath/osclass-spam-protection" target="_blank"><button class="btn">Github</button></a>
+        <div id="sp_review_wrap" style="display: none;">
+            <div id="sp_review_inner">
+                <span class="sp_review_close">x</span>
+                <h3 style="text-align: center;">'.__("Thank you for rating this plugin", "spamprotection").'</h3>
+                <p>'.__("This plugin is and will always be free of charge! If you found any errors, please contact me in OSClass Forum to solve your problems before rating this plugin.", "spamprotection").'</p>    
+                <p>'.__("If you are happy with this plugin and love to use it, please rate it now on OSClass Market!", "spamprotection").'</p>    
+                <p>'.__("Thanks in advance.<br />Liath", "spamprotection").'</p>
+                <br />    
+                <p style="text-align: center;">
+                    <a href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank">
+                        <button class="btn btn-submit">'.__("Rate now", "spamprotection").'</button>
+                    </a>
+                    <a href="https://forums.osclass.org/plugins/(plugin)-spam-protection/msg148758/#msg148758" target="_blank">
+                        <button class="btn">'.__("OSClass Forum", "spamprotection").'</button>
+                    </a>
+                    <button class="btn btn-red sp_review_close">'.__("Not now", "spamprotection").'</button>
+                </p>                        
             </div>
-        </div>';    
+        </div>
+    </div>';    
 }
 
 function sprot_install() {
@@ -44,8 +46,8 @@ function sprot_uninstall() {
 function sprot_style_admin() {
     $params = Params::getParamsAsArray();
     
-    osc_enqueue_style('spam_protection-upgrade_css', osc_plugin_url('spamprotection/assets/css/upgrade.css').'upgrade.css');
-    osc_register_script('spam_protection-upgrade_js', osc_plugin_url('spamprotection/assets/js/upgrade.js') . 'upgrade.js', array('jquery'));
+    osc_enqueue_style('spam_protection-upgrade_css', osc_plugin_url('spamprotection/assets/css/admin_general.css').'admin_general.css');
+    osc_register_script('spam_protection-upgrade_js', osc_plugin_url('spamprotection/assets/js/admin_general.js') . 'admin_general.js', array('jquery'));
     osc_enqueue_script('spam_protection-upgrade_js');
         
     if (isset($params['file'])) {
@@ -53,22 +55,36 @@ function sprot_style_admin() {
         $file = explode(".", $plugin[2]);
         if ($plugin[0] == 'spamprotection') {
             
-            osc_enqueue_style('spam_protection-styles_admin', osc_plugin_url('spamprotection/assets/css/admin.css').'admin.css');
+            osc_enqueue_style('spam_protection-styles_admin', osc_plugin_url('spamprotection/assets/css/admin_plugin.css').'admin_plugin.css');
             
-            osc_register_script('spam_protection-admin', osc_plugin_url('spamprotection/assets/js/admin.js') . 'admin.js', array('jquery'));
+            osc_register_script('spam_protection-admin', osc_plugin_url('spamprotection/assets/js/admin_plugin.js') . 'admin_plugin.js', array('jquery'));
             osc_enqueue_script('spam_protection-admin');
             
             osc_add_hook('admin_page_header','sprot_admin_page_header');
             osc_remove_hook('admin_page_header', 'customPageHeader');    
-        }
-        
-        if ($file[0] == 'config') {
-            /*osc_enqueue_style('spam_protection-uploader', osc_plugin_url('spamprotection/assets/css/filedrop.css').'filedrop.css');
-            osc_register_script('spam_protection-uploader', osc_plugin_url('spamprotection/assets/js/custom-file-input.js') . 'custom-file-input.js', array('jquery'));
-            osc_enqueue_script('spam_protection-uploader');
-            osc_register_script('spam_protection-uploader_jquery', osc_plugin_url('spamprotection/assets/js/jquery.custom-file-input.js') . 'jquery.custom-file-input.js', array('jquery'));
-            osc_enqueue_script('spam_protection-uploader_jquery');*/       
         }   
+    }    
+}
+
+function sprot_style_admin_footer() {
+    $menu = spam_prot::newInstance()->_get('sp_activate_menu');
+    $order = spam_prot::newInstance()->_get('sp_menu_after');
+    
+    if ($menu == '1' && $order != 'anywhere') {
+        echo '
+        <script>
+        $(document).ready(function(){
+            $("ul.oscmenu li#menu_spamprotection").insertAfter("#sidebar ul.oscmenu > li#'.$order.'").css("display", "");                            
+            $("ul#hidden-menus li#menu_spamprotection").remove();                            
+            ;
+            $("#sidebar ul.oscmenu > li#menu_spamprotection").hover(function(){
+                $(this).addClass("hover");
+            },function(){
+                $(this).removeClass("hover");
+            });
+        });
+        </script>
+        ';
     }    
 }
 
@@ -78,15 +94,24 @@ function sprot_configuration() {
 
 function sprot_init() {      
     spam_prot::newInstance()->_admin_menu_draw();
-    $check = spam_prot::newInstance()->_upgradeCheck();
-        
-    if (!$check) {        
-        spam_prot::newInstance()->_upgradeDatabaseInfo($check);
-    }
+    $upgrade = spam_prot::newInstance()->_get('sp_update_check');
+    
+    if ($upgrade == '1') {   
+        $check = spam_prot::newInstance()->_upgradeCheck();             
+        if (!$check) {        
+            spam_prot::newInstance()->_upgradeDatabaseInfo($check);
+        } 
+    } 
 }
 
 function sprot_admin_menu_init() {
     osc_add_admin_submenu_page('tools', __('Spam Protection', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings'), 'sprot_admin_settings', 'administrator');
+
+    osc_add_admin_menu_page( __('Spam Protection', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings'), 'spamprotection', 'administrator' );
+    osc_add_admin_submenu_divider('spamprotection', __('Spam Protection', 'spamprotection'), 'spamprotection_divider', 'administrator');
+    osc_add_admin_submenu_page('spamprotection', __('Dashboard', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings'), 'spamprotection_dashboard', 'administrator');
+    osc_add_admin_submenu_page('spamprotection', __('Settings', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=sp_config'), 'spamprotection_settings', 'administrator');
+    osc_add_admin_submenu_page('spamprotection', __('Help', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=sp_help'), 'spamprotection_help', 'administrator');
 }
 
 function sprot_admin_menu() {

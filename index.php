@@ -78,6 +78,7 @@ if (OC_ADMIN) {
     osc_add_hook(osc_plugin_path(__FILE__) . '_configure', 'sprot_configuration');
     
     osc_add_hook('admin_header', 'sprot_style_admin');
+    osc_add_hook('admin_footer', 'sprot_style_admin_footer');
     osc_add_hook('init_admin', 'sprot_init');
     
     if (osc_version() >= 300) {
@@ -99,13 +100,15 @@ if (spam_prot::newInstance()->_get('sp_comment_activate') == '1') {
     osc_add_hook('add_comment', 'sp_check_comment');                        
     osc_add_hook('edit_comment', 'sp_check_comment');
 }
-
-if (spam_prot::newInstance()->_get('sp_honeypot') == '1') {
-    osc_add_hook('item_form', 'sp_add_honeypot');
-    osc_add_hook('item_edit', 'sp_add_honeypot');
+if (osc_is_ad_page()) {
+    if (spam_prot::newInstance()->_get('sp_honeypot') == '1') {
+        osc_add_hook('item_form', 'sp_add_honeypot');
+        osc_add_hook('item_edit', 'sp_add_honeypot');
+    }
+    osc_add_hook('item_contact_form', 'sp_contact_form');
 }
 
-osc_add_hook('item_contact_form', 'sp_contact_form');
+
 osc_add_hook('delete_comment', 'sp_delete_comment');
 osc_add_hook('actions_manage_items', 'sp_compare_items');
 osc_add_hook('hook_email_item_inquiry', 'sp_check_contact_item', 1);
@@ -116,13 +119,13 @@ if ($sp->_get('sp_security_activate') == '1') {
     osc_add_hook('before_validating_login', 'sp_check_user_login', 1);
     
     if (spam_prot::newInstance()->_get('sp_security_login_hp') == '1') {
-        osc_add_hook('user_login_form', 'sp_add_honeypot_security');
+        osc_add_hook('user_login_form', 'sp_add_honeypot_security', 1);
     }
     if (spam_prot::newInstance()->_get('sp_security_register_hp') == '1') {
-        osc_add_hook('user_register_form', 'sp_add_honeypot_security');
+        osc_add_hook('user_register_form', 'sp_add_honeypot_security', 1);
     }
     if (spam_prot::newInstance()->_get('sp_security_recover_hp') == '1') {
-        osc_add_hook('user_recover_form', 'sp_add_honeypot_security');
+        osc_add_hook('user_recover_form', 'sp_add_honeypot_security', 1);
     }
     
     if (spam_prot::newInstance()->_get('sp_security_login_unban') > '0') {
@@ -140,7 +143,7 @@ if ($sp->_get('sp_admin_activate') == '1') {
     osc_add_hook('before_login_admin', 'sp_check_admin_login', 1);
     
     if (spam_prot::newInstance()->_get('sp_admin_login_hp') == '1') {
-        osc_add_hook('login_admin_form', 'sp_admin_login');
+        osc_add_hook('login_admin_form', 'sp_admin_login', 1);
     }
     
     if (spam_prot::newInstance()->_get('sp_admin_login_unban') > '0') {

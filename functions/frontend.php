@@ -149,7 +149,12 @@ function sp_check_user_login() {
 }
 
 function sp_add_honeypot_security() {
-    echo '<input id="token" type="text" name="token" value="" class="form-control sp_form_field" autocomplete="off">';    
+    echo '<input id="token" type="text" name="token" value="" class="form-control sp_form_field" autocomplete="off">';
+    
+    /*
+    <div data-widget data-app="ohulo8uneva1uro7orut"></div>
+    <script src="//cdn.ringcaptcha.com/widget/v2/bundle.min.js"></script>
+    */    
 }
 
 function sp_unban_cron() {

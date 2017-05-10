@@ -1,0 +1,617 @@
+@import 'icons.css';
+
+/* OSClass overrides */
+#content-head {
+    border-bottom: solid 1px #ddd;
+    background-color: #f3f3f3;
+    padding: 24px 30px;
+}
+
+#content-page {
+    padding: 0 !important;
+}
+
+.grid-row {
+    margin: 0;
+}
+
+.grid-row .row-wrapper {
+    margin: 0;
+}
+
+/* Coming soon */
+
+.row.form-group.comingsoon {
+    position: relative;
+}
+
+.row.form-group.comingsoon:before {
+    content: "coming soon";
+    font-size: 30px;
+    color: red;
+    position: absolute;
+    margin: 100px auto;
+    width: 175px;
+    top: 20px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transform: rotate(-45deg);
+}
+
+/* Standards */
+.row {
+    margin: 20px 0 !important;   
+}
+
+.halfrow {
+    width: 46%;
+    padding: 2%;
+    float: left;
+}
+
+.compare {
+    width: 100%;
+}
+
+/* Spam Protection */
+
+.settings input[type='text'], .settings textarea {
+    width: 100%;    
+}
+
+#view_comment .author_info > p, #view_comment .comment_info > p {
+    line-height: 10px;
+    margin-left: 10px;
+}
+
+div#blocked_ads {
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+div#blocked_ads_inner {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 120px auto;
+    padding: 15px;
+    width: 500px;
+    height: auto;
+    overflow: auto;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid #000;
+    border-radius: 3px;
+    color: #000;
+}
+
+div#blocked_ads_close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+div#blocked_ads_inner table {
+    width: 100%;    
+}
+
+div#blocked_ads_inner table tr {
+    height: 30px;    
+}
+
+div#blocked_ads_inner table tr td {
+    padding: 3px 7px;    
+}
+
+#sp_options,
+#sp_comment_options,
+#sp_contact_options,
+#sp_security_mainfeatures_user,
+#sp_security_mainfeatures_admin,
+#sp_config_options {
+    color: #000;
+    transition: ease all 0.6s;
+}
+
+#sp_options.disabled *,
+#sp_comment_options.disabled *,
+#sp_contact_options.disabled *,
+#sp_security_mainfeatures_user.disabled *,
+#sp_security_mainfeatures_admin.disabled * {
+    color: #bbb;
+}
+
+
+.hiddeninput {
+    margin-top: 15px;
+}
+
+.hiddeninput label {
+    width: 100%;
+}
+
+.hiddeninput:not(.visible) {
+    display: none;
+}
+
+input[name=honeypot_name].valid {
+    border: 1px solid green;
+    outline: none;    
+}
+
+input[name=honeypot_name].invalid {
+    border: 1px solid red;
+    outline: none;    
+}
+
+#spamprot { 
+    background: transparent; 
+    border: none; 
+}
+#spamprot div.row.form-group {
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 20px;
+}
+
+div#sp_settings, 
+div#sp_comments, 
+div#sp_contact, 
+div#sp_security, 
+div#sp_help,
+div#sp_config {
+    position: relative;
+    top: 35px;
+    left: 0;
+    width: 100%;
+}
+
+#spamprot div.settings > div > div, #spamprot div.help > div > div {
+    padding: 20px;
+}
+
+#spamprot ul.tabs {
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: calc(100% - 15px);
+    padding-left: 15px;
+    line-height: 35px;
+    background: #000;
+    border: none;
+}
+
+#spamprot ul.langtabs { 
+    background: transparent; 
+    border: none; 
+    border-bottom: 1px solid #c0c0c0; 
+    -moz-border-radius: 0px; 
+    -webkit-border-radius: 0px; 
+    border-radius: 0px; 
+}
+
+#spamprot ul.tabs li,
+#spamprot ul.langtabs li { 
+    background: transparent;
+    display: inline-block;
+    border: none;
+    list-style: none;
+    position: relative;
+    top: 1px;
+    border-bottom: 0 !important;
+} 
+
+#spamprot ul.tabs li a,
+#spamprot ul.langtabs li a {
+    color: #c0c0c0 !important;
+    display: block;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    padding: .5em 1em;
+} 
+
+#spamprot ul.tabs li.current,
+#spamprot ul.langtabs li.current { 
+    background: transparent url(../img/uiTabsArrow.png) no-repeat bottom center; 
+    border: none;
+}
+
+#spamprot ul.tabs li.current a, 
+#spamprot ul.langtabs li.current a { 
+    color: #459e00 !important; 
+}
+
+.sp_tabs {
+    width: 200px;
+    float: left;
+    padding: 0;
+}
+.sp_options, 
+.sp_comment_options, 
+.sp_contact_options, 
+.sp_security_options, 
+.sp_admin_options, 
+.sp_help_section, 
+.sp_config_options {
+    width: calc(100% - 200px);
+    float: left;
+} 
+
+#spamprot ul.subtabs {
+    background: #000;
+    border: none;
+    padding: 0;
+}
+#spamprot ul.subtabs li { 
+    background: transparent;
+    display: block;
+    border: none;
+    list-style: none;
+    position: relative;
+    top: 1px;
+    border-bottom: 0 !important;
+    text-align: center;
+} 
+#spamprot ul.subtabs li a {
+    color: #c0c0c0 !important;
+    display: block;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    padding: 1em;
+}
+#spamprot ul.subtabs li button {
+    margin-top: 20px;
+} 
+#spamprot ul.subtabs li.current {
+    border: none;
+} 
+#spamprot ul.subtabs li.current a { 
+    color: #459e00 !important; 
+}
+
+#spamprot .tab-content, 
+#spamprot .subtab-content {
+    display: none;
+}
+
+#spamprot .tab-content.current, 
+#spamprot .subtab-content.current {
+    display: inherit;
+}
+
+#spamprot div > div.floating {
+    display: inline-block;
+    margin: 0 10px 0 0;
+    float: left;
+}
+
+#spamprot .form-control {
+    width: 100%;
+}
+
+#spamprot textarea.form-control {
+    height: 200px;
+}
+
+#spamprot .actionbuttons {
+    margin: 70px 0 0;
+    text-align: right;
+}
+
+#spamprot .actionbuttons a {
+    margin: 0 10px;
+    width: 150px;
+    padding: 10px;
+    text-align: center;
+}
+
+#sp_help ul li {
+    list-style-type: disc;
+}
+
+#sp_help ul li p {
+    margin: 0 0 10px;
+}
+div#flashmessage {
+    position: absolute;
+    right: 45px;
+    top: 90px;
+    z-index: 100;
+    min-height: 0;
+    line-height: 21px;
+    padding: 0;
+    background: none;
+    border: none;
+}
+div#flashmessage a {
+    margin-left: 15px;
+}
+
+div#attention {
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+}
+#attention_content {
+    display: none;
+    margin: 150px auto;
+    width: 350px;
+    text-align: center;
+    padding: 20px;
+    background: rgba(200, 200, 200, 0.95);
+    border-radius: 3px;
+    box-shadow: 6px 6px 8px #000;
+}
+.viewToggle {
+    position: absolute;
+    right: 50px;
+    top: 100px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.viewToggle:hover {
+    background: #eee;
+}
+textarea#descriptionCode {
+    display: none;
+}
+div#descriptionHTML {
+    display: block;
+}
+
+.table th, .table td {
+    padding: 4px 6px;
+    line-height: 18px;
+    vertical-align: top;
+    border-left: 0;
+    border-top: 0;
+    border: 1px solid #ddd;
+    border-bottom: 0;
+    border-left: 0;
+    position: relative;
+}
+
+.table td.col-status-border {
+    width: 1px;
+    margin: 0;
+    padding: 0;
+    border-top: 0;
+    border-bottom: 0;
+    border-right: 0;
+}
+
+.table .status-blocked td.col-status-border {
+    background: #e02800;
+}
+
+.table td.col-author {
+    width: 200px;    
+}
+
+.table td.col-status {
+    border-top: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 0;
+    width: 50px;
+    padding: 0 10px;
+    margin: 0;
+    font-weight: 700;
+    vertical-align: middle;
+    border-left: 0;
+}
+
+.table .status-blocked td.col-status {
+    background: #fe7d7f;
+    color: #A10;
+}
+
+.table div.actions {
+    display: none;
+}
+
+.table div.actions > ul{
+    margin: 0;
+    padding: 0;
+}
+
+.table div.actions > ul > li {
+    display: inline-block;
+}
+
+.table div.actions > ul > li:before {
+    content: "> ";
+}
+
+.table tr:hover div.actions {
+    display: block;
+}
+
+.table-contains-actions tbody td {
+    padding-bottom: 0;
+    height: 41px;
+}
+
+div#sp_review_wrap {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+div#sp_review_inner {
+    position: relative;
+    width: 400px;
+    padding: 25px;
+    margin: 100px auto 0 auto;
+    background: rgba(200, 200, 200, 0.95);
+    border-radius: 3px;
+    box-shadow: 6px 6px 8px #000;
+    z-index: 2;
+}
+
+span.sp_review_close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: 1px solid #999;
+    color: #999;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#sp_security_login_honeypots > div > strong {
+    display: block;
+    margin: 5px 0 0;
+    padding: 5px;
+    width: calc(100% - 21px);
+    background-color: #666;
+    color: #fff;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-left: 11px solid #666;
+    border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;    
+}
+
+#sp_security_login_honeypots > div > pre {
+    display: block;
+    padding: 10px;
+    margin: 0;
+    overflow: auto;
+    width: calc(100% - 32px);
+    background-color: #f3f3f3;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-left: 11px solid #666;
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre;
+    white-space: pre-wrap;
+    border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;    
+}
+
+#sp_security_login_honeypots code {
+    line-height: 1.6em;
+    font-size: 11px;
+    font-family: "Courier New", Courier, monospace, sans-serif;
+    text-align: left;
+    color: #555;
+    border: 0;    
+}
+
+.spamprot_bans > table > tbody > tr {
+    position: relative;
+}
+
+.spamprot_bans > table > tbody > tr > td > div.actions {
+    position: absolute;
+    background: #ccc;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.file-button {
+    background-image: url(../img/bnt-overlay.png);    
+}
+.file-upload-override-button {
+    position: relative;
+    float: left;
+    padding: 0 10px;
+    line-height: 32px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #00bed6;
+    border: solid 1px #2f96b4;
+    color: #fff;
+    margin-right: 10px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+.file-upload-override-button:hover {
+    background-color: #00b3c1;
+    border-color: #2f96b4;
+}
+.file-upload-override-button:active {
+    position:relative; top:1px;
+}
+.file-upload-button {
+    position: absolute;
+    height: 50px;
+    top: -25px;
+    left: -10px;
+    cursor: pointer;
+    opacity: 0;
+    filter:alpha(opacity=0);
+}
+.file-upload-filename {
+    float: left;
+    margin-left: 10px;
+    height: auto;
+    padding: 10px;
+}
+
+
+
+
+#spamprot fieldset {
+    border: 1px solid #bbb; 
+    padding: 0 15px; 
+    margin: 25px 0;
+    transition: ease all .4s;
+}
+
+#spamprot fieldset:hover {
+    background: #efefef;
+}
+
+#spamprot fieldset legend {
+    font-size: 16px;
+    font-weight: bold;
+    font-style: italic;
+    transition: ease all .4s;
+}
+
+#spamprot fieldset:hover legend {
+    margin-left: 10px;
+}
+
+#spamprot fieldset .row {
+    margin: 10px 0 !important;
+}
+
+#spamprot fieldset div.row.form-group {
+    border-bottom: none;
+    padding-bottom: 0px;
+}
+
+#spamprot fieldset input[type=text], #spamprot fieldset textarea {
+    width: calc(100% - 15px);
+}
