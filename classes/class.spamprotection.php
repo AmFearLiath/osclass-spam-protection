@@ -1105,7 +1105,18 @@ class spam_prot extends DAO {
         return false;        
     }
     
-    function _checkUserLogin($email, $password) {        
+    function _checkUserLogin($email, $password) {
+        $user = User::newInstance()->findByEmail(mysql_real_escape_string($email)); 
+        if ($user && isset($user['pk_i_id'])) {
+            if (!osc_verify_password(mysql_real_escape_string($password), (isset($user['s_password']) ? $user['s_password'] : ''))) {
+                return false;                
+            } else {
+                return true;
+            }    
+        } else {
+            return false;
+        }
+        /*      
         if (!$this->_checkAccount($email, 'user')) {
             return false;
         } else {
@@ -1116,7 +1127,8 @@ class spam_prot extends DAO {
             } else {
                 return true;
             }
-        }        
+        }
+        */        
     }
     
     function _checkAdminLogin($admin, $password) {

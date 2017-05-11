@@ -5,6 +5,11 @@
     margin-top: -8px;
 }
 
+#spamprotection .ico-spamprotection {
+    opacity: 0.5;
+    transition: ease opacity .4s;
+}
+
 #spamprotection .ico-spamprotection, #content-head .sp_header_icon {
     background-image: url(../img/admin.png) !important;
     background-size: 150px 50px;
@@ -17,6 +22,7 @@
 
 #spamprotection:hover .ico-spamprotection {
     background-position: -50px 0px;
+    opacity: 1;
 }
 
 div#spamprot_upgrade_overlay {

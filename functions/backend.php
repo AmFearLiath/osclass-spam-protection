@@ -1,5 +1,5 @@
 <?php
-if (!defined('ABS_PATH')) {
+if (!defined('OC_ADMIN')) {
     exit('Direct access is not allowed.');
 }
 
