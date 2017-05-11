@@ -13,6 +13,7 @@ $data = $sp->_get();
     <ul class="subtabs sp_tabs">
         <li class="subtab-link current" data-tab="sp_security_mainfeatures_user"><a><?php _e('User Protection', 'spamprotection'); ?></a></li>
         <li class="subtab-link" data-tab="sp_security_mainfeatures_admin"><a><?php _e('Admin Protection', 'spamprotection'); ?></a></li>
+        <li class="subtab-link" data-tab="sp_security_mainfeatures_register"><a><?php _e('Registrations', 'spamprotection'); ?></a></li>
         <li class="subtab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
     </ul>
 
@@ -221,15 +222,16 @@ $data = $sp->_get();
             <fieldset>
                 <legend><?php _e("Login limit reached", "spamprotection"); ?></legend>
                 <div class="row form-group">
-                <label>
-                    <?php _e('Action done after false logins', 'spamprotection'); ?>
-                </label><br />
-                <select id="sp_admin_login_action" name="sp_admin_login_action">
-                    <option value="1"<?php if (empty($data['sp_admin_login_action']) || $data['sp_admin_login_action'] == '1') { echo ' selected="selected"'; } ?>><?php _e('Disable user account', 'spamprotection'); ?></option>
-                    <option value="2"<?php if (!empty($data['sp_admin_login_action']) && $data['sp_admin_login_action'] == '2') { echo ' selected="selected"'; } ?>><?php _e('Add IP to Banlist', 'spamprotection'); ?></option>
-                    <option value="3"<?php if (!empty($data['sp_admin_login_action']) && $data['sp_admin_login_action'] == '3') { echo ' selected="selected"'; } ?>><?php _e('Both', 'spamprotection'); ?></option>
-                </select>
-            </div>            
+                    <label>
+                        <?php _e('Action done after false logins', 'spamprotection'); ?>
+                    </label><br />
+                    <select id="sp_admin_login_action" name="sp_admin_login_action">
+                        <option value="1"<?php if (empty($data['sp_admin_login_action']) || $data['sp_admin_login_action'] == '1') { echo ' selected="selected"'; } ?>><?php _e('Disable user account', 'spamprotection'); ?></option>
+                        <option value="2"<?php if (!empty($data['sp_admin_login_action']) && $data['sp_admin_login_action'] == '2') { echo ' selected="selected"'; } ?>><?php _e('Add IP to Banlist', 'spamprotection'); ?></option>
+                        <option value="3"<?php if (!empty($data['sp_admin_login_action']) && $data['sp_admin_login_action'] == '3') { echo ' selected="selected"'; } ?>><?php _e('Both', 'spamprotection'); ?></option>
+                    </select>
+                </div>
+            </fieldset>            
             
             <fieldset>
                 <legend><?php _e("Inform user", "spamprotection"); ?></legend>
@@ -250,6 +252,32 @@ $data = $sp->_get();
                         <?php _e('Add Honeypot to admin login form', 'spamprotection'); ?>
                     </label><br />
                     <small><?php _e('This Option ads a hidden form field to the admin login forms. After a bot tap into your trap, action following rules you have set above.', 'spamprotection'); ?></small><br />
+                </div>
+            </fieldset>
+            
+        </div>
+    </div>
+    
+    <div id="sp_register_options" class="sp_register_options">
+        <div id="sp_security_mainfeatures_register" class="subtab-content <?php echo (empty($data['sp_admin_activate']) || $data['sp_admin_activate'] == '0' ? 'disabled' : 'enabled'); ?>">
+            
+            <fieldset>
+                <legend><?php _e("Check registrations", "spamprotection"); ?></legend>
+                <div class="row form-group">
+                    <label>
+                        <?php _e('Select type of registrations check', 'spamprotection'); ?>
+                    </label><br />
+                    <select id="sp_check_registrations" name="sp_check_registrations">
+                        <option value="1"<?php if (empty($data['sp_check_registrations']) || $data['sp_check_registrations'] == '1') { echo ' selected="selected"'; } ?>><?php _e('Deactivate', 'spamprotection'); ?></option>
+                        <option value="2"<?php if (!empty($data['sp_check_registrations']) && $data['sp_check_registrations'] == '2') { echo ' selected="selected"'; } ?>><?php _e('Allow only following hoster', 'spamprotection'); ?></option>
+                        <option value="3"<?php if (!empty($data['sp_check_registrations']) && $data['sp_check_registrations'] == '3') { echo ' selected="selected"'; } ?>><?php _e('Disallow following hoster', 'spamprotection'); ?></option>
+                    </select><br />
+                    <small><?php _e('This option allows to define which emails can be used for registering an account on your page.', 'spamprotection'); ?></small>
+                    
+                    <div id="sp_check_registration_mails" class="hiddeninput<?php if (!empty($data['sp_check_registrations']) && $data['sp_check_registrations'] == '2' || $data['sp_check_registrations'] == '3') { echo ' visible'; } ?>">
+                        <label for="sp_check_registration_mails"><?php _e('Enter email hoster, separated by , (e.g. mail.ru,gmail.com,yahoo.com)', 'spamprotection'); ?></label><br>
+                        <textarea class="form-control" name="sp_check_registration_mails" style="height: 150px;"><?php if (!empty($data['sp_check_registration_mails'])) { echo $data['sp_check_registration_mails']; } ?></textarea>
+                    </div>
                 </div>
             </fieldset>
             

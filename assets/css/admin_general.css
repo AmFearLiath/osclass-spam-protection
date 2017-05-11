@@ -3,12 +3,16 @@
     width: 50px;
     height: 50px;
     margin-top: -8px;
- }
+}
 
 #spamprotection .ico-spamprotection, #content-head .sp_header_icon {
     background-image: url(../img/admin.png) !important;
-    background-size: 100px 50px;
+    background-size: 150px 50px;
     background-position: 0 0;
+}
+
+#spamprotection.highlight .ico-spamprotection {
+    background-position: -100px 0;
 }
 
 #spamprotection:hover .ico-spamprotection {

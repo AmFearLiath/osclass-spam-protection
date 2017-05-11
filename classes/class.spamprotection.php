@@ -58,61 +58,63 @@ class spam_prot extends DAO {
     
     function _opt($key = false) {                
         $opts = array(
-            'sp_activate'               => array('1', 'BOOLEAN'),
-            'sp_comment_activate'       => array('1', 'BOOLEAN'),
-            'sp_contact_activate'       => array('1', 'BOOLEAN'),
-            'sp_security_activate'      => array('1', 'BOOLEAN'),
-            'sp_admin_activate'         => array('1', 'BOOLEAN'),
-            'sp_duplicates'             => array('1', 'BOOLEAN'),
-            'sp_duplicates_as'          => array('1', 'BOOLEAN'),
-            'sp_duplicate_type'         => array('0', 'BOOLEAN'),
-            'sp_duplicate_perc'         => array('85', 'BOOLEAN'),
-            'sp_duplicates_time'        => array('30', 'BOOLEAN'),
-            'sp_honeypot'               => array('0', 'BOOLEAN'),
-            'sp_contact_honeypot'       => array('0', 'BOOLEAN'),
-            'honeypot_name'             => array('sp_price_range', 'STRING'),
-            'contact_honeypot_name'     => array('yourDate', 'STRING'),
-            'contact_honeypot_value'    => array('asap', 'STRING'),
-            'sp_blocked'                => array('0', 'BOOLEAN'),
-            'sp_blocked_tld'            => array('0', 'BOOLEAN'),
-            'sp_blockedtype'            => array('strpos', 'STRING'),
-            'sp_comment_blocked'        => array('0', 'BOOLEAN'),
-            'sp_comment_blocked_tld'    => array('0', 'BOOLEAN'),
-            'sp_comment_blockedtype'    => array('strpos', 'STRING'),
-            'sp_contact_blocked'        => array('0', 'BOOLEAN'),
-            'sp_contact_blocked_tld'    => array('0', 'BOOLEAN'),
-            'sp_contact_blockedtype'    => array('strpos', 'STRING'),
-            'sp_mxr'                    => array('0', 'BOOLEAN'),
-            'blocked'                   => array('', 'STRING'),
-            'blocked_tld'               => array('', 'STRING'),
-            'comment_blocked'           => array('', 'STRING'),
-            'comment_blocked_tld'       => array('', 'STRING'),
-            'contact_blocked'           => array('', 'STRING'),
-            'contact_blocked_tld'       => array('', 'STRING'),
-            'sp_stopwords'              => array('', 'STRING'),
-            'sp_comment_stopwords'      => array('', 'STRING'),
-            'sp_contact_stopwords'      => array('', 'STRING'),
-            'sp_comment_links'          => array('', 'STRING'),
-            'sp_contact_links'          => array('', 'STRING'),
-            'sp_security_login_count'   => array('', 'STRING'),
-            'sp_admin_login_count'      => array('', 'STRING'),
-            'sp_security_login_time'    => array('', 'STRING'),
-            'sp_admin_login_time'       => array('', 'STRING'),
-            'sp_security_login_action'  => array('', 'STRING'),
-            'sp_admin_login_action'     => array('', 'STRING'),
-            'sp_security_login_inform'  => array('0', 'BOOLEAN'),
-            'sp_admin_login_inform'     => array('0', 'BOOLEAN'),
-            'sp_security_login_hp'      => array('0', 'BOOLEAN'),
-            'sp_admin_login_hp'         => array('0', 'BOOLEAN'),
-            'sp_security_register_hp'   => array('0', 'BOOLEAN'),
-            'sp_security_recover_hp'    => array('0', 'BOOLEAN'),
-            'sp_security_login_unban'   => array('0', 'STRING'),
-            'sp_admin_login_unban'      => array('0', 'STRING'),
-            'sp_admin_login_cron'       => array('0', 'STRING'),
-            'sp_activate_topbar'        => array('1', 'BOOLEAN'),
-            'sp_activate_menu'          => array('1', 'BOOLEAN'),
-            'sp_menu_after'             => array('menu_dash', 'STRING'),
-            'sp_update_check'           => array('1', 'BOOLEN'),
+            'sp_activate'                   => array('1', 'BOOLEAN'),
+            'sp_comment_activate'           => array('1', 'BOOLEAN'),
+            'sp_contact_activate'           => array('1', 'BOOLEAN'),
+            'sp_security_activate'          => array('1', 'BOOLEAN'),
+            'sp_admin_activate'             => array('1', 'BOOLEAN'),
+            'sp_duplicates'                 => array('1', 'BOOLEAN'),
+            'sp_duplicates_as'              => array('1', 'BOOLEAN'),
+            'sp_duplicate_type'             => array('0', 'BOOLEAN'),
+            'sp_duplicate_perc'             => array('85', 'BOOLEAN'),
+            'sp_duplicates_time'            => array('30', 'BOOLEAN'),
+            'sp_honeypot'                   => array('0', 'BOOLEAN'),
+            'sp_contact_honeypot'           => array('0', 'BOOLEAN'),
+            'honeypot_name'                 => array('sp_price_range', 'STRING'),
+            'contact_honeypot_name'         => array('yourDate', 'STRING'),
+            'contact_honeypot_value'        => array('asap', 'STRING'),
+            'sp_blocked'                    => array('0', 'BOOLEAN'),
+            'sp_blocked_tld'                => array('0', 'BOOLEAN'),
+            'sp_blockedtype'                => array('strpos', 'STRING'),
+            'sp_comment_blocked'            => array('0', 'BOOLEAN'),
+            'sp_comment_blocked_tld'        => array('0', 'BOOLEAN'),
+            'sp_comment_blockedtype'        => array('strpos', 'STRING'),
+            'sp_contact_blocked'            => array('0', 'BOOLEAN'),
+            'sp_contact_blocked_tld'        => array('0', 'BOOLEAN'),
+            'sp_contact_blockedtype'        => array('strpos', 'STRING'),
+            'sp_mxr'                        => array('0', 'BOOLEAN'),
+            'blocked'                       => array('', 'STRING'),
+            'blocked_tld'                   => array('', 'STRING'),
+            'comment_blocked'               => array('', 'STRING'),
+            'comment_blocked_tld'           => array('', 'STRING'),
+            'contact_blocked'               => array('', 'STRING'),
+            'contact_blocked_tld'           => array('', 'STRING'),
+            'sp_stopwords'                  => array('', 'STRING'),
+            'sp_comment_stopwords'          => array('', 'STRING'),
+            'sp_contact_stopwords'          => array('', 'STRING'),
+            'sp_comment_links'              => array('', 'STRING'),
+            'sp_contact_links'              => array('', 'STRING'),
+            'sp_security_login_count'       => array('', 'STRING'),
+            'sp_admin_login_count'          => array('', 'STRING'),
+            'sp_security_login_time'        => array('', 'STRING'),
+            'sp_admin_login_time'           => array('', 'STRING'),
+            'sp_security_login_action'      => array('', 'STRING'),
+            'sp_admin_login_action'         => array('', 'STRING'),
+            'sp_security_login_inform'      => array('0', 'BOOLEAN'),
+            'sp_admin_login_inform'         => array('0', 'BOOLEAN'),
+            'sp_security_login_hp'          => array('0', 'BOOLEAN'),
+            'sp_admin_login_hp'             => array('0', 'BOOLEAN'),
+            'sp_security_register_hp'       => array('0', 'BOOLEAN'),
+            'sp_security_recover_hp'        => array('0', 'BOOLEAN'),
+            'sp_security_login_unban'       => array('0', 'STRING'),
+            'sp_admin_login_unban'          => array('0', 'STRING'),
+            'sp_admin_login_cron'           => array('0', 'STRING'),
+            'sp_activate_topbar'            => array('1', 'BOOLEAN'),
+            'sp_activate_menu'              => array('1', 'BOOLEAN'),
+            'sp_menu_after'                 => array('menu_dash', 'STRING'),
+            'sp_update_check'               => array('1', 'BOOLEN'),
+            'sp_check_registrations'        => array('1', 'BOOLEN'),
+            'sp_check_registration_mails'   => array('1', 'BOOLEN'),
         );
         
         if ($key) { return $opts[$key]; }
@@ -127,58 +129,61 @@ class spam_prot extends DAO {
         } else {
             if (!$type) {
                 $opts = array(
-                    'sp_activate'               => osc_get_preference('sp_activate', $pref),
-                    'sp_comment_activate'       => osc_get_preference('sp_comment_activate', $pref),
-                    'sp_contact_activate'       => osc_get_preference('sp_contact_activate', $pref),
-                    'sp_security_activate'      => osc_get_preference('sp_security_activate', $pref),
-                    'sp_admin_activate'         => osc_get_preference('sp_admin_activate', $pref),
-                    'sp_duplicates'             => osc_get_preference('sp_duplicates', $pref),
-                    'sp_duplicates_as'          => osc_get_preference('sp_duplicates_as', $pref),
-                    'sp_duplicate_type'         => osc_get_preference('sp_duplicate_type', $pref),
-                    'sp_duplicate_perc'         => osc_get_preference('sp_duplicate_perc', $pref),
-                    'sp_duplicates_time'        => osc_get_preference('sp_duplicates_time', $pref),
-                    'sp_honeypot'               => osc_get_preference('sp_honeypot', $pref),
-                    'sp_contact_honeypot'       => osc_get_preference('sp_contact_honeypot', $pref),
-                    'honeypot_name'             => osc_get_preference('honeypot_name', $pref),
-                    'contact_honeypot_name'     => osc_get_preference('contact_honeypot_name', $pref),
-                    'contact_honeypot_value'    => osc_get_preference('contact_honeypot_value', $pref),
-                    'sp_blocked'                => osc_get_preference('sp_blocked', $pref),
-                    'sp_blocked_tld'            => osc_get_preference('sp_blocked_tld', $pref),
-                    'sp_blockedtype'            => osc_get_preference('sp_blockedtype', $pref),
-                    'sp_comment_blocked'        => osc_get_preference('sp_comment_blocked', $pref),
-                    'sp_comment_blocked_tld'    => osc_get_preference('sp_comment_blocked_tld', $pref),
-                    'sp_comment_blockedtype'    => osc_get_preference('sp_comment_blockedtype', $pref),
-                    'sp_contact_blocked'        => osc_get_preference('sp_contact_blocked', $pref),
-                    'sp_contact_blocked_tld'    => osc_get_preference('sp_contact_blocked_tld', $pref),
-                    'sp_contact_blockedtype'    => osc_get_preference('sp_contact_blockedtype', $pref),
-                    'sp_mxr'                    => osc_get_preference('sp_mxr', $pref),
-                    'blocked'                   => osc_get_preference('blocked', $pref),
-                    'blocked_tld'               => osc_get_preference('blocked_tld', $pref),
-                    'comment_blocked'           => osc_get_preference('comment_blocked', $pref),
-                    'comment_blocked_tld'       => osc_get_preference('comment_blocked_tld', $pref),
-                    'contact_blocked'           => osc_get_preference('contact_blocked', $pref),
-                    'contact_blocked_tld'       => osc_get_preference('contact_blocked_tld', $pref),
-                    'sp_stopwords'              => osc_get_preference('sp_stopwords', $pref),
-                    'sp_comment_stopwords'      => osc_get_preference('sp_comment_stopwords', $pref),
-                    'sp_contact_stopwords'      => osc_get_preference('sp_contact_stopwords', $pref),
-                    'sp_comment_links'          => osc_get_preference('sp_comment_links', $pref),
-                    'sp_contact_links'          => osc_get_preference('sp_contact_links', $pref),
-                    'sp_security_login_count'   => osc_get_preference('sp_security_login_count', $pref),
-                    'sp_admin_login_count'      => osc_get_preference('sp_admin_login_count', $pref),
-                    'sp_security_login_time'    => osc_get_preference('sp_security_login_time', $pref),
-                    'sp_admin_login_time'       => osc_get_preference('sp_admin_login_time', $pref),
-                    'sp_security_login_action'  => osc_get_preference('sp_security_login_action', $pref),
-                    'sp_admin_login_action'     => osc_get_preference('sp_admin_login_action', $pref),
-                    'sp_security_login_inform'  => osc_get_preference('sp_security_login_inform', $pref),
-                    'sp_admin_login_inform'     => osc_get_preference('sp_admin_login_inform', $pref),
-                    'sp_security_login_hp'      => osc_get_preference('sp_security_login_hp', $pref),
-                    'sp_admin_login_hp'         => osc_get_preference('sp_admin_login_hp', $pref),
-                    'sp_security_register_hp'   => osc_get_preference('sp_security_register_hp', $pref),
-                    'sp_security_recover_hp'    => osc_get_preference('sp_security_recover_hp', $pref),
-                    'sp_security_login_unban'   => osc_get_preference('sp_security_login_unban', $pref),
-                    'sp_admin_login_unban'      => osc_get_preference('sp_admin_login_unban', $pref),
-                    'sp_security_login_cron'    => osc_get_preference('sp_security_login_cron', $pref),
-                    'sp_admin_login_cron'       => osc_get_preference('sp_admin_login_cron', $pref),
+                    'sp_activate'                   => osc_get_preference('sp_activate', $pref),
+                    'sp_comment_activate'           => osc_get_preference('sp_comment_activate', $pref),
+                    'sp_contact_activate'           => osc_get_preference('sp_contact_activate', $pref),
+                    'sp_security_activate'          => osc_get_preference('sp_security_activate', $pref),
+                    'sp_admin_activate'             => osc_get_preference('sp_admin_activate', $pref),
+                    'sp_duplicates'                 => osc_get_preference('sp_duplicates', $pref),
+                    'sp_duplicates_as'              => osc_get_preference('sp_duplicates_as', $pref),
+                    'sp_duplicate_type'             => osc_get_preference('sp_duplicate_type', $pref),
+                    'sp_duplicate_perc'             => osc_get_preference('sp_duplicate_perc', $pref),
+                    'sp_duplicates_time'            => osc_get_preference('sp_duplicates_time', $pref),
+                    'sp_honeypot'                   => osc_get_preference('sp_honeypot', $pref),
+                    'sp_contact_honeypot'           => osc_get_preference('sp_contact_honeypot', $pref),
+                    'honeypot_name'                 => osc_get_preference('honeypot_name', $pref),
+                    'contact_honeypot_name'         => osc_get_preference('contact_honeypot_name', $pref),
+                    'contact_honeypot_value'        => osc_get_preference('contact_honeypot_value', $pref),
+                    'sp_blocked'                    => osc_get_preference('sp_blocked', $pref),
+                    'sp_blocked_tld'                => osc_get_preference('sp_blocked_tld', $pref),
+                    'sp_blockedtype'                => osc_get_preference('sp_blockedtype', $pref),
+                    'sp_comment_blocked'            => osc_get_preference('sp_comment_blocked', $pref),
+                    'sp_comment_blocked_tld'        => osc_get_preference('sp_comment_blocked_tld', $pref),
+                    'sp_comment_blockedtype'        => osc_get_preference('sp_comment_blockedtype', $pref),
+                    'sp_contact_blocked'            => osc_get_preference('sp_contact_blocked', $pref),
+                    'sp_contact_blocked_tld'        => osc_get_preference('sp_contact_blocked_tld', $pref),
+                    'sp_contact_blockedtype'        => osc_get_preference('sp_contact_blockedtype', $pref),
+                    'sp_mxr'                        => osc_get_preference('sp_mxr', $pref),
+                    'blocked'                       => osc_get_preference('blocked', $pref),
+                    'blocked_tld'                   => osc_get_preference('blocked_tld', $pref),
+                    'comment_blocked'               => osc_get_preference('comment_blocked', $pref),
+                    'comment_blocked_tld'           => osc_get_preference('comment_blocked_tld', $pref),
+                    'contact_blocked'               => osc_get_preference('contact_blocked', $pref),
+                    'contact_blocked_tld'           => osc_get_preference('contact_blocked_tld', $pref),
+                    'sp_stopwords'                  => osc_get_preference('sp_stopwords', $pref),
+                    'sp_comment_stopwords'          => osc_get_preference('sp_comment_stopwords', $pref),
+                    'sp_contact_stopwords'          => osc_get_preference('sp_contact_stopwords', $pref),
+                    'sp_comment_links'              => osc_get_preference('sp_comment_links', $pref),
+                    'sp_contact_links'              => osc_get_preference('sp_contact_links', $pref),
+                    'sp_security_login_count'       => osc_get_preference('sp_security_login_count', $pref),
+                    'sp_admin_login_count'          => osc_get_preference('sp_admin_login_count', $pref),
+                    'sp_security_login_time'        => osc_get_preference('sp_security_login_time', $pref),
+                    'sp_admin_login_time'           => osc_get_preference('sp_admin_login_time', $pref),
+                    'sp_security_login_action'      => osc_get_preference('sp_security_login_action', $pref),
+                    'sp_admin_login_action'         => osc_get_preference('sp_admin_login_action', $pref),
+                    'sp_security_login_inform'      => osc_get_preference('sp_security_login_inform', $pref),
+                    'sp_admin_login_inform'         => osc_get_preference('sp_admin_login_inform', $pref),
+                    'sp_security_login_hp'          => osc_get_preference('sp_security_login_hp', $pref),
+                    'sp_admin_login_hp'             => osc_get_preference('sp_admin_login_hp', $pref),
+                    'sp_security_register_hp'       => osc_get_preference('sp_security_register_hp', $pref),
+                    'sp_security_recover_hp'        => osc_get_preference('sp_security_recover_hp', $pref),
+                    'sp_security_login_unban'       => osc_get_preference('sp_security_login_unban', $pref),
+                    'sp_admin_login_unban'          => osc_get_preference('sp_admin_login_unban', $pref),
+                    'sp_security_login_cron'        => osc_get_preference('sp_security_login_cron', $pref),
+                    'sp_admin_login_cron'           => osc_get_preference('sp_admin_login_cron', $pref),
+                    'sp_admin_login_cron'           => osc_get_preference('sp_admin_login_cron', $pref),
+                    'sp_check_registrations'        => osc_get_preference('sp_check_registrations', $pref),
+                    'sp_check_registration_mails'   => osc_get_preference('sp_check_registration_mails', $pref),
                 );
             } else {
                 $opts = array(                
@@ -351,58 +356,60 @@ class spam_prot extends DAO {
     
         if (!$type) {        
             $data = array(
-                'sp_activate'               => (isset($params['sp_activate']) ? $params['sp_activate'] : ''),
-                'sp_comment_activate'       => (isset($params['sp_comment_activate']) ? $params['sp_comment_activate'] : ''),
-                'sp_contact_activate'       => (isset($params['sp_contact_activate']) ? $params['sp_contact_activate'] : ''),
-                'sp_security_activate'      => (isset($params['sp_security_activate']) ? $params['sp_security_activate'] : ''),
-                'sp_admin_activate'         => (isset($params['sp_admin_activate']) ? $params['sp_admin_activate'] : ''),
-                'sp_duplicates'             => (isset($params['sp_duplicates']) ? $params['sp_duplicates'] : ''),
-                'sp_duplicates_as'          => (isset($params['sp_duplicates_as']) ? $params['sp_duplicates_as'] : ''),
-                'sp_duplicate_type'         => (isset($params['sp_duplicate_type']) ? $params['sp_duplicate_type'] : ''),
-                'sp_duplicate_perc'         => (isset($params['sp_duplicate_perc']) ? $params['sp_duplicate_perc'] : ''),
-                'sp_duplicates_time'        => (isset($params['sp_duplicates_time']) ? $params['sp_duplicates_time'] : ''),
-                'sp_honeypot'               => (isset($params['sp_honeypot']) ? $params['sp_honeypot'] : ''),
-                'sp_contact_honeypot'       => (isset($params['sp_contact_honeypot']) ? $params['sp_contact_honeypot'] : ''),
-                'honeypot_name'             => (isset($params['honeypot_name']) ? $params['honeypot_name'] : ''),
-                'contact_honeypot_name'     => (isset($params['contact_honeypot_name']) ? $params['contact_honeypot_name'] : ''),
-                'contact_honeypot_value'    => (isset($params['contact_honeypot_value']) ? $params['contact_honeypot_value'] : ''),
-                'sp_blocked'                => (isset($params['sp_blocked']) ? $params['sp_blocked'] : ''),
-                'sp_blocked_tld'            => (isset($params['sp_blocked_tld']) ? $params['sp_blocked_tld'] : ''),
-                'sp_blockedtype'            => (isset($params['sp_blockedtype']) ? $params['sp_blockedtype'] : ''),
-                'sp_comment_blocked'        => (isset($params['sp_comment_blocked']) ? $params['sp_comment_blocked'] : ''),
-                'sp_comment_blocked_tld'    => (isset($params['sp_comment_blocked_tld']) ? $params['sp_comment_blocked_tld'] : ''),
-                'sp_comment_blockedtype'    => (isset($params['sp_comment_blockedtype']) ? $params['sp_comment_blockedtype'] : ''),
-                'sp_contact_blocked'        => (isset($params['sp_contact_blocked']) ? $params['sp_contact_blocked'] : ''),
-                'sp_contact_blocked_tld'    => (isset($params['sp_contact_blocked_tld']) ? $params['sp_contact_blocked_tld'] : ''),
-                'sp_contact_blockedtype'    => (isset($params['sp_contact_blockedtype']) ? $params['sp_contact_blockedtype'] : ''),
-                'sp_mxr'                    => (isset($params['sp_mxr']) ? $params['sp_mxr'] : ''),
-                'blocked'                   => (isset($params['blocked']) ? $this->_sort($params['blocked']) : ''),
-                'blocked_tld'               => (isset($params['blocked_tld']) ? $this->_sort($params['blocked_tld']) : ''),
-                'comment_blocked'           => (isset($params['comment_blocked']) ? $this->_sort($params['comment_blocked']) : ''),
-                'comment_blocked_tld'       => (isset($params['comment_blocked_tld']) ? $this->_sort($params['comment_blocked_tld']) : ''),
-                'contact_blocked'           => (isset($params['contact_blocked']) ? $this->_sort($params['contact_blocked']) : ''),
-                'contact_blocked_tld'       => (isset($params['contact_blocked_tld']) ? $this->_sort($params['contact_blocked_tld']) : ''),
-                'sp_stopwords'              => (isset($params['sp_stopwords']) ? $this->_sort($params['sp_stopwords']) : ''),
-                'sp_comment_stopwords'      => (isset($params['sp_comment_stopwords']) ? $this->_sort($params['sp_comment_stopwords']) : ''),
-                'sp_contact_stopwords'      => (isset($params['sp_contact_stopwords']) ? $this->_sort($params['sp_contact_stopwords']) : ''),
-                'sp_comment_links'          => (isset($params['sp_comment_links']) ? $params['sp_comment_links'] : ''),
-                'sp_contact_links'          => (isset($params['sp_contact_links']) ? $params['sp_contact_links'] : ''),
-                'sp_security_login_count'   => (isset($params['sp_security_login_count']) ? $params['sp_security_login_count'] : ''),
-                'sp_admin_login_count'      => (isset($params['sp_admin_login_count']) ? $params['sp_admin_login_count'] : ''),
-                'sp_security_login_time'    => (isset($params['sp_security_login_time']) ? $params['sp_security_login_time'] : ''),
-                'sp_admin_login_time'       => (isset($params['sp_admin_login_time']) ? $params['sp_admin_login_time'] : ''),
-                'sp_security_login_action'  => (isset($params['sp_security_login_action']) ? $params['sp_security_login_action'] : ''),
-                'sp_admin_login_action'     => (isset($params['sp_admin_login_action']) ? $params['sp_admin_login_action'] : ''),
-                'sp_security_login_inform'  => (isset($params['sp_security_login_inform']) ? $params['sp_security_login_inform'] : ''),
-                'sp_admin_login_inform'     => (isset($params['sp_admin_login_inform']) ? $params['sp_admin_login_inform'] : ''),
-                'sp_security_login_hp'      => (isset($params['sp_security_login_hp']) ? $params['sp_security_login_hp'] : ''),
-                'sp_admin_login_hp'         => (isset($params['sp_admin_login_hp']) ? $params['sp_admin_login_hp'] : ''),
-                'sp_security_register_hp'   => (isset($params['sp_security_register_hp']) ? $params['sp_security_register_hp'] : ''),
-                'sp_security_recover_hp'    => (isset($params['sp_security_recover_hp']) ? $params['sp_security_recover_hp'] : ''),
-                'sp_security_login_unban'   => (isset($params['sp_security_login_unban']) ? $params['sp_security_login_unban'] : ''),
-                'sp_admin_login_unban'      => (isset($params['sp_admin_login_unban']) ? $params['sp_admin_login_unban'] : ''),
-                'sp_security_login_cron'    => (isset($params['sp_security_login_cron']) ? $params['sp_security_login_cron'] : ''),
-                'sp_admin_login_cron'       => (isset($params['sp_admin_login_cron']) ? $params['sp_admin_login_cron'] : ''),
+                'sp_activate'                   => (isset($params['sp_activate']) ? $params['sp_activate'] : ''),
+                'sp_comment_activate'           => (isset($params['sp_comment_activate']) ? $params['sp_comment_activate'] : ''),
+                'sp_contact_activate'           => (isset($params['sp_contact_activate']) ? $params['sp_contact_activate'] : ''),
+                'sp_security_activate'          => (isset($params['sp_security_activate']) ? $params['sp_security_activate'] : ''),
+                'sp_admin_activate'             => (isset($params['sp_admin_activate']) ? $params['sp_admin_activate'] : ''),
+                'sp_duplicates'                 => (isset($params['sp_duplicates']) ? $params['sp_duplicates'] : ''),
+                'sp_duplicates_as'              => (isset($params['sp_duplicates_as']) ? $params['sp_duplicates_as'] : ''),
+                'sp_duplicate_type'             => (isset($params['sp_duplicate_type']) ? $params['sp_duplicate_type'] : ''),
+                'sp_duplicate_perc'             => (isset($params['sp_duplicate_perc']) ? $params['sp_duplicate_perc'] : ''),
+                'sp_duplicates_time'            => (isset($params['sp_duplicates_time']) ? $params['sp_duplicates_time'] : ''),
+                'sp_honeypot'                   => (isset($params['sp_honeypot']) ? $params['sp_honeypot'] : ''),
+                'sp_contact_honeypot'           => (isset($params['sp_contact_honeypot']) ? $params['sp_contact_honeypot'] : ''),
+                'honeypot_name'                 => (isset($params['honeypot_name']) ? $params['honeypot_name'] : ''),
+                'contact_honeypot_name'         => (isset($params['contact_honeypot_name']) ? $params['contact_honeypot_name'] : ''),
+                'contact_honeypot_value'        => (isset($params['contact_honeypot_value']) ? $params['contact_honeypot_value'] : ''),
+                'sp_blocked'                    => (isset($params['sp_blocked']) ? $params['sp_blocked'] : ''),
+                'sp_blocked_tld'                => (isset($params['sp_blocked_tld']) ? $params['sp_blocked_tld'] : ''),
+                'sp_blockedtype'                => (isset($params['sp_blockedtype']) ? $params['sp_blockedtype'] : ''),
+                'sp_comment_blocked'            => (isset($params['sp_comment_blocked']) ? $params['sp_comment_blocked'] : ''),
+                'sp_comment_blocked_tld'        => (isset($params['sp_comment_blocked_tld']) ? $params['sp_comment_blocked_tld'] : ''),
+                'sp_comment_blockedtype'        => (isset($params['sp_comment_blockedtype']) ? $params['sp_comment_blockedtype'] : ''),
+                'sp_contact_blocked'            => (isset($params['sp_contact_blocked']) ? $params['sp_contact_blocked'] : ''),
+                'sp_contact_blocked_tld'        => (isset($params['sp_contact_blocked_tld']) ? $params['sp_contact_blocked_tld'] : ''),
+                'sp_contact_blockedtype'        => (isset($params['sp_contact_blockedtype']) ? $params['sp_contact_blockedtype'] : ''),
+                'sp_mxr'                        => (isset($params['sp_mxr']) ? $params['sp_mxr'] : ''),
+                'blocked'                       => (isset($params['blocked']) ? $this->_sort($params['blocked']) : ''),
+                'blocked_tld'                   => (isset($params['blocked_tld']) ? $this->_sort($params['blocked_tld']) : ''),
+                'comment_blocked'               => (isset($params['comment_blocked']) ? $this->_sort($params['comment_blocked']) : ''),
+                'comment_blocked_tld'           => (isset($params['comment_blocked_tld']) ? $this->_sort($params['comment_blocked_tld']) : ''),
+                'contact_blocked'               => (isset($params['contact_blocked']) ? $this->_sort($params['contact_blocked']) : ''),
+                'contact_blocked_tld'           => (isset($params['contact_blocked_tld']) ? $this->_sort($params['contact_blocked_tld']) : ''),
+                'sp_stopwords'                  => (isset($params['sp_stopwords']) ? $this->_sort($params['sp_stopwords']) : ''),
+                'sp_comment_stopwords'          => (isset($params['sp_comment_stopwords']) ? $this->_sort($params['sp_comment_stopwords']) : ''),
+                'sp_contact_stopwords'          => (isset($params['sp_contact_stopwords']) ? $this->_sort($params['sp_contact_stopwords']) : ''),
+                'sp_comment_links'              => (isset($params['sp_comment_links']) ? $params['sp_comment_links'] : ''),
+                'sp_contact_links'              => (isset($params['sp_contact_links']) ? $params['sp_contact_links'] : ''),
+                'sp_security_login_count'       => (isset($params['sp_security_login_count']) ? $params['sp_security_login_count'] : ''),
+                'sp_admin_login_count'          => (isset($params['sp_admin_login_count']) ? $params['sp_admin_login_count'] : ''),
+                'sp_security_login_time'        => (isset($params['sp_security_login_time']) ? $params['sp_security_login_time'] : ''),
+                'sp_admin_login_time'           => (isset($params['sp_admin_login_time']) ? $params['sp_admin_login_time'] : ''),
+                'sp_security_login_action'      => (isset($params['sp_security_login_action']) ? $params['sp_security_login_action'] : ''),
+                'sp_admin_login_action'         => (isset($params['sp_admin_login_action']) ? $params['sp_admin_login_action'] : ''),
+                'sp_security_login_inform'      => (isset($params['sp_security_login_inform']) ? $params['sp_security_login_inform'] : ''),
+                'sp_admin_login_inform'         => (isset($params['sp_admin_login_inform']) ? $params['sp_admin_login_inform'] : ''),
+                'sp_security_login_hp'          => (isset($params['sp_security_login_hp']) ? $params['sp_security_login_hp'] : ''),
+                'sp_admin_login_hp'             => (isset($params['sp_admin_login_hp']) ? $params['sp_admin_login_hp'] : ''),
+                'sp_security_register_hp'       => (isset($params['sp_security_register_hp']) ? $params['sp_security_register_hp'] : ''),
+                'sp_security_recover_hp'        => (isset($params['sp_security_recover_hp']) ? $params['sp_security_recover_hp'] : ''),
+                'sp_security_login_unban'       => (isset($params['sp_security_login_unban']) ? $params['sp_security_login_unban'] : ''),
+                'sp_admin_login_unban'          => (isset($params['sp_admin_login_unban']) ? $params['sp_admin_login_unban'] : ''),
+                'sp_security_login_cron'        => (isset($params['sp_security_login_cron']) ? $params['sp_security_login_cron'] : ''),
+                'sp_admin_login_cron'           => (isset($params['sp_admin_login_cron']) ? $params['sp_admin_login_cron'] : ''),
+                'sp_check_registrations'        => (isset($params['sp_check_registrations']) ? $params['sp_check_registrations'] : ''),
+                'sp_check_registration_mails'   => (isset($params['sp_check_registration_mails']) ? $this->_sort($params['sp_check_registration_mails']) : ''),
             );
             
             if (!empty($params['sp_htaccess'])) {
@@ -1121,31 +1128,41 @@ class spam_prot extends DAO {
         }        
     }
     
-    function _checkAdminBan($ip) {        
+    function _checkAdminBan($ip) {
+    
+        $debug = new Debugger;
+            
         $this->dao->select('*');
-        $this->dao->from($this->_table_sp_logins);
-        $this->dao->where("s_name LIKE '%Admin/Mod%'");
+        $this->dao->from($this->_table_bans);
         $this->dao->where("s_ip", $ip);
+        $this->dao->like("s_name", "Admin/Mod");
         
         $result = $this->dao->get();
-        if ($result->numRows() > 0) { return false; }
+        if ($result->numRows() > 0) {
+            $debug->do_log("debug", "Admin Ban Rule found: ".$ip);
+            return true; 
+        }
         
-        return true;        
+        $debug->do_log("debug", "No Admin Ban Rule found: ".$ip);
+        return false;        
     }
     
-    function _handleUserLogin($email, $ip = false) {        
-        if (!$ip) { $ip = $this->_IpUserLogin(); }
+    function _handleUserLogin($email, $ip) {
         
         $action = $this->_get('sp_security_login_action');
         $reason = __("Spam Protection - Too many false login attempts", "spamprotection");
+        $debug = new Debugger;
         
         if ($action == '1') {
+            $debug->do_log("debug", "User blocked");
             $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));            
             $this->_addBanLog('block', 'falselogin', $email, $ip);    
         } elseif ($action == '2') {
+            $debug->do_log("debug", "User banned");
             $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
             $this->_addBanLog('ban', 'falselogin', $email, $ip);    
         } elseif ($action == '3') {
+            $debug->do_log("debug", "User blocked and banned");
             $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));
             $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
             $this->_addBanLog('blockban', 'falselogin', $email, $ip);    
@@ -1155,14 +1172,18 @@ class spam_prot extends DAO {
     function _handleAdminLogin($name, $ip) {
         $action = $this->_get('sp_admin_login_action');
         $reason = sprintf(__("Spam Protection - Admin/Mod %s blocked in due to too many false login attempts", "spamprotection"), $name);
+        $debug = new Debugger;
         
-        if ($action == '1') {            
+        if ($action == '1') {
+            $debug->do_log("debug", "Admin blocked");            
             $this->_addBanLog('block', 'falselogin', $name, $ip, 'admin');    
         } elseif ($action == '2') {
+            $debug->do_log("debug", "Admin banned");
             $this->dao->delete($this->_table_sp_logins, '`s_name` = "'.$name.'"');
             $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
             $this->_addBanLog('ban', 'falselogin', $name, $ip, 'admin');    
         } elseif ($action == '3') {
+            $debug->do_log("debug", "Admin blocked and banned");
             $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
             $this->_addBanLog('blockban', 'falselogin', $name, $ip, 'admin');    
         }

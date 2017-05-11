@@ -118,6 +118,7 @@ div#blocked_ads_inner table tr td {
 #sp_contact_options,
 #sp_security_mainfeatures_user,
 #sp_security_mainfeatures_admin,
+#sp_security_mainfeatures_register,
 #sp_config_options {
     color: #000;
     transition: ease all 0.6s;
@@ -127,7 +128,8 @@ div#blocked_ads_inner table tr td {
 #sp_comment_options.disabled *,
 #sp_contact_options.disabled *,
 #sp_security_mainfeatures_user.disabled *,
-#sp_security_mainfeatures_admin.disabled * {
+#sp_security_mainfeatures_admin.disabled *,
+#sp_security_mainfeatures_register.disabled * {
     color: #bbb;
 }
 
@@ -240,6 +242,7 @@ div#sp_config {
 .sp_contact_options, 
 .sp_security_options, 
 .sp_admin_options, 
+.sp_register_options, 
 .sp_help_section, 
 .sp_config_options {
     width: calc(100% - 200px);

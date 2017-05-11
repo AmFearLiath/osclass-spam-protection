@@ -106,10 +106,40 @@ function sp_check_user_login() {
     $email = Params::getParam('email');
     $password = Params::getParam('password', false, false);
     
-    if ($action == 'login_post' && !empty($email) && !empty($password)) {        
+    if ($action == 'login_post' && !empty($email) && !empty($password)) {
+        
+        spam_prot::newInstance()->_increaseUserLogin($email);
+        $ip = spam_prot::newInstance()->_IpUserLogin();
+                
         $logins = spam_prot::newInstance()->_countLogin($email, 'user');
         $max_logins = spam_prot::newInstance()->_get('sp_security_login_count');
         
+        if (!empty($data_token)) {
+            ob_get_clean();
+            osc_add_flash_error_message(__('<strong>Information!</strong> Your account is disabled due to too much of false login attempts. Please contact support.', 'spamprotection'));    
+            header('Location: '.osc_base_url());
+            exit;
+        } elseif ($logins <= $max_logins && spam_prot::newInstance()->_checkUserLogin($email, $password)) {            
+            spam_prot::newInstance()->_resetUserLogin($email);    
+        } elseif (!spam_prot::newInstance()->_checkUserLogin($email, $password)) {
+            if ($logins >= $max_logins) {
+                spam_prot::newInstance()->_handleUserLogin($email, $ip);
+                if ($logins == $max_logins) {
+                    spam_prot::newInstance()->_informUser($email, 'user');    
+                } if (spam_prot::newInstance()->_get('sp_security_login_inform') == '1') {                
+                    ob_get_clean();
+                    osc_add_flash_error_message(__('<strong>Information!</strong> Your account is disabled due to too much of false login attempts. Please contact support.', 'spamprotection'));
+                }
+            } elseif (empty($logins) || $login_trys < $max_logins) {
+                if (spam_prot::newInstance()->_get('sp_security_login_inform') == '1') {
+                    ob_get_clean();
+                    osc_add_flash_error_message(sprintf(__('<strong>Warning!</strong> Only %d login attempts remaining', 'spamprotection'), ($max_logins-$logins)));    
+                }
+            }
+            header('Location: '.osc_user_login_url());
+            exit;   
+        }
+        /*
         if (!empty($logins) && ($logins >= $max_logins || $logins == $max_logins)) {
             $ip = spam_prot::newInstance()->_IpUserLogin();
             spam_prot::newInstance()->_handleUserLogin($email, $logins, $ip);
@@ -145,16 +175,38 @@ function sp_check_user_login() {
         } else {            
             spam_prot::newInstance()->_resetUserLogin($email);    
         }
+        */
     }
 }
 
 function sp_add_honeypot_security() {
-    echo '<input id="token" type="text" name="token" value="" class="form-control sp_form_field" autocomplete="off">';
+    echo '<input id="token" type="text" name="token" value="" class="form-control sp_form_field" autocomplete="off">';    
+}
+
+function sp_check_registrations() {
+    $email = Params::getParam('s_email');
     
-    /*
-    <div data-widget data-app="ohulo8uneva1uro7orut"></div>
-    <script src="//cdn.ringcaptcha.com/widget/v2/bundle.min.js"></script>
-    */    
+    if (($email = filter_var($email, FILTER_VALIDATE_EMAIL)) !== false) {
+        
+        $check = spam_prot::newInstance()->_get('sp_check_registration');
+        $mails = explode(",", spam_prot::newInstance()->_get('sp_check_registration_mails'));
+        $domain = substr(strrchr($email, "@"), 1);
+        $error = false;
+        
+        if ($check == '2') {
+            if (!in_array($domain, $mails)) { $error = sprintf(__("Sorry, but you cannot use this email address: %s", "spamprotection"), $domain); }   
+        } elseif ($check == '3') {
+            if (in_array($domain, $mails)) { $error = sprintf(__("Sorry, but you cannot use this email address: %s", "spamprotection"), $domain); }            
+        }
+    } else { $error = __("Sorry, but you need to use a valid email address.", "spamprotection"); } 
+    
+    if ($error) {
+        ob_get_clean();
+        osc_add_flash_error_message($error);
+        
+        header('Location: '.osc_register_account_url());
+        exit;
+    }  
 }
 
 function sp_unban_cron() {

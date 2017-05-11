@@ -72,8 +72,10 @@ require('functions/index.php');
 $sp = new spam_prot;
 
 /* HOOKS */
+
+osc_register_plugin(osc_plugin_path(__FILE__), 'sprot_install');
+
 if (OC_ADMIN) {
-    osc_register_plugin(osc_plugin_path(__FILE__), 'sprot_install');
     osc_add_hook(osc_plugin_path(__FILE__) . '_uninstall', 'sprot_uninstall');    
     osc_add_hook(osc_plugin_path(__FILE__) . '_configure', 'sprot_configuration');
     
@@ -140,7 +142,7 @@ if ($sp->_get('sp_security_activate') == '1') {
 }
     
 if ($sp->_get('sp_admin_activate') == '1') {    
-    osc_add_hook('before_login_admin', 'sp_check_admin_login', 1);
+    osc_add_hook('before_login_admin', 'sp_check_admin_login', 0);
     
     if (spam_prot::newInstance()->_get('sp_admin_login_hp') == '1') {
         osc_add_hook('login_admin_form', 'sp_admin_login', 1);
@@ -154,6 +156,13 @@ if ($sp->_get('sp_admin_activate') == '1') {
         } elseif (spam_prot::newInstance()->_get('sp_admin_login_cron') == '3') {
             osc_add_hook('cron_weekly', 'sp_unban_cron_admin');
         }
+    }    
+}
+    
+if ($sp->_get('sp_check_registrations') >= '2') {
+    $mails = spam_prot::newInstance()->_get('sp_check_registration_mails');    
+    if (!empty($mails)) {
+        osc_add_hook('before_user_register ', 'sp_check_registrations', 1);
     }    
 }
 

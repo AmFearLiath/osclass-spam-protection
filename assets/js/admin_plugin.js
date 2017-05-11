@@ -384,6 +384,18 @@ $(document).ready(function(){
         } else if (type && type == '0') {
             $("#sp_security_login_count_cont, #sp_security_login_action_cont").fadeOut("slow");    
         }    
+    });
+    
+    $(document).on("change", "#sp_check_registrations", function(event){
+        
+        event.preventDefault();        
+        var type = $(this).val();
+        
+        if (type && (type == '2' || type == '3')) {
+            $("#sp_check_registration_mails").fadeIn("slow");    
+        } else {
+            $("#sp_check_registration_mails").fadeOut("slow");    
+        }    
     });    
     
 });
