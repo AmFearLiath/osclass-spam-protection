@@ -314,7 +314,7 @@ class spam_prot extends DAO {
         }                
         
         $result = $this->dao->get();
-        if ($result->numRows() <= 0) { return false; }
+        if ($result && $result->numRows() <= 0) { return false; }
         
         return $result->result();
     }
@@ -1100,15 +1100,15 @@ class spam_prot extends DAO {
         }
         
         $result = $this->dao->get();
-        if ($result->numRows() > 0) { return true; }
+        if ($result && $result->numRows() > 0) { return true; }
         
         return false;        
     }
     
     function _checkUserLogin($email, $password) {
-        $user = User::newInstance()->findByEmail(mysql_real_escape_string($email)); 
+        $user = User::newInstance()->findByEmail($email); 
         if ($user && isset($user['pk_i_id'])) {
-            if (!osc_verify_password(mysql_real_escape_string($password), (isset($user['s_password']) ? $user['s_password'] : ''))) {
+            if (!osc_verify_password($password, (isset($user['s_password']) ? $user['s_password'] : ''))) {
                 return false;                
             } else {
                 return true;
@@ -1141,8 +1141,6 @@ class spam_prot extends DAO {
     }
     
     function _checkAdminBan($ip) {
-    
-        $debug = new Debugger;
             
         $this->dao->select('*');
         $this->dao->from($this->_table_bans);
@@ -1150,12 +1148,10 @@ class spam_prot extends DAO {
         $this->dao->like("s_name", "Admin/Mod");
         
         $result = $this->dao->get();
-        if ($result->numRows() > 0) {
-            $debug->do_log("debug", "Admin Ban Rule found: ".$ip);
+        if ($result && $result->numRows() > 0) {
             return true; 
         }
         
-        $debug->do_log("debug", "No Admin Ban Rule found: ".$ip);
         return false;        
     }
     
@@ -1163,18 +1159,14 @@ class spam_prot extends DAO {
         
         $action = $this->_get('sp_security_login_action');
         $reason = __("Spam Protection - Too many false login attempts", "spamprotection");
-        $debug = new Debugger;
         
         if ($action == '1') {
-            $debug->do_log("debug", "User blocked");
             $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));            
             $this->_addBanLog('block', 'falselogin', $email, $ip);    
         } elseif ($action == '2') {
-            $debug->do_log("debug", "User banned");
             $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
             $this->_addBanLog('ban', 'falselogin', $email, $ip);    
         } elseif ($action == '3') {
-            $debug->do_log("debug", "User blocked and banned");
             $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));
             $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
             $this->_addBanLog('blockban', 'falselogin', $email, $ip);    
@@ -1184,26 +1176,22 @@ class spam_prot extends DAO {
     function _handleAdminLogin($name, $ip) {
         $action = $this->_get('sp_admin_login_action');
         $reason = sprintf(__("Spam Protection - Admin/Mod %s blocked in due to too many false login attempts", "spamprotection"), $name);
-        $debug = new Debugger;
         
-        if ($action == '1') {
-            $debug->do_log("debug", "Admin blocked");            
+        if ($action == '1') {            
             $this->_addBanLog('block', 'falselogin', $name, $ip, 'admin');    
         } elseif ($action == '2') {
-            $debug->do_log("debug", "Admin banned");
             $this->dao->delete($this->_table_sp_logins, '`s_name` = "'.$name.'"');
             $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
             $this->_addBanLog('ban', 'falselogin', $name, $ip, 'admin');    
         } elseif ($action == '3') {
-            $debug->do_log("debug", "Admin blocked and banned");
             $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_ip' => $ip));
             $this->_addBanLog('blockban', 'falselogin', $name, $ip, 'admin');    
         }
     }
     
-    function _countLogin($search, $type = 'user') {    
+    function _countLogin($search, $type = 'user', $ip = false) {    
         $time = $this->_get('sp_security_login_time')*60;
-        $ip = $this->_IpUserLogin();
+        if (!$ip) { $ip = $this->_IpUserLogin(); }
             
         $this->dao->select('*');
         $this->dao->from($this->_table_sp_logins);
@@ -1218,10 +1206,13 @@ class spam_prot extends DAO {
         }        
         
         $this->dao->orWhere("s_ip", $ip);
-        
+
         $result = $this->dao->get();
-        $rows = $result->numRows();
-        if ($rows > 0) { return $rows; }
+        if (isset($result)) {
+            $rows = $result->numRows();    
+        }        
+        
+        if (isset($rows) && $rows > 0) { return $rows; }
         
         return false;       
     }
@@ -1275,7 +1266,7 @@ class spam_prot extends DAO {
         $this->dao->where("dt_date_login < ".(time()-$time));
         
         $result = $this->dao->get();
-        if ($result->numRows() <= 0) { return false; }
+        if ($result && $result->numRows() <= 0) { return false; }
         
         $bans = $result->result();
         
@@ -1287,31 +1278,28 @@ class spam_prot extends DAO {
     }
     
     function _unbanAdmin() {
-        /*
-        $time = $this->_get('sp_security_login_unban')*60;
+        $time = $this->_get('sp_admin_login_unban')*60;
         
         $this->dao->select('*');
         $this->dao->from($this->_table_sp_logins);
         $this->dao->where("dt_date_login < ".(time()-$time));
         
         $result = $this->dao->get();
-        if ($result->numRows() <= 0) { return false; }
+        if ($result && $result->numRows() <= 0) { return false; }
         
         $bans = $result->result();
         
         foreach ($bans AS $k => $v) {
-            $this->dao->update($this->_table_user, array('b_enabled' => '1'), array('s_email' => $v['s_email']));
             $this->dao->delete($this->_table_bans, '`s_ip` = "'.$v['s_ip'].'"');
             $this->dao->delete($this->_table_sp_logins, '`pk_i_id` < "'.$v['pk_i_id'].'"');    
         }
-        */
     }
     
-    function _addBanLog($type, $reason, $email = false, $ip = false, $type = 'user') {
+    function _addBanLog($type, $reason, $email = false, $ip = false, $mode = 'user') {
         
         if (!$ip) { $ip = $this->_IpUserLogin(); }
-        if ($email && $type == 'user') { $user = User::newInstance()->findByEmail($email); }
-        elseif ($email && $type == 'admin') { $user = Admin::newInstance()->findByUsername($email); }
+        if ($email && $mode == 'user') { $user = User::newInstance()->findByEmail($email); }
+        elseif ($email && $mode == 'admin') { $user = Admin::newInstance()->findByUsername($email); }
         
         if ($type == 'block') {
             $reason_sql = __("User was blocked because of", "spamprotection");
@@ -1368,10 +1356,7 @@ class spam_prot extends DAO {
         } else {
             return false;
         }
-        
-        //localhost fix
-        return getenv('REMOTE_ADDR');      
-        //return $ip;      
+        return $ip;      
     }
     
     function _informUser($search, $type = 'user') {
@@ -1537,7 +1522,7 @@ class spam_prot extends DAO {
         if (is_array($where)) { $this->dao->where($where['key'], $where['value']); }
         
         $result = $this->dao->get();
-        if ($result->numRows() <= 0) { return false; }
+        if ($result && $result->numRows() <= 0) { return false; }
         
         return $result->result();    
     }

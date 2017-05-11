@@ -147,7 +147,7 @@ function sp_check_admin_login() {
     spam_prot::newInstance()->_increaseAdminLogin(($admin ? $admin_name : $data_user));
     
     $max_logins = spam_prot::newInstance()->_get('sp_admin_login_count');
-    $login_trys = spam_prot::newInstance()->_countLogin(($admin ? $admin_name : $data_user), 'admin');
+    $login_trys = spam_prot::newInstance()->_countLogin(($admin ? $admin_name : $data_user), 'admin', $ip);
     
     if (spam_prot::newInstance()->_checkAdminBan($ip) || !empty($data_token)) {
         ob_get_clean();

@@ -3,7 +3,7 @@
 Plugin Name: Spam Protection
 Plugin URI: http://amfearliath.tk/osclass-spam-protection/
 Description: Spam Protection for Osclass. Checks in ads, comments and contact mails for duplicates, banned e-mail addresses and stopwords. Includes a honeypot and many other features. 
-Version: 1.6.0
+Version: 1.6.0 Beta
 Author: Liath
 Author URI: http://amfearliath.tk
 Short Name: spamprotection
@@ -72,7 +72,6 @@ require('functions/index.php');
 $sp = new spam_prot;
 
 /* HOOKS */
-
 osc_register_plugin(osc_plugin_path(__FILE__), 'sprot_install');
 
 if (OC_ADMIN) {
@@ -158,12 +157,12 @@ if ($sp->_get('sp_admin_activate') == '1') {
         }
     }    
 }
+
+
+$debug = new Debugger;
     
-if ($sp->_get('sp_check_registrations') >= '2') {
-    $mails = spam_prot::newInstance()->_get('sp_check_registration_mails');    
-    if (!empty($mails)) {
-        osc_add_hook('before_user_register ', 'sp_check_registrations', 1);
-    }    
+if (Params::getParam('action') == 'register_post' && $sp->_get('sp_check_registrations') >= '2') {        
+    osc_add_hook('before_user_register', 'sp_check_user_registrations', 1);    
 }
 
 ?>
