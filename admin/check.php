@@ -16,6 +16,7 @@ $user_spams = $sp->_countRows('t_sp_items', array('key' => 's_user_mail', 'value
 if ($user_spams > 0) {
     $item_spams = $sp->_getResult('t_sp_items', array('key' => 's_user_mail', 'value' => $item['s_user_mail']));
 }
+
 ?>
 
 <div class="compare" id="spamprot">

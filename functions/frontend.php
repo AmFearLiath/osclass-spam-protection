@@ -130,7 +130,7 @@ function sp_check_user_login() {
                     ob_get_clean();
                     osc_add_flash_error_message(__('<strong>Information!</strong> Your account is disabled due to too much of false login attempts. Please contact support.', 'spamprotection'));
                 }
-            } elseif (empty($logins) || $login_trys < $max_logins) {
+            } elseif (empty($logins) || $logins < $max_logins) {
                 if (spam_prot::newInstance()->_get('sp_security_login_inform') == '1') {
                     ob_get_clean();
                     osc_add_flash_error_message(sprintf(__('<strong>Warning!</strong> Only %d login attempts remaining', 'spamprotection'), ($max_logins-$logins)));    

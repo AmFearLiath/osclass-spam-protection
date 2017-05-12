@@ -3,7 +3,7 @@
 /* OSClass overrides */
 #content-head {
     border-bottom: solid 1px #ddd;
-    background-color: #f3f3f3;
+    background-color: #f3f3f3;                                 
     padding: 24px 30px;
 }
 
@@ -282,11 +282,13 @@ div#sp_config {
 }
 
 #spamprot .tab-content, 
+#spamprot .langtab-content,
 #spamprot .subtab-content {
     display: none;
 }
 
 #spamprot .tab-content.current, 
+#spamprot .langtab-content.current,
 #spamprot .subtab-content.current {
     display: inherit;
 }
@@ -617,4 +619,24 @@ span.sp_review_close {
 
 #spamprot fieldset input[type=text], #spamprot fieldset textarea {
     width: calc(100% - 15px);
+}
+
+#sp_config_mailtemplates table td {
+    padding-right: 10px;
+}
+
+div#sp_config_mailtemplates > div > div > fieldset {
+    display: none;
+}
+
+div#sp_config_mailtemplates > div > div {
+    background: #efefef;
+    border: 1px solid #aaa;
+    padding: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+div#sp_config_mailtemplates > div > div:hover {
+    background: #dfdfdf;
 }

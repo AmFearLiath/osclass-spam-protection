@@ -1,14 +1,13 @@
 <?php
 /*
-Plugin Name: Spam Protection
+Plugin Name: Anti Spam & Protection System
 Plugin URI: http://amfearliath.tk/osclass-spam-protection/
-Description: Spam Protection for Osclass. Checks in ads, comments and contact mails for duplicates, banned e-mail addresses and stopwords. Includes a honeypot and many other features. 
-Version: 1.6.0 Beta
+Description: Anti Spam & Protection System for Osclass. Secures your ads, comments and contact mails against spam. Protects your login/registration processes and many other features. 
+Version: 1.6.1
 Author: Liath
 Author URI: http://amfearliath.tk
 Short Name: spamprotection
 Plugin update URI: spam-protection
-Support URI: https://forums.osclass.org/plugins/(plugin)-spam-protection/
 
 DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
 Version 2, December 2004
@@ -60,7 +59,9 @@ Changelog
 
 1.5.3 - Added Ban overview, some code cleanings, correcting translations 
 
-1.6.0 - Redesign configuration area, added admin login protection (need some fixes), Import/Export for settings and database (import need to be completed) 
+1.6.0 - Redesigned configuration area, admin login protection, import/export for settings and database, plugin settings, update check and registration check been added. Changed plugin name to Anti Spam & Protection System. 
+
+1.6.1 - Added Mailtemplate manager, now mails sended to admin after user/admin has banned 
 */
 
 define('SPP_PATH', dirname(__FILE__) . '/');
@@ -157,9 +158,6 @@ if ($sp->_get('sp_admin_activate') == '1') {
         }
     }    
 }
-
-
-$debug = new Debugger;
     
 if (Params::getParam('action') == 'register_post' && $sp->_get('sp_check_registrations') >= '2') {        
     osc_add_hook('before_user_register', 'sp_check_user_registrations', 1);    

@@ -22,7 +22,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
     
         <div id="sp_help_general" class="subtab-content current">        
             
-            <h2><?php echo sprintf(__("Welcome to Spam Protection %s", "spamprotection"), "v".$info['version']); ?></h2>
+            <h2><?php echo sprintf(__("Welcome to Anti Spam & Protection System %s", "spamprotection"), "v".$info['version']); ?></h2>
             
             <p><?php _e('Since you can read this help, you have already installed the plugin. So let\'s continue with the functions.', 'spamprotection'); ?></p>
             <p><?php _e('You can configure this plugin in two ways.', 'spamprotection'); ?></p>
@@ -30,7 +30,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
                 <li><?php _e('Through the plugin page and check the option "configure"', 'spamprotection'); ?></li>
                 <li><?php _e('or through the Tools-Tab that you can find on the button "More" to the left side.', 'spamprotection'); ?></li>
             </ul>
-            <p><?php _e('After your Settings, the Spam Protection is ready to work, you dont have to modify your files or something else.', 'spamprotection'); ?></p>
+            <p><?php _e('After your Settings, the Anti Spam & Protection System is ready to work, you dont have to modify your files or something else.', 'spamprotection'); ?></p>
         
             <p><?php _e('This plugin gives you different options to stop spam.', 'spamprotection'); ?></p>
             <ul>

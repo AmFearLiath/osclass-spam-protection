@@ -18,10 +18,20 @@
 
 #spamprotection.highlight .ico-spamprotection {
     background-position: -100px 0;
+    opacity: 1;    
+}
+
+#spamprotection.highlight.pulse .ico-spamprotection {    
+    animation-name: pulse_button;
+    animation-duration: 1500ms;
+    transform-origin:70% 70%;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 }
 
 #spamprotection:hover .ico-spamprotection {
     background-position: -50px 0px;
+    animation: none;
     opacity: 1;
 }
 
@@ -66,4 +76,18 @@ div#spamprot_upgrade_close {
     text-align: center;
     border-radius: 3px;
     cursor: pointer;
+}
+
+@keyframes pulse_button {
+    0% { opacity: 0.5; }
+    10% { opacity: 0.6; }
+    20% { opacity: 0.7; }
+    30% { opacity: 0.8; }
+    40% { opacity: 0.9; }
+    50% { opacity: 1; }
+    60% { opacity: 0.9; }
+    70% { opacity: 0.8; }
+    80% { opacity: 0.7; }
+    90% { opacity: 0.6; }
+    100% { opacity: 0.5; }
 }

@@ -6,7 +6,7 @@ if (!defined('OC_ADMIN')) {
 function sprot_admin_page_header($message = false) {
     $info = osc_plugin_get_info("spamprotection/index.php");   
     echo '
-    <h1 style="display: inline-block;font-size: 28px;line-height: 50px;">'.($message ? $message : '<i class="sp_header_icon"></i>'.sprintf(__('Spam Protection', 'spamprotection'). ' v'.$info['version'])).'</h1>
+    <h1 style="display: inline-block;font-size: 28px;line-height: 50px; margin-top: -10px;">'.($message ? $message : '<i class="sp_header_icon" style="margin: 0;"></i>'.sprintf(__('Anti Spam & Protection System', 'spamprotection'). ' v'.$info['version'])).'</h1>
     <div style="line-height: 36px; float: right;">
         <a href="https://forums.osclass.org/plugins/(plugin)-spam-protection/msg148758/#msg148758" target="_blank"><button class="btn">OSClass Forum</button></a>
         <a id="sp_review" href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank"><button class="btn">Please Review</button></a>
@@ -15,9 +15,9 @@ function sprot_admin_page_header($message = false) {
             <div id="sp_review_inner">
                 <span class="sp_review_close">x</span>
                 <h3 style="text-align: center;">'.__("Thank you for rating this plugin", "spamprotection").'</h3>
-                <p>'.__("This plugin is and will always be free of charge! If you found any errors, please contact me in OSClass Forum to solve your problems before rating this plugin.", "spamprotection").'</p>    
-                <p>'.__("If you are happy with this plugin and love to use it, please rate it now on OSClass Market!", "spamprotection").'</p>    
-                <p>'.__("Thanks in advance.<br />Liath", "spamprotection").'</p>
+                <p style="line-height: 20px;">'.__("This plugin is and will always be free of charge! If you found any errors, please contact me in OSClass Forum to solve your problems before rating this plugin.", "spamprotection").'</p>    
+                <p style="line-height: 20px;">'.__("If you are happy with this plugin and love to use it, please rate it now on OSClass Market!", "spamprotection").'</p>    
+                <p style="line-height: 20px;">'.__("Thanks in advance.<br />Liath", "spamprotection").'</p>
                 <br />    
                 <p style="text-align: center;">
                     <a href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank">
@@ -67,6 +67,7 @@ function sprot_style_admin() {
 function sprot_style_admin_footer() {        
     $menu = spam_prot::newInstance()->_get('sp_activate_menu');
     $order = spam_prot::newInstance()->_get('sp_menu_after');
+    $pulse = spam_prot::newInstance()->_get('sp_activate_pulsemenu');
     
     $items = spam_prot::newInstance()->_countRows('t_item', array('key' => 'b_spam', 'value' => '1'));
     $comments = spam_prot::newInstance()->_countRows('t_comment', array('key' => 'b_spam', 'value' => '1'));
@@ -79,7 +80,8 @@ function sprot_style_admin_footer() {
         $(document).ready(function(){
             $("ul.oscmenu li#menu_spamprotection").insertAfter("#sidebar ul.oscmenu > li#'.$order.'").css("display", "");                            
             $("ul#hidden-menus li#menu_spamprotection").remove();                            
-
+            resetLayout();
+            
             $("#sidebar ul.oscmenu > li#menu_spamprotection").hover(function(){
                 $(this).addClass("hover");
             },function(){
@@ -87,6 +89,7 @@ function sprot_style_admin_footer() {
             });
             
             '.($items > 0 || $comments > 0 || $contacts > 0 || $bans > 0 ? '$("ul.oscmenu li#menu_spamprotection a").addClass("highlight");' : '').'
+            '.($pulse == '1' ? '$("ul.oscmenu li#menu_spamprotection a").addClass("pulse");' : '').'
         });
         </script>
         ';
@@ -110,17 +113,17 @@ function sprot_init() {
 }
 
 function sprot_admin_menu_init() {
-    osc_add_admin_submenu_page('tools', __('Spam Protection', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings'), 'sprot_admin_settings', 'administrator');
+    osc_add_admin_submenu_page('tools', __('Anti Spam & Protection', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings'), 'sprot_admin_settings', 'administrator');
 
-    osc_add_admin_menu_page( __('Spam Protection', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings'), 'spamprotection', 'administrator' );
-    osc_add_admin_submenu_divider('spamprotection', __('Spam Protection', 'spamprotection'), 'spamprotection_divider', 'administrator');
+    osc_add_admin_menu_page( __('Anti Spam & Protection', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings'), 'spamprotection', 'administrator' );
+    osc_add_admin_submenu_divider('spamprotection', __('Pages', 'spamprotection'), 'spamprotection_divider', 'administrator');
     osc_add_admin_submenu_page('spamprotection', __('Dashboard', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings'), 'spamprotection_dashboard', 'administrator');
     osc_add_admin_submenu_page('spamprotection', __('Settings', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=sp_config'), 'spamprotection_settings', 'administrator');
     osc_add_admin_submenu_page('spamprotection', __('Help', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=sp_help'), 'spamprotection_help', 'administrator');
 }
 
 function sprot_admin_menu() {
-    echo '<h3><a href="#">'.__('Spam Protection', 'spamprotection').'</a></h3>
+    echo '<h3><a href="#">'.__('AntiSpam & SysProt', 'spamprotection').'</a></h3>
     <ul>
         <li><a href="'.osc_admin_render_plugin_url(SPP_PATH.'admin/config.php&tab=settings') . '">&raquo; '.__('Settings', 'spamprotection').'</a></li>
         <li><a href="'.osc_admin_render_plugin_url(SPP_PATH.'admin/config.php&tab=help') . '">&raquo; '.__('Help', 'spamprotection').'</a></li>

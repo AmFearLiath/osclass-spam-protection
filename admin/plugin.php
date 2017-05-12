@@ -9,6 +9,7 @@ $path = osc_plugin_path('spamprotection/export');
 $url = osc_base_url().'oc-content/plugins/spamprotection';
 $js_path = osc_plugin_path('spamprotection/assets/js');
 $data = $sp->_get(false, true);
+$mail = unserialize($data['sp_mailtemplates']);
 
 if (Params::getParam('subtab')) {
     $subtab = Params::getParam('subtab');        
@@ -55,7 +56,7 @@ if (Params::getParam('subtab')) {
 
 if (Params::getParam('plugin_settings') == 'save') {
     $params = Params::getParamsAsArray('', false);
-    if ($sp->_saveSettings($params, true)) {
+    if ($sp->_saveSettings($params, 'plugin')) {
         ob_get_clean();
         osc_add_flash_ok_message(__('<strong>All Settings saved.</strong>', 'spamprotection'), 'admin');
         osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
@@ -66,7 +67,41 @@ if (Params::getParam('plugin_settings') == 'save') {
     }      
 }
 
-$import_files = array_diff(scandir($path), array('..', '.', 'index.php')); 
+if (Params::getParam('save_mailtemplates') == 'true') {
+    $params = Params::getParamsAsArray();
+    $subtab = Params::getParam('subtab');
+    
+    $save = array(
+        'sp_mailuser_user' => $params['sp_mailuser_user'],
+        'sp_mailuser_admin' => $params['sp_mailuser_admin'],
+        'sp_mailadmin_user' => $params['sp_mailadmin_user'],
+        'sp_mailadmin_admin' => $params['sp_mailadmin_admin'],
+    );
+    
+    if ($sp->_saveSettings($params, 'mails')) {
+        ob_get_clean();
+        osc_add_flash_ok_message(__('<strong>All Settings saved.</strong>', 'spamprotection'), 'admin');
+        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
+    } else {
+        ob_get_clean();
+        osc_add_flash_error_message(__('<strong>Error.</strong> Your settings can not be saved.', 'spamprotection'), 'admin');
+        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
+    }
+      
+}
+$target = Params::getParam('target');
+$target2 = Params::getParam('target2');
+$testmail = Params::getParam('testmail');
+
+if (isset($target) && isset($target2) && isset($testmail)) {
+    if ($sp->_testMail($target, $target2, $testmail)) {
+        $return = true;
+    } else {
+        $return = false;
+    }   
+}
+
+$import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
 ?>
 <div class="settings">
 
@@ -74,6 +109,7 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
         <li class="subtab-link <?php echo (!isset($subtab) || $subtab == 'settings' ? 'current' : ''); ?>" data-tab="sp_config_settings"><a><?php _e('Settings', 'spamprotection'); ?></a></li>
         <li class="subtab-link <?php echo (isset($subtab) && $subtab == 'export' ? 'current' : ''); ?>" data-tab="sp_config_export"><a><?php _e('Export', 'spamprotection'); ?></a></li>
         <li class="subtab-link <?php echo (isset($subtab) && $subtab == 'import' ? 'current' : ''); ?>" data-tab="sp_config_import"><a><?php _e('Import', 'spamprotection'); ?></a></li>
+        <li class="subtab-link <?php echo (isset($subtab) && $subtab == 'mailtemplates' ? 'current' : ''); ?>" data-tab="sp_config_mailtemplates"><a><?php _e('Mailtemplates', 'spamprotection'); ?></a></li>
     </ul>
 
     <div id="sp_config_options" class="sp_config_options">
@@ -93,14 +129,14 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
                 <fieldset>
                     <legend><?php _e("Menu appearance", "spamprotection"); ?></legend>
                     <div class="row form-group">
-                        <div class="halfrow"style="width: 50%; padding: 0;">
+                        <div class="halfrow" style="width: 50%; padding: 0;">
                             <label>
                                 <input type="checkbox" name="sp_activate_menu" value="1"<?php if (!empty($data['sp_activate_menu'])) { echo ' checked="checked"'; } ?> />
                                 <?php _e('Show icon in sidebar', 'spamprotection'); ?>
                             </label><br />
                             <small><?php _e('This option allows to show an icon for this plugin in your admin sidebar.', 'spamprotection'); ?></small>
                         </div>
-                        <div id="sp_menu_appearance_cont" class="halfrow"style="width: 50%; padding: 0;<?php if (empty($data['sp_activate_menu']) || $data['sp_activate_menu'] != '1') { echo ' display: none;'; } ?>">
+                        <div id="sp_menu_appearance_cont" class="halfrow" style="width: 50%; padding: 0;<?php if (empty($data['sp_activate_menu']) || $data['sp_activate_menu'] != '1') { echo ' display: none;'; } ?>">
                             <label>
                                 <?php _e('Show icon after', 'spamprotection'); ?>
                             </label><br />
@@ -117,6 +153,17 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
                                 <option value="anywhere"<?php if (!empty($data['sp_menu_after']) && $data['sp_menu_after'] == 'anywhere') { echo ' selected="selected"'; } ?>><?php _e('Anywhere', 'spamprotection'); ?></option>
                             </select>
                         </div>
+                        
+                        <div style="clear:both;"></div>
+                        
+                        <div id="sp_activate_pulsemenu_cont" class="halfrow" style="width: 50%; padding: 0;<?php if (empty($data['sp_activate_menu']) || $data['sp_activate_menu'] != '1') { echo ' display: none;'; } ?>">
+                            <label>
+                                <input type="checkbox" name="sp_activate_pulsemenu" value="1"<?php if (!empty($data['sp_activate_pulsemenu'])) { echo ' checked="checked"'; } ?> />
+                                <?php _e('Pulse icon on activity', 'spamprotection'); ?>
+                            </label><br />
+                            <small><?php _e('This option lets pulse the menu icon if some spam was found.', 'spamprotection'); ?></small>
+                        </div>
+                        
                         <div style="clear:both;"></div>
                     </div>
                 </fieldset>
@@ -289,6 +336,85 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
             <?php if (!empty($import)) { 
                 echo $import;                 
             } ?>
+        </div>
+
+        <div id="sp_config_mailtemplates" class="subtab-content <?php echo (isset($subtab) && $subtab == 'mailtemplates' ? 'current' : ''); ?>">
+            
+            <h3><?php _e("Here you can edit the mailtemplates, which will be used to inform the user about false login attempts", "spamprotection"); ?></h3>
+            <p><?php sprintf(__("If you dont want to generate your own templates, the standard mail templates will be used. The mails for admins will be always sended to: %s", "spamprotection"), osc_contact_email()); ?></p>
+            
+            <br /><hr /><br />
+                    
+            <fieldset style="border: 1px solid #bbb; padding: 15px; margin: 15px 0; font-size: 14px;">
+                <legend><?php _e("For adding important informations in your mail, you can use following placeholders:", "spamprotection"); ?></legend>
+                <small>
+                    <table>
+                        <tr><td><strong>{PAGE_NAME}</strong></td><td><?php echo sprintf(__("This is the name of your page (%s)", "spamprotection"), osc_page_title()); ?></td></tr>
+                        <tr><td><strong>{MAIL_USER}</strong></td><td><?php _e("This is the name of the user who will receive the mail", "spamprotection"); ?></td></tr>
+                        <tr><td><strong>{MAIL_USED}</strong></td><td><?php _e("This is the used mail address for the login attempts", "spamprotection"); ?></td></tr>
+                        <tr><td><strong>{MAIL_DATE}</strong></td><td><?php _e("This is the date for the last false login attempt", "spamprotection"); ?></td></tr>
+                        <tr><td><strong>{MAIL_IP}</strong></td><td><?php _e("This is the ip which was used for the false login attempt", "spamprotection"); ?></td></tr>
+                        <tr><td><strong>{UNBAN_LINK}</strong></td><td><?php _e("This link allows the user to automatically unban his account", "spamprotection"); ?></td></tr>
+                        <tr><td><strong>{PASSWORD_LINK}</strong></td><td><?php _e("This link redirect the user to the password recovery page", "spamprotection"); ?></td></tr>
+                        <tr><td><strong>{BAN_LIST}</strong></td><td><?php _e("This link redirect the admin to the ban list", "spamprotection"); ?></td></tr>
+                    </table>
+                </small>
+            </fieldset>
+            
+            <br /><hr /><br />
+            
+            <form action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php'); ?>" method="post">
+                <input type="hidden" name="page" value="plugins" />
+                <input type="hidden" name="tab" id="sp_tab" value="sp_config" />
+                <input type="hidden" name="subtab" id="sp_subtab" value="mailtemplates" />
+                <input type="hidden" name="action" value="renderplugin" />
+                <input type="hidden" name="file" value="<?php echo osc_plugin_folder(__FILE__); ?>config.php" />
+                <input type="hidden" name="save_mailtemplates" value="true" />    
+            
+                <button type="submit" class="btn btn-info" style="float: right;margin-top: -5px;"><?php _e('Save', 'spamprotection'); ?></button>
+                <div style="clear:both;"></div>
+                                         
+                <div id="sp_mail_user_login">                    
+                    <fieldset style="border: 1px solid #bbb; padding: 15px; margin: 15px 0;">
+                        <legend><?php _e("Configure mail templates for false user logins", "spamprotection"); ?></legend>
+                                            
+                        <div style="float: left; width: calc(50% - 37.5px); padding: 15px;">
+                            <label><strong><?php _e("Send to user", "spamprotection"); ?></strong></label>
+                            <textarea name="sp_mailuser_user" style="width: 100%; height: 150px;"><?php echo (isset($mail['sp_mailuser_user']) ? $mail['sp_mailuser_user'] : ''); ?></textarea>
+                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&subtab=mailtemplates&target=user&target2=user&testmail='.osc_logged_admin_email()); ?>" class="btn btn-green" style="margin-top: 10px; margin-right: -15px; float: right; padding: 9px 25px 8px;"><?php echo sprintf(__("Send test mail to: %s", "spamprotection"), osc_logged_admin_email()); ?></a>                    
+                        </div>
+                                            
+                        <div style="float: left; width: calc(50% - 37.5px); padding: 15px;">
+                            <label><strong><?php _e("Send to admin", "spamprotection"); ?></strong></label>
+                            <textarea name="sp_mailuser_admin" style="width: 100%; height: 150px;"><?php echo (isset($mail['sp_mailuser_admin']) ? $mail['sp_mailuser_admin'] : ''); ?></textarea>
+                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&subtab=mailtemplates&target=user&target2=admin&testmail='.osc_logged_admin_email()); ?>" class="btn btn-green" style="margin-top: 10px; margin-right: -15px; float: right; padding: 9px 25px 8px;"><?php echo sprintf(__("Send test mail to: %s", "spamprotection"), osc_logged_admin_email()); ?></a>                    
+                        </div>                        
+                    </fieldset>
+                </div>
+                
+                <div id="sp_mail_admin_login">                    
+                    <fieldset style="border: 1px solid #bbb; padding: 15px; margin: 15px 0;">
+                        <legend><?php _e("Configure mail templates for false admin logins", "spamprotection"); ?></legend>
+                                            
+                        <div style="float: left; width: calc(50% - 37.5px); padding: 15px;">
+                            <label><strong><?php _e("Send to user", "spamprotection"); ?></strong></label>
+                            <textarea name="sp_mailadmin_user" style="width: 100%; height: 150px;"><?php echo (isset($mail['sp_mailadmin_user']) ? $mail['sp_mailadmin_user'] : ''); ?></textarea>
+                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&subtab=mailtemplates&target=admin&target2=user&testmail='.osc_logged_admin_email()); ?>" class="btn btn-green" style="margin-top: 10px; margin-right: -15px; float: right; padding: 9px 25px 8px;"><?php echo sprintf(__("Send test mail to: %s", "spamprotection"), osc_logged_admin_email()); ?></a>                    
+                        </div>
+                                            
+                        <div style="float: left; width: calc(50% - 37.5px); padding: 15px;">
+                            <label><strong><?php _e("Send to admin", "spamprotection"); ?></strong></label>
+                            <textarea name="sp_mailadmin_admin" style="width: 100%; height: 150px;"><?php echo (isset($mail['sp_mailadmin_admin']) ? $mail['sp_mailadmin_admin'] : ''); ?></textarea>
+                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&subtab=mailtemplates&target=admin&target2=admin&testmail='.osc_logged_admin_email()); ?>" class="btn btn-green" style="margin-top: 10px; margin-right: -15px; float: right; padding: 9px 25px 8px;"><?php echo sprintf(__("Send test mail to: %s", "spamprotection"), osc_logged_admin_email()); ?></a>                    
+                        </div>                        
+                    </fieldset>                                    
+                </div>    
+            
+                <button type="submit" class="btn btn-info" style="float: right;margin-top: -5px;"><?php _e('Save', 'spamprotection'); ?></button>
+                <div style="clear:both;"></div>
+                
+            </form>
+            
         </div>
     </div>
 </div>

@@ -111,10 +111,12 @@ class spam_prot extends DAO {
             'sp_admin_login_cron'           => array('0', 'STRING'),
             'sp_activate_topbar'            => array('1', 'BOOLEAN'),
             'sp_activate_menu'              => array('1', 'BOOLEAN'),
+            'sp_activate_pulsemenu'         => array('1', 'BOOLEAN'),
             'sp_menu_after'                 => array('menu_dash', 'STRING'),
             'sp_update_check'               => array('1', 'BOOLEN'),
             'sp_check_registrations'        => array('1', 'BOOLEN'),
             'sp_check_registration_mails'   => array('1', 'BOOLEN'),
+            'sp_mailtemplates'              => array('', 'STRING'),
         );
         
         if ($key) { return $opts[$key]; }
@@ -189,8 +191,10 @@ class spam_prot extends DAO {
                 $opts = array(                
                     'sp_activate_topbar'        => osc_get_preference('sp_activate_topbar', $pref),
                     'sp_activate_menu'          => osc_get_preference('sp_activate_menu', $pref),
+                    'sp_activate_pulsemenu'     => osc_get_preference('sp_activate_pulsemenu', $pref),
                     'sp_menu_after'             => osc_get_preference('sp_menu_after', $pref),
                     'sp_update_check'           => osc_get_preference('sp_update_check', $pref),
+                    'sp_mailtemplates'          => osc_get_preference('sp_mailtemplates', $pref),
                 );    
             }
             return $opts;
@@ -421,10 +425,19 @@ class spam_prot extends DAO {
                     }    
                 }
             }
-        } else {
+        } elseif ($type == 'mails') {
+            $array = array(
+                'sp_mailuser_user' => $params['sp_mailuser_user'],
+                'sp_mailuser_admin' => $params['sp_mailuser_admin'],
+                'sp_mailadmin_user' => $params['sp_mailadmin_user'],
+                'sp_mailadmin_admin' => $params['sp_mailadmin_admin']
+            );
+            $data = array('sp_mailtemplates' => serialize($params));    
+        } elseif ($type == 'plugin') {
             $data = array(
                 'sp_activate_topbar'        => (isset($params['sp_activate_topbar']) ? $params['sp_activate_topbar'] : ''),
                 'sp_activate_menu'          => (isset($params['sp_activate_menu']) ? $params['sp_activate_menu'] : ''),
+                'sp_activate_pulsemenu'     => (isset($params['sp_activate_pulsemenu']) ? $params['sp_activate_pulsemenu'] : ''),
                 'sp_menu_after'             => (isset($params['sp_menu_after']) ? $params['sp_menu_after'] : ''),
                 'sp_update_check'           => (isset($params['sp_update_check']) ? $params['sp_update_check'] : ''),
             );    
@@ -1359,67 +1372,170 @@ class spam_prot extends DAO {
         return $ip;      
     }
     
-    function _informUser($search, $type = 'user') {
+    function _informUser($search, $target = 'user') {
         
-        if ($this->_checkAccount($search, $type)) {
+        if ($this->_checkAccount($search, $target)) {
             $ip = $this->_IpUserLogin();
             
-            if ($type == 'user') {
+            if ($target == 'user') {
                 $user = User::newInstance()->findByEmail($search);
                 
                 $email = $search;
                 $content   = array();
-                $content[] = array('{PAGE_NAME}', '{MAIL_USER}', '{MAIL_USED}', '{MAIL_DATE}', '{MAIL_IP}', '{UNBAN_LINK}', '{PASSWORD_LINK}');
-                $content[] = array(osc_page_title(), $user['s_name'], $search, date("Y/m/d H:i", time()), $ip, osc_base_url(true).'?page=sp_activate_account&email='.$search.'&token='.md5($user['s_secret']), osc_recover_user_password_url());    
-            } elseif ($type == 'admin') {
+                $content[] = array(
+                    '{PAGE_NAME}', 
+                    '{MAIL_USER}', 
+                    '{MAIL_USED}', 
+                    '{MAIL_DATE}', 
+                    '{MAIL_IP}', 
+                    '{UNBAN_LINK}', 
+                    '{PASSWORD_LINK}', 
+                    '{BAN_LIST}'
+                );
+                $content[] = array(
+                    osc_page_title(), 
+                    $user['s_name'], 
+                    $search, 
+                    date("Y/m/d H:i", time()), 
+                    $ip, 
+                    '<a href="'.osc_base_url(true).'?page=sp_activate_account&email='.$search.'&token='.md5($user['s_secret']).'">Click here</a>', 
+                    '<a href="'.osc_recover_user_password_url().'">Click here</a>', 
+                    '<a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php').'">Ban List</a>'
+                );
+            } elseif ($target == 'admin') {
                 $user = Admin::newInstance()->findByUsername($search);
                 
                 $email = $user['s_email'];
                 $content   = array();
-                $content[] = array('{PAGE_NAME}', '{MAIL_USER}', '{MAIL_USED}', '{MAIL_DATE}', '{MAIL_IP}', '{UNBAN_LINK}', '{PASSWORD_LINK}');
-                $content[] = array(osc_page_title(), $user['s_name'], $search, date("Y/m/d H:i", time()), $ip, osc_base_url(true).'?page=sp_activate_account&name='.$search.'&token='.md5($user['s_secret']), osc_admin_base_url(true).'?page=login&action=recover');    
+                $content[] = array(
+                    '{PAGE_NAME}', 
+                    '{MAIL_USER}', 
+                    '{MAIL_USED}', 
+                    '{MAIL_DATE}', 
+                    '{MAIL_IP}', 
+                    '{UNBAN_LINK}', 
+                    '{PASSWORD_LINK}', 
+                    '{BAN_LIST}'
+                );
+                $content[] = array(
+                    osc_page_title(), 
+                    $user['s_name'], 
+                    $search, 
+                    date("Y/m/d H:i", time()), 
+                    $ip, 
+                    '<a href="'.osc_base_url(true).'?page=sp_activate_account&name='.$search.'&token='.md5($user['s_secret']).'">Click here</a>', 
+                    '<a href="'.osc_admin_base_url(true).'?page=login&action=recover">Click here</a>', 
+                    '<a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php').'">Ban List</a>'
+                );
             }
             
-            $mail_title = __("False logins on {PAGE_NAME}", "spamprotection");
-            
-            $mail_body_plain = __('Hello {MAIL_USER},','spamprotection').'\r\n\r\n
-'.__('We have detected some false logins for your account {MAIL_USED} on {PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}','spamprotection').'\r\n\r\n
-'.__('In order to our security policy, we have temporarily disabled your account and banned the used IP in our System. You can use following link to unban and reactivate your Account. If this was not you, please contact the support and change your password. You can use the password recovery function, if you don\'t remember your password.','spamprotection').'\r\n\r\n\r\n
-'.__('Unban your account: {UNBAN_LINK} ','spamprotection').'\r\n\r\n
-'.__('Password recovery: {PASSWORD_LINK} ','spamprotection').'\r\n\r\n
-'.__('Best regards','spamprotection').'\r\n
-{PAGE_NAME}';
-            
-            $mail_body_html = __('Hello {MAIL_USER},','spamprotection').'<br /><br />
+            $target_array = array('user', 'admin');            
+            foreach($target_array as $target2) {
+                
+                $body_extra = '';
+                if ($target2 == 'admin') {
+                    $info = osc_plugin_get_info("spamprotection/index.php");
+                    $body_extra = "\n\nThis Mail was sended from ".$info['plugin_name'];    
+                }
+                
+                $mail_title = __("False logins on {PAGE_NAME}", "spamprotection");
+                $mail_body_plain = nl2br(strip_tags($this->_mailTemplate('plain', $target, $target2).$body_extra));    
+                $mail_body_html = nl2br(strip_tags($this->_mailTemplate('html', $target, $target2).$body_extra));
+                
+                $title = osc_mailBeauty($mail_title, $content);
+                $body_plain  = osc_mailBeauty($mail_body_plain, $content);
+                $body_html  = osc_mailBeauty($mail_body_html, $content);
+                
+                $params = array(
+                    'from'      => osc_contact_email(),
+                    'from_name' => osc_page_title(),
+                    'subject'   => $title,
+                    'to'        => ($target2 == 'user' ? $email : osc_contact_email()),
+                    'to_name'   => $user['s_name'],
+                    'body'      => $body_html,
+                    'alt_body'  => $body_plain,
+                    'reply_to'  => osc_contact_email()
+                );
+                
+                if (!osc_sendMail($params)) {
+                    return false;
+                }    
+            }
+             
+            return true;
+        }    
+    }
+    
+    function _testMail($target, $target2, $email) {
+        $user = Admin::newInstance()->findByEmail($email);
+        $ip = $this->_IpUserLogin();
+        
+        $plain   = array();
+        $plain[] = array('{PAGE_NAME}', '{MAIL_USER}', '{MAIL_USED}', '{MAIL_DATE}', '{MAIL_IP}', '{UNBAN_LINK}', '{PASSWORD_LINK}', '{BAN_LIST}');
+        $plain[] = array(osc_page_title(), $user['s_name'], $email, date("Y/m/d H:i", time()), $ip, osc_base_url(true).'?page=sp_activate_account&name='.$email.'&token='.md5($user['s_secret']), osc_admin_base_url(true).'?page=login&action=recover', osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php'));
+
+        $html   = array();
+        $html[] = array('{PAGE_NAME}', '{MAIL_USER}', '{MAIL_USED}', '{MAIL_DATE}', '{MAIL_IP}', '{UNBAN_LINK}', '{PASSWORD_LINK}', '{BAN_LIST}');
+        $html[] = array(osc_page_title(), $user['s_name'], $email, date("Y/m/d H:i", time()), $ip, '<a href="'.osc_base_url(true).'?page=sp_activate_account&name='.$email.'&token='.md5($user['s_secret']).'">Click here</a>', '<a href="'.osc_admin_base_url(true).'?page=login&action=recover">Click here</a>', '<a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php').'">Ban List</a>');
+
+                
+        $body_extra = '';
+        if ($target2 == 'admin') {
+            $info = osc_plugin_get_info("spamprotection/index.php");
+            $body_extra = "\n\nThis Mail was sended from ".$info['plugin_name'];    
+        }
+        
+        $mail_title = __("False logins on {PAGE_NAME}", "spamprotection");
+        $mail_body_plain = nl2br(strip_tags($this->_mailTemplate('plain', $target, $target2).$body_extra));    
+        $mail_body_html = nl2br(strip_tags($this->_mailTemplate('html', $target, $target2).$body_extra));
+        
+        $title = osc_mailBeauty($mail_title, $html);
+        $body_plain  = osc_mailBeauty($mail_body_plain, $plain);
+        $body_html  = osc_mailBeauty($mail_body_html, $html);
+        
+        $params = array(
+            'from'      => osc_contact_email(),
+            'from_name' => osc_page_title(),
+            'subject'   => $title,
+            'to'        => $email,
+            'to_name'   => $user['s_name'],
+            'body'      => $body_html,
+            'alt_body'  => $body_plain,
+            'reply_to'  => osc_contact_email()
+        );
+        
+        if (!osc_sendMail($params)) {
+            return false;
+        }    
+             
+        return true;    
+    }
+    
+    function _mailTemplate($type = 'html', $target = false, $target2 = false) {
+        
+        $template = unserialize($this->_get('sp_mailtemplates'));
+        
+        if ($template && !empty($template['sp_mail'.$target.'_'.$target2])) {
+            return $template['sp_mail'.$target.'_'.$target2];    
+        } else {
+            if ($type == 'html') {
+                return __('Hello {MAIL_USER},','spamprotection').'<br /><br />
 '.__('We have detected some false logins for your account {MAIL_USED} on {PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}','spamprotection').'<br /><br />
 '.__('In order to our security policy, we have temporarily disabled your account and banned the used IP in our System. You can use following link to unban and reactivate your Account. If this was not you, please contact the support and change your password. You can use the password recovery function, if you don\'t remember your password.','spamprotection').'<br /><br /><br />
 '.__('Unban your account: <a href="{UNBAN_LINK}">{UNBAN_LINK}</a> ','spamprotection').'<br /><br />
 '.__('Password recovery: <a href="{PASSWORD_LINK}">{PASSWORD_LINK}</a> ','spamprotection').'<br /><br />
 '.__('Best regards','spamprotection').'<br />
-{PAGE_NAME}';
-
-            $title = osc_mailBeauty($mail_title, $content);
-            $body_plain  = osc_mailBeauty($mail_body_plain, $content);
-            $body_html  = osc_mailBeauty($mail_body_html, $content);
-
-            $params = array(
-                'from'      => osc_contact_email(),
-                'from_name' => osc_page_title(),
-                'subject'   => $title,
-                'to'        => $email,
-                'to_name'   => $user['s_name'],
-                'body'      => $body_html,
-                'alt_body'  => $body_plain,
-                'reply_to'  => osc_contact_email()
-            );
-            
-            $return = false;
-            if (osc_sendMail($params)) {
-                $return = true;
+{PAGE_NAME}';    
+            } elseif ($type == 'plain') {
+                return __('Hello {MAIL_USER},','spamprotection').'\r\n\r\n
+'.__('We have detected some false logins for your account {MAIL_USED} on {PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}','spamprotection').'\r\n\r\n
+'.__('In order to our security policy, we have temporarily disabled your account and banned the used IP in our System. You can use following link to unban and reactivate your Account. If this was not you, please contact the support and change your password. You can use the password recovery function, if you don\'t remember your password.','spamprotection').'\r\n\r\n\r\n
+'.__('Unban your account: {UNBAN_LINK} ','spamprotection').'\r\n\r\n
+'.__('Password recovery: {PASSWORD_LINK} ','spamprotection').'\r\n\r\n
+'.__('Best regards','spamprotection').'\r\n
+{PAGE_NAME}';    
             }
-            
-            return $return;
-        }    
+        }
     }
     
     function _upgradeDatabaseInfo($error) {
