@@ -147,8 +147,7 @@ function sp_add_honeypot_security() {
 }
 
 function sp_check_user_registrations() {     
-    $email = Params::getParam('s_email');
-    
+    $email = Params::getParam('s_email');    
     $check_mail = spam_prot::newInstance()->_get('sp_check_stopforumspam_mail');
     $check_ip = spam_prot::newInstance()->_get('sp_check_stopforumspam_ip');
     
@@ -194,12 +193,11 @@ function sp_check_user_registrations() {
         $data_mail = $data['email'];
         $data_ip = $data['ip'];
         
-        if (is_array($data_mail)) {
-            
+        if (isset($data_mail) && is_array($data_mail)) {            
             $data_freq = $data_mail['frequency'];
             $data_conf = $data_mail['confidence'];
             
-            if ($data_freq > $frequency || $data_conf > $confidence) {                
+            if ($data_freq >= $frequency || $data_conf >= $confidence) {                
                 ob_get_clean();
                 osc_add_flash_error_message(__("Sorry, but your email address is listed because of spam on <a href=\"https://www.stopforumspam.com\">StopForumSpam</a>. Due to this, you cannot register your Account here using this email address, but you can request the deleting of your email address <a href=\"https://www.stopforumspam.com/removal\">Here</a>", "spamprotection"));        
                 header('Location: '.osc_register_account_url());
@@ -207,11 +205,11 @@ function sp_check_user_registrations() {
             }
         }
         
-        if (is_array($data_ip)) {            
+        if (isset($data_ip) && is_array($data_ip)) {            
             $data_freq = $data_ip['frequency'];
             $data_conf = $data_ip['confidence'];
             
-            if ($data_freq > $frequency || $data_conf > $confidence) {                
+            if ($data_freq >= $frequency || $data_conf >= $confidence) {                
                 ob_get_clean();
                 osc_add_flash_error_message(__("Sorry, but your IP is listed because of spam on <a href=\"https://www.stopforumspam.com\">StopForumSpam</a>. Due to this, you cannot register your Account here, but you can request the deleting of your IP <a href=\"https://www.stopforumspam.com/removal\">Here</a>", "spamprotection"));        
                 header('Location: '.osc_register_account_url());

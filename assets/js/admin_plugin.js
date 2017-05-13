@@ -301,11 +301,6 @@ $(document).ready(function(){
         $("#sp_review_wrap").fadeToggle("slow");  
     });
     
-    $(document).on("click", ".sp_review_close", function(event){
-        event.preventDefault();
-        $("#sp_review_wrap").fadeOut("slow");  
-    });
-    
     $(document).on("submit", "#sp_save_settings", function(event) {
         event.preventDefault();
         var changed = $("input[name=changed_htaccess]").val();

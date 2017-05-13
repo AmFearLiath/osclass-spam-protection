@@ -251,12 +251,30 @@ $info = osc_plugin_get_info("spamprotection/index.php");
             </ul>            
             <p><?php _e("If this Honeypot is filled out while sending the form, the system will increase the number of login attempts and the action follows the rules you have set before.", "spamprotection"); ?></p>
             <p><?php _e("Because of missing action hooks you have to add one line of code in some files. Explanation how to add you will find after this option himself.", "spamprotection"); ?></p>
+            
+            <br /><hr /><br />
+            
+            <h2><?php _e("Registrations", "spamprotection"); ?></h2>
+            
+            <h3><?php _e("Check registrations", "spamprotection"); ?></h3>
+            <p><?php _e("Here you can activate and define the registrations protection. If you disallow email provider, no user can register with any email address from this provider, if you allow only some provider, users can register only with email adresses from this hoster.", "spamprotection"); ?></p>
+            
+            <hr />
+            
+            <h3><?php _e("StopForumSpam", "spamprotection"); ?></h3>
+            <p><?php _e("If you activate this, all registrations will be checked against StopForumSpam and if they have listed the user ip and/or email address, the user cannot register an account on your page.", "spamprotection"); ?></p>
+            <ul>
+                <li><?php _e('Max frequency of reports', 'spamprotection'); ?> - <small><?php _e('Enter here the amount, how many times a user can be reported at max. (0 - 255)', 'spamprotection'); ?></small></li>
+                <li><?php _e('Max percentage of suspiciousness', 'spamprotection'); ?> - <small><?php _e('Enter here the percentage, how high is the suspiciousness on StopForumSpam (0 = high confidence, 100 = low confidence).', 'spamprotection'); ?></small></li>
+            </ul>
+            
+            <hr />
         </div>
         
         <div id="sp_help_about" class="subtab-content">
             <h2><?php _e("About this plugin", "spamprotection"); ?></h2>
-            <p><?php _e("
-            This plugin I've developed at the request of the community in the OSClass forum. 
+            <p><?php _e('
+            This plugin I`ve developed at the request of the community in the OSClass forum. 
             There I was given lots of ideas and some have participated in beta tests.
             <br />
             <ul>
@@ -276,9 +294,9 @@ $info = osc_plugin_get_info("spamprotection/index.php");
             If you find any errors, please report it in the forum and tell it to me. 
             I will try to fix this immediately, so that everyone can use this plugin properly.<br /><br />
             Also i would be glad, when you go back to the market and rate this plugin with some stars. I need weeks to develop this plugin for free, you only need some minutes to rate and review it.<br /><br />
-            <a id=\"sp_review\" href=\"https://market.osclass.org/plugins/security/spam-protection_787\" target=\"_blank\">Rate and review now</a><br /><br />
+            <a id="sp_review" href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank"><button class="btn btn-green ratenow"><i class="sp-icon heart small margin-right float-left"></i>Rate and review now</button></a><br /><br />
             <strong>Thanks alot</strong>
-            ", "spamprotection"); ?></p>
+            ', 'spamprotection'); ?></p>
         </div>
         
     </div>

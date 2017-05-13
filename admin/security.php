@@ -128,7 +128,7 @@ $data = $sp->_get();
                         <br /><hr /><br />
                         <div style="margin-bottom: 15px;">
                             <div class="floating">
-                                <i class="fa fa-exclamation-triangle"></i>
+                                <i class="sp-icon attention margin-right"></i>
                             </div> 
                             <div class="floating">
                                 <?php _e('To make this honeypot works for login and recover pages, you need to add one line of code in each of this files.', 'spamprotection'); ?><br />
@@ -302,6 +302,7 @@ $data = $sp->_get();
                             <?php _e('Max frequency of reports', 'spamprotection'); ?>
                         </label><br />
                         <input type="text" name="sp_stopforumspam_freq" style="width: 50px;" value="<?php echo (empty($data['sp_stopforumspam_freq']) ? '3' : $data['sp_stopforumspam_freq']); ?>" />
+                        <span style="line-height: 28px;"><small><?php _e("(0 - 255)", "spamprotection"); ?></small></span>
                         <br />
                         <label for="sp_stopforumspam_susp">
                             <?php _e('Max percentage of suspiciousness', 'spamprotection'); ?>

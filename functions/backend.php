@@ -21,10 +21,10 @@ function sprot_admin_page_header($message = false) {
                 <br />    
                 <p style="text-align: center;">
                     <a href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank">
-                        <button class="btn btn-submit">'.__("Rate now", "spamprotection").'</button>
+                        <button class="btn btn-blue sp_review_close">'.__("Rate now", "spamprotection").'</button>
                     </a>
                     <a href="https://forums.osclass.org/plugins/(plugin)-spam-protection/msg148758/#msg148758" target="_blank">
-                        <button class="btn">'.__("OSClass Forum", "spamprotection").'</button>
+                        <button class="btn sp_review_close">'.__("OSClass Forum", "spamprotection").'</button>
                     </a>
                     <button class="btn btn-red sp_review_close">'.__("Not now", "spamprotection").'</button>
                 </p>                        

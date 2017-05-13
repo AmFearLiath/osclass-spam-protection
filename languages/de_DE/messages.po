@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OSClass Spam Protection\n"
-"POT-Creation-Date: 2017-05-13 13:45+0200\n"
-"PO-Revision-Date: 2017-05-13 13:51+0200\n"
+"POT-Creation-Date: 2017-05-13 18:27+0200\n"
+"PO-Revision-Date: 2017-05-13 18:27+0200\n"
 "Last-Translator: \n"
 "Language-Team: Liath <amfearliath@gmx.de>\n"
 "Language: de_DE\n"
@@ -1118,14 +1118,73 @@ msgstr ""
 "Aufgrund fehlender Hooks muss eine Codezeile in einigen Dateien hinzugefügt "
 "werden. Erklärungen dazu stehen direkt unter der Einstellung."
 
-#: admin/help.php:257
+#: admin/help.php:257 admin/security.php:16
+msgid "Registrations"
+msgstr "Registrierungen"
+
+#: admin/help.php:259 admin/security.php:265
+msgid "Check registrations"
+msgstr "Registrierungen überwachen"
+
+#: admin/help.php:260
+msgid ""
+"Here you can activate and define the registrations protection. If you "
+"disallow email provider, no user can register with any email address from "
+"this provider, if you allow only some provider, users can register only with "
+"email adresses from this hoster."
+msgstr ""
+"Hier kannst Du die Registrierungsüberprüfung aktivieren und auswählen. Wenn "
+"Du E-Mail Provider verbietest, kann sich niemand mit einer E-Mail Adresse "
+"von diesem Anbieter registrieren. Erlaubst Du nur einige ausgewählte "
+"Anbieter, muss der Benutzer für die Registrierung eine dieser E-Mail "
+"Adressen verwenden."
+
+#: admin/help.php:264 admin/security.php:285
+msgid "StopForumSpam"
+msgstr "StopForumSpam"
+
+#: admin/help.php:265
+msgid ""
+"If you activate this, all registrations will be checked against "
+"StopForumSpam and if they have listed the user ip and/or email address, the "
+"user cannot register an account on your page."
+msgstr ""
+"Wenn Du dies aktivierst, werden alle Registrierungen geprüft und die E-Mail "
+"Adressen und/oder IP's auf StopForumSpam verglichen. Ist eins davon dort "
+"gelistet, kann sich der Benutzer nicht registrieren."
+
+#: admin/help.php:267 admin/security.php:302
+msgid "Max frequency of reports"
+msgstr "Maximale Anzahl an Meldungen"
+
+#: admin/help.php:267
+msgid ""
+"Enter here the amount, how many times a user can be reported at max. (0 - "
+"255)"
+msgstr ""
+"Hier kannst Du die maximale Anzahl angeben, wie oft ein Benutzer maximal "
+"gemeldet worden sein darf. (0 - 255)"
+
+#: admin/help.php:268 admin/security.php:308
+msgid "Max percentage of suspiciousness"
+msgstr "Max. Prozent Misstrauen"
+
+#: admin/help.php:268
+msgid ""
+"Enter here the percentage, how high is the suspiciousness on StopForumSpam "
+"(0 = high confidence, 100 = low confidence)."
+msgstr ""
+"Gib hier an, wie hoch das Vertrauen in Prozent auf StopForumSpam sein muss "
+"(0 = hohes Vertrauen, 100 = geringes Vertrauen)."
+
+#: admin/help.php:275
 msgid "About this plugin"
 msgstr "Über dieses Plugin"
 
-#: admin/help.php:258
+#: admin/help.php:276
 msgid ""
 "\n"
-"            This plugin I've developed at the request of the community in "
+"            This plugin I`ve developed at the request of the community in "
 "the OSClass forum. \n"
 "            There I was given lots of ideas and some have participated in "
 "beta tests.\n"
@@ -1160,8 +1219,9 @@ msgid ""
 "this plugin with some stars. I need weeks to develop this plugin for free, "
 "you only need some minutes to rate and review it.<br /><br />\n"
 "            <a id=\"sp_review\" href=\"https://market.osclass.org/plugins/"
-"security/spam-protection_787\" target=\"_blank\">Rate and review now</a><br /"
-"><br />\n"
+"security/spam-protection_787\" target=\"_blank\"><button class=\"btn btn-"
+"green ratenow\"><i class=\"sp-icon heart small margin-right float-left\"></"
+"i>Rate and review now</button></a><br /><br />\n"
 "            <strong>Thanks alot</strong>\n"
 "            "
 msgstr ""
@@ -1201,8 +1261,10 @@ msgstr ""
 "brauchen es zu bewerten.\n"
 "            <br /><br />\n"
 "            <a id=\"sp_review\" href=\"https://market.osclass.org/plugins/"
-"security/spam-protection_787\" target=\"_blank\">Jetzt bewerten</a><br /"
-"><br />\n"
+"security/spam-protection_787\" target=\"_blank\"><button class=\"btn btn-"
+"green ratenow\"><i class=\"sp-icon heart small margin-right float-left\"></"
+"i>Jetzt bewerten</button></a><br /><br />\n"
+"            <br /><br />\n"
 "            <strong>Vielen Dank</strong>\n"
 "            "
 
@@ -1540,10 +1602,6 @@ msgstr "Datei für den Import bereit: "
 msgid "Upload & Import"
 msgstr "Hochladen und importieren"
 
-#: admin/security.php:16
-msgid "Registrations"
-msgstr "Registrierungen"
-
 #: admin/security.php:30
 msgid ""
 "This Option activates the whole form protection. Some features are optional "
@@ -1663,10 +1721,6 @@ msgstr ""
 "Diese Option fügt ein verstecktes Eingabefeld dem Anmeldungsformular hinzu. "
 "Fallen Bots drauf rein greifen die zuvor eingestellten Regeln."
 
-#: admin/security.php:265
-msgid "Check registrations"
-msgstr "Registrierungen überwachen"
-
 #: admin/security.php:268
 msgid "Select type of registrations check"
 msgstr "Wähle den Typ der Registrierungsüberwachung"
@@ -1696,10 +1750,6 @@ msgid "Enter email hoster, separated by , (e.g. mail.ru,gmail.com,yahoo.com)"
 msgstr ""
 "E-Mailanbieter angeben mit , getrennt (z.B. mail.ru,gmail.com,yahoo.com)"
 
-#: admin/security.php:285
-msgid "StopForumSpam"
-msgstr "StopForumSpam"
-
 #: admin/security.php:290
 msgid "Check email address"
 msgstr "E-Mail Adresse überprüfen"
@@ -1716,19 +1766,15 @@ msgstr ""
 "Diese Einstellung erlaubt es, die verwendete E-Mail Adresse und IP bei "
 "StopForumSpam während den Registrierungen zu überwachen"
 
-#: admin/security.php:302
-msgid "Max frequency of reports"
-msgstr "Maximale Anzahl an Meldungen"
+#: admin/security.php:305
+msgid "(0 - 255)"
+msgstr "(0 - 255)"
 
-#: admin/security.php:307
-msgid "Max percentage of suspiciousness"
-msgstr "Max. Prozent Misstrauen"
-
-#: admin/security.php:310
+#: admin/security.php:311
 msgid "(0 = high confidence, 100 = low confidence)"
 msgstr "(0 = hohes Vertrauen, 100 = geringes Vertrauen)"
 
-#: admin/security.php:313
+#: admin/security.php:314
 msgid ""
 "Here you can define the max frequency of reports and the percentage of max "
 "suspiciousness"
@@ -2171,17 +2217,17 @@ msgstr ""
 "<strong>Information!</strong> Dein Account wurde wegen zuvieler falscher "
 "Anmeldeversuche gesperrt. Bitte kontaktiere den Support."
 
-#: functions/frontend.php:163 functions/frontend.php:165
+#: functions/frontend.php:162 functions/frontend.php:164
 #, php-format
 msgid "Sorry, but you cannot use this email address: %s"
 msgstr ""
 "Entschuldigung, aber diese E-Mail Adresse kann nicht verwendet werden: %s"
 
-#: functions/frontend.php:168
+#: functions/frontend.php:167
 msgid "Sorry, but you need to use a valid email address."
 msgstr "Entschuldigung, aber Du musst eine gültige E-Mail Adresse verwenden"
 
-#: functions/frontend.php:204
+#: functions/frontend.php:202
 msgid ""
 "Sorry, but your email address is listed because of spam on <a href=\"https://"
 "www.stopforumspam.com\">StopForumSpam</a>. Due to this, you cannot register "
@@ -2195,7 +2241,7 @@ msgstr ""
 "werden, Du kannst aber die Löschung Deiner E-Mail Adresse <a href=\"https://"
 "www.stopforumspam.com/removal\">hier</a> beantragen"
 
-#: functions/frontend.php:216
+#: functions/frontend.php:214
 msgid ""
 "Sorry, but your IP is listed because of spam on <a href=\"https://www."
 "stopforumspam.com\">StopForumSpam</a>. Due to this, you cannot register your "

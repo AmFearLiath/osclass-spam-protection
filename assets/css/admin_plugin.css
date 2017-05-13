@@ -640,3 +640,9 @@ div#sp_config_mailtemplates > div > div {
 div#sp_config_mailtemplates > div > div:hover {
     background: #dfdfdf;
 }
+
+
+button.ratenow {
+    padding: 2px 10px;
+    line-height: 30px;
+}
