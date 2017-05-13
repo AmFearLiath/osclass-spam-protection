@@ -1,5 +1,14 @@
 $(document).ready(function(){
     
+    $("#spamprot ul.subtabs").each(function(index, element){
+        var height      = $(element).closest("div.tab-content").height(),
+            minheight   = $(document).height()-180;;
+        $(element).css({
+            "minHeight": minheight,
+            "height": height    
+        });
+    });
+    
     if ($("input[name=sp_activate]").is(":checked")) {            
         $("#sp_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
     } if ($("input[name=sp_comment_activate]").is(":checked")) {            
@@ -7,7 +16,9 @@ $(document).ready(function(){
     } if ($("input[name=sp_contact_activate]").is(":checked")) {            
         $("#sp_contact_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
     } if ($("input[name=sp_security_activate]").is(":checked")) {            
-        $("#sp_security_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
+        $("#sp_security_mainfeatures_user").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
+    } if ($("input[name=sp_admin_activate]").is(":checked")) {            
+        $("#sp_security_mainfeatures_admin").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
     } if ($("input[name=sp_honeypot]").is(":checked")) {
         $("#honeypot").addClass("visible");        
     } if ($("input[name=sp_blocked]").is(":checked")) {
@@ -55,10 +66,19 @@ $(document).ready(function(){
     
     $(document).on("click", "input[name=sp_security_activate]", function(){
         if ($("input[name=sp_security_activate]").is(":checked")) {
-            $("#sp_security_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);        
+            $("#sp_security_mainfeatures_user").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);        
         } else {
-            $("#sp_security_options").removeClass("enabled").addClass("disabled").find("input, textarea").prop("disabled", true);
+            $("#sp_security_mainfeatures_user").removeClass("enabled").addClass("disabled").find("input, textarea").prop("disabled", true);
             $("input[name=sp_security_activate]").prop("disabled", false);
+        }  
+    });
+    
+    $(document).on("click", "input[name=sp_admin_activate]", function(){
+        if ($("input[name=sp_admin_activate]").is(":checked")) {
+            $("#sp_security_mainfeatures_admin").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);        
+        } else {
+            $("#sp_security_mainfeatures_admin").removeClass("enabled").addClass("disabled").find("input, textarea").prop("disabled", true);
+            $("input[name=sp_admin_activate]").prop("disabled", false);
         }  
     });
     
@@ -163,15 +183,36 @@ $(document).ready(function(){
         $("#"+tab_id).addClass('current');
     });
     
+    $(document).on("click", "ul.langtabs li", function(){
+        var tab_id = $(this).attr('data-tab');        
+        
+        $('ul.langtabs li').removeClass('current');
+        $('.langtab-content').removeClass('current');
+
+        $(this).addClass('current');
+        $("#"+tab_id).addClass('current');            
+    });
+    
     $(document).on("click", "ul.subtabs li", function(){
         var tab_id      = $(this).attr('data-tab'),
-            currentid   = $(this).closest('div').parent().prop('id');
-        
+            div         = $(this).closest('div'),
+            currentid   = div.parent().prop('id');
+            
         $('#'+currentid+' ul.subtabs li').removeClass('current');
         $('#'+currentid+' .subtab-content').removeClass('current');
 
         $(this).addClass('current');
         $("#"+tab_id).addClass('current');
+        
+        var child       = div.children("div"),
+            height      = child.height(),
+            minheight   = screen.height;    
+        
+        $(this).closest("ul").css({
+            "minHeight": minheight-180,
+            "height": height    
+        });
+        
     });
     
     $(document).on("focusout", "input[name=honeypot_name]", function(){
@@ -253,6 +294,16 @@ $(document).ready(function(){
                 });
             }
         });    
+    });
+    
+    $(document).on("click", "#sp_review", function(event){
+        event.preventDefault();
+        $("#sp_review_wrap").fadeToggle("slow");  
+    });
+    
+    $(document).on("click", ".sp_review_close", function(event){
+        event.preventDefault();
+        $("#sp_review_wrap").fadeOut("slow");  
     });
     
     $(document).on("submit", "#sp_save_settings", function(event) {
@@ -337,14 +388,43 @@ $(document).ready(function(){
         }    
     });
     
-    $(document).on("click", "#sp_review", function(event){
-        event.preventDefault();
-        $("#sp_review_wrap").fadeToggle("slow");  
+    $(document).on("change", "#sp_check_registrations", function(event){
+        
+        event.preventDefault();        
+        var type = $(this).val();
+        
+        if (type && (type == '2' || type == '3')) {
+            $("#sp_check_registration_mails").fadeIn("slow");    
+        } else {
+            $("#sp_check_registration_mails").fadeOut("slow");    
+        }    
     });
     
-    $(document).on("click", ".sp_review_close", function(event){
-        event.preventDefault();
-        $("#sp_review_wrap").fadeOut("slow");  
+    $(document).on("click", "input[name=sp_check_stopforumspam_mail], input[name=sp_check_stopforumspam_ip]", function(event){
+        var mail    = $("input[name=sp_check_stopforumspam_mail]"),
+            ip      = $("input[name=sp_check_stopforumspam_ip]");
+        
+        if ($(mail).is(":checked") || $(ip).is(":checked")) {            
+            $("#sp_stopforumspam_settings").fadeIn("slow");                
+        } else {
+            $("#sp_stopforumspam_settings").fadeOut("slow");    
+        }    
+    });
+    
+    $(document).on("click", "input[name=sp_activate_menu]", function(event){
+        if ($("input[name=sp_activate_menu]").is(":checked")) {
+            $("#sp_menu_appearance_cont, #sp_activate_pulsemenu_cont").fadeIn("slow");    
+        } else {
+            $("#sp_menu_appearance_cont, #sp_activate_pulsemenu_cont").fadeOut("slow");    
+        }    
+    });
+    
+    $(document).on("click", "input[name=sp_activate_pulsemenu]", function(){
+        if ($("input[name=sp_activate_pulsemenu]").is(":checked")) {
+            $("ul.oscmenu li#menu_spamprotection a").addClass("pulse");        
+        } else {
+            $("ul.oscmenu li#menu_spamprotection a").removeClass("pulse");
+        }    
     });    
     
 });

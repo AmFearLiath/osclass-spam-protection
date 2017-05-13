@@ -35,9 +35,11 @@ CREATE TABLE IF NOT EXISTS `/*TABLE_PREFIX*/t_spam_protection_contacts` (
 
 CREATE TABLE IF NOT EXISTS `/*TABLE_PREFIX*/t_spam_protection_logins` (
   `pk_i_id` int(10) NOT NULL AUTO_INCREMENT,
+  `s_name` varchar(100) DEFAULT NULL,
   `s_email` varchar(100) DEFAULT NULL,
-  `s_ip` varchar(100) DEFAULT NULL,
-  `dt_date_login` int(20) DEFAULT NULL,
+  `s_ip` varchar(30) DEFAULT NULL,
+  `s_type` varchar(5) NOT NULL DEFAULT 'user',
+  `dt_date_login` int(11) DEFAULT NULL,
   PRIMARY KEY (`pk_i_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -45,9 +47,8 @@ CREATE TABLE IF NOT EXISTS `/*TABLE_PREFIX*/t_spam_protection_ban_log` (
   `pk_i_id` INT(10) NOT NULL AUTO_INCREMENT,
   `i_user_id` int(10) DEFAULT NULL,
   `s_user_email` varchar(100) DEFAULT NULL,
-  `s_user_ip` int(11) DEFAULT NULL,
+  `s_user_ip` varchar(50) DEFAULT NULL,
   `s_reason` text DEFAULT NULL,
-  `dt_date_banned` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `dt_date_released` datetime DEFAULT NULL 
+  `dt_date_banned` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP, 
   PRIMARY KEY (`pk_i_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

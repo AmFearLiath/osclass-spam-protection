@@ -1,6 +1,7 @@
-<?php 
-require_once(ABS_PATH.'/oc-load.php');
-require_once(osc_plugin_path('spamprotection/classes/class.spamprotection.php'));
+<?php
+if (!defined('OC_ADMIN')) {
+    exit('Direct access is not allowed.');
+}
 
 $sp = new spam_prot;
 $settings = false; $help = false;
@@ -25,8 +26,10 @@ if (Params::getParam('tab') == 'sp_contact') {
     $comments = true;    
 } elseif (Params::getParam('tab') == 'sp_security') {
     $security = true;    
-} elseif (Params::getParam('tab') == 'sp_shelp') {
+} elseif (Params::getParam('tab') == 'sp_help') {
     $help = true;    
+} elseif (Params::getParam('tab') == 'sp_config') {
+    $config = true;    
 } else {
     $settings = true;    
 }
@@ -53,6 +56,7 @@ if (Params::getParam('settings') == 'save') {
             <li class="tab-link<?php if (isset($contact) && $contact) { echo ' current'; } ?>" data-tab="sp_contact"><a><?php _e('Contact Settings', 'spamprotection'); ?></a></li>
             <li class="tab-link<?php if (isset($security) && $security) { echo ' current'; } ?>" data-tab="sp_security"><a><?php _e('Security Settings', 'spamprotection'); ?></a></li>
             <li class="tab-link<?php if (isset($help) && $help) { echo ' current'; } ?>" data-tab="sp_help"><a><?php _e('Help', 'spamprotection'); ?></a></li>
+            <li class="tab-link float-right<?php if (isset($config) && $config) { echo ' current'; } ?>" data-tab="sp_config"><a class="sp-icon tools"style="padding: 0;background-color: transparent;border: none;margin: 8px;"></a></li>
         </ul>
         
         <form id="sp_save_settings" action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php'); ?>" method="POST">
@@ -77,11 +81,15 @@ if (Params::getParam('settings') == 'save') {
             <div id="sp_security" class="tab-content<?php if (isset($security) && $security) { echo ' current'; } ?>">
                 <?php include_once(osc_plugin_path('spamprotection/admin/security.php')); ?>    
             </div>
+
+            <div id="sp_help" class="tab-content<?php if (isset($help) && $help) { echo ' current'; } ?>">
+                <?php include_once(osc_plugin_path('spamprotection/admin/help.php')); ?>
+            </div>
             
         </form>
 
-        <div id="sp_help" class="tab-content<?php if (isset($help) && $help) { echo ' current'; } ?>">
-            <?php include_once(osc_plugin_path('spamprotection/admin/help.php')); ?>
+        <div id="sp_config" class="tab-content<?php if (isset($config) && $config) { echo ' current'; } ?>">
+            <?php include_once(osc_plugin_path('spamprotection/admin/plugin.php')); ?>
         </div>        
     </div>   
 </div>

@@ -1,4 +1,10 @@
 <?php
+if (!defined('OC_ADMIN')) {
+    exit('Direct access is not allowed.');
+} if (!osc_is_admin_user_logged_in()) {
+    die;
+}
+
 $info = osc_plugin_get_info("spamprotection/index.php");
 ?>
 <div class="help">
@@ -16,7 +22,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
     
         <div id="sp_help_general" class="subtab-content current">        
             
-            <h2><?php echo sprintf(__("Welcome to Spam Protection %s", "spamprotection"), "v".$info['version']); ?></h2>
+            <h2><?php echo sprintf(__("Welcome to Anti Spam & Protection System %s", "spamprotection"), "v".$info['version']); ?></h2>
             
             <p><?php _e('Since you can read this help, you have already installed the plugin. So let\'s continue with the functions.', 'spamprotection'); ?></p>
             <p><?php _e('You can configure this plugin in two ways.', 'spamprotection'); ?></p>
@@ -24,7 +30,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
                 <li><?php _e('Through the plugin page and check the option "configure"', 'spamprotection'); ?></li>
                 <li><?php _e('or through the Tools-Tab that you can find on the button "More" to the left side.', 'spamprotection'); ?></li>
             </ul>
-            <p><?php _e('After your Settings, the Spam Protection is ready to work, you dont have to modify your files or something else.', 'spamprotection'); ?></p>
+            <p><?php _e('After your Settings, the Anti Spam & Protection System is ready to work, you dont have to modify your files or something else.', 'spamprotection'); ?></p>
         
             <p><?php _e('This plugin gives you different options to stop spam.', 'spamprotection'); ?></p>
             <ul>
@@ -202,7 +208,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
         </div>
         
         <div id="sp_help_security" class="subtab-content">
-            <h2><?php _e("Form Protection", "spamprotection"); ?></h2>
+            <h2><?php _e("User Protection", "spamprotection"); ?> / <?php _e("Admin Protection", "spamprotection"); ?></h2>
             
             <h3><?php _e("Activate the Form Protection", "spamprotection"); ?></h3>
             <p><?php _e("This Option activates the whole form protection. You can deactivate some features optionally, but deactivate this checkbox will deactivate the whole system.", "spamprotection"); ?></p>
@@ -249,7 +255,30 @@ $info = osc_plugin_get_info("spamprotection/index.php");
         
         <div id="sp_help_about" class="subtab-content">
             <h2><?php _e("About this plugin", "spamprotection"); ?></h2>
-            <p><?php _e("This plugin I've developed at the request of the community in the OSClass forum. There I was given lots of ideas and some have participated in beta tests.<br /><br /><strong>Thanks to all for your help!</strong><br /><br />I hope this plugin will be useful to many of you and it helps you to reduce the spam on your pages to a minimum. Keep in mind, however, that it was never intended to fight spam automatically. It is just a tool to mark the spam and to check it manually.<br /><br />An automated system would always involve the risk that even realistic ads will be marked as spam and not published.<br /><br />If you find any errors, please report it in the forum and tell it to me. I will try to fix this immediately, so that everyone can use this plugin properly.", "spamprotection"); ?></p>
+            <p><?php _e("
+            This plugin I've developed at the request of the community in the OSClass forum. 
+            There I was given lots of ideas and some have participated in beta tests.
+            <br />
+            <ul>
+            <li><strong>Web-Media</strong>   -   Improve the plugin security</li>
+            <li><strong>Aficionado</strong>  -   Testing and error reporting...</li>
+            <li><strong>dev101</strong>      -   Suggestions and explaining features and functions</li>
+            <li><strong>TangoX</strong>      -   Correcting some translations</li>
+            </ul> 
+            <strong>Thanks to all for your help!</strong>
+            <br /><br />
+            I hope this plugin will be useful to many of you and it helps you to reduce the spam on your pages to a minimum. 
+            Keep in mind, however, that it was never intended to fight spam automatically. 
+            It is just a tool to find and mark the spam for manually editoring.
+            <br /><br />
+            An automated system would always involve the risk that even realistic ads will be marked as spam and not published.
+            <br /><br />
+            If you find any errors, please report it in the forum and tell it to me. 
+            I will try to fix this immediately, so that everyone can use this plugin properly.<br /><br />
+            Also i would be glad, when you go back to the market and rate this plugin with some stars. I need weeks to develop this plugin for free, you only need some minutes to rate and review it.<br /><br />
+            <a id=\"sp_review\" href=\"https://market.osclass.org/plugins/security/spam-protection_787\" target=\"_blank\">Rate and review now</a><br /><br />
+            <strong>Thanks alot</strong>
+            ", "spamprotection"); ?></p>
         </div>
         
     </div>

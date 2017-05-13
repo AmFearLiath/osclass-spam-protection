@@ -1,6 +1,9 @@
 <?php
-require_once(ABS_PATH.'/oc-load.php');
-require_once(osc_plugin_path('spamprotection/classes/class.spamprotection.php'));
+if (!defined('OC_ADMIN')) {
+    exit('Direct access is not allowed.');
+} if (!osc_is_admin_user_logged_in()) {
+    die;
+}
             
 $sp = new spam_prot;
 $id = Params::getParam('itemid');
@@ -13,6 +16,7 @@ $user_spams = $sp->_countRows('t_sp_items', array('key' => 's_user_mail', 'value
 if ($user_spams > 0) {
     $item_spams = $sp->_getResult('t_sp_items', array('key' => 's_user_mail', 'value' => $item['s_user_mail']));
 }
+
 ?>
 
 <div class="compare" id="spamprot">
