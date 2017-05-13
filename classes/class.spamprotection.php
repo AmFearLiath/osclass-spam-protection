@@ -116,6 +116,11 @@ class spam_prot extends DAO {
             'sp_update_check'               => array('1', 'BOOLEN'),
             'sp_check_registrations'        => array('1', 'BOOLEN'),
             'sp_check_registration_mails'   => array('1', 'BOOLEN'),
+            'sp_check_stopforumspam_mail'   => array('0', 'BOOLEN'),
+            'sp_stopforumspam_freq'         => array('3', 'STRING'),
+            'sp_stopforumspam_susp'         => array('50', 'STRING'),
+            'sp_check_stopforumspam_ip'     => array('0', 'BOOLEN'),
+            'sp_check_stopforumspam_ip'     => array('0', 'BOOLEN'),
             'sp_mailtemplates'              => array('', 'STRING'),
         );
         
@@ -186,6 +191,10 @@ class spam_prot extends DAO {
                     'sp_admin_login_cron'           => osc_get_preference('sp_admin_login_cron', $pref),
                     'sp_check_registrations'        => osc_get_preference('sp_check_registrations', $pref),
                     'sp_check_registration_mails'   => osc_get_preference('sp_check_registration_mails', $pref),
+                    'sp_check_stopforumspam_mail'   => osc_get_preference('sp_check_stopforumspam_mail', $pref),
+                    'sp_check_stopforumspam_ip'     => osc_get_preference('sp_check_stopforumspam_ip', $pref),
+                    'sp_stopforumspam_freq'         => osc_get_preference('sp_stopforumspam_freq', $pref),
+                    'sp_stopforumspam_susp'         => osc_get_preference('sp_stopforumspam_susp', $pref),
                 );
             } else {
                 $opts = array(                
@@ -414,6 +423,10 @@ class spam_prot extends DAO {
                 'sp_admin_login_cron'           => (isset($params['sp_admin_login_cron']) ? $params['sp_admin_login_cron'] : ''),
                 'sp_check_registrations'        => (isset($params['sp_check_registrations']) ? $params['sp_check_registrations'] : ''),
                 'sp_check_registration_mails'   => (isset($params['sp_check_registration_mails']) ? $this->_sort($params['sp_check_registration_mails']) : ''),
+                'sp_check_stopforumspam_mail'   => (isset($params['sp_check_stopforumspam_mail']) ? $this->_sort($params['sp_check_stopforumspam_mail']) : ''),
+                'sp_check_stopforumspam_ip'     => (isset($params['sp_check_stopforumspam_ip']) ? $this->_sort($params['sp_check_stopforumspam_ip']) : ''),
+                'sp_stopforumspam_freq'         => (isset($params['sp_stopforumspam_freq']) ? $this->_sort($params['sp_stopforumspam_freq']) : ''),
+                'sp_stopforumspam_susp'         => (isset($params['sp_stopforumspam_susp']) ? $this->_sort($params['sp_stopforumspam_susp']) : ''),
             );
             
             if (!empty($params['sp_htaccess'])) {

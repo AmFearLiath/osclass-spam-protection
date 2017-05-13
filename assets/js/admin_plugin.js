@@ -400,6 +400,17 @@ $(document).ready(function(){
         }    
     });
     
+    $(document).on("click", "input[name=sp_check_stopforumspam_mail], input[name=sp_check_stopforumspam_ip]", function(event){
+        var mail    = $("input[name=sp_check_stopforumspam_mail]"),
+            ip      = $("input[name=sp_check_stopforumspam_ip]");
+        
+        if ($(mail).is(":checked") || $(ip).is(":checked")) {            
+            $("#sp_stopforumspam_settings").fadeIn("slow");                
+        } else {
+            $("#sp_stopforumspam_settings").fadeOut("slow");    
+        }    
+    });
+    
     $(document).on("click", "input[name=sp_activate_menu]", function(event){
         if ($("input[name=sp_activate_menu]").is(":checked")) {
             $("#sp_menu_appearance_cont, #sp_activate_pulsemenu_cont").fadeIn("slow");    

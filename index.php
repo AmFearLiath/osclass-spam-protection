@@ -3,7 +3,7 @@
 Plugin Name: Anti Spam & Protection System
 Plugin URI: http://amfearliath.tk/osclass-spam-protection/
 Description: Anti Spam & Protection System for Osclass. Secures your ads, comments and contact mails against spam. Protects your login/registration processes and many other features. 
-Version: 1.6.1
+Version: 1.6.2
 Author: Liath
 Author URI: http://amfearliath.tk
 Short Name: spamprotection
@@ -61,7 +61,9 @@ Changelog
 
 1.6.0 - Redesigned configuration area, admin login protection, import/export for settings and database, plugin settings, update check and registration check been added. Changed plugin name to Anti Spam & Protection System. 
 
-1.6.1 - Added Mailtemplate manager, now mails sended to admin after user/admin has banned 
+1.6.1 - Added Mailtemplate manager, now mails sended to admin after user/admin has banned
+
+1.6.2 - Added check on StopForumSpam for registrations 
 */
 
 define('SPP_PATH', dirname(__FILE__) . '/');
@@ -159,7 +161,7 @@ if ($sp->_get('sp_admin_activate') == '1') {
     }    
 }
     
-if (Params::getParam('action') == 'register_post' && $sp->_get('sp_check_registrations') >= '2') {        
+if (Params::getParam('sp_check_stopforumspam') == '1' || (Params::getParam('action') == 'register_post' && $sp->_get('sp_check_registrations') >= '2')) {        
     osc_add_hook('before_user_register', 'sp_check_user_registrations', 1);    
 }
 

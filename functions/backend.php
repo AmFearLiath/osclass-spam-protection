@@ -44,8 +44,8 @@ function sprot_uninstall() {
 function sprot_style_admin() {
     $params = Params::getParamsAsArray();
     
-    osc_enqueue_style('spam_protection-upgrade_css', osc_plugin_url('spamprotection/assets/css/admin_general.css').'admin_general.css');
-    osc_register_script('spam_protection-upgrade_js', osc_plugin_url('spamprotection/assets/js/admin_general.js') . 'admin_general.js', array('jquery'));
+    osc_enqueue_style('spam_protection-upgrade_css', osc_plugin_url('spamprotection/assets/css/admin_general.css').'admin_general.css?'.time());
+    osc_register_script('spam_protection-upgrade_js', osc_plugin_url('spamprotection/assets/js/admin_general.js') . 'admin_general.js?'.time(), array('jquery'));
     osc_enqueue_script('spam_protection-upgrade_js');
         
     if (isset($params['file'])) {
@@ -53,9 +53,9 @@ function sprot_style_admin() {
         $file = explode(".", $plugin[2]);
         if ($plugin[0] == 'spamprotection') {
             
-            osc_enqueue_style('spam_protection-styles_admin', osc_plugin_url('spamprotection/assets/css/admin_plugin.css').'admin_plugin.css');
+            osc_enqueue_style('spam_protection-styles_admin', osc_plugin_url('spamprotection/assets/css/admin_plugin.css').'admin_plugin.css?'.time());
             
-            osc_register_script('spam_protection-admin', osc_plugin_url('spamprotection/assets/js/admin_plugin.js') . 'admin_plugin.js', array('jquery'));
+            osc_register_script('spam_protection-admin', osc_plugin_url('spamprotection/assets/js/admin_plugin.js') . 'admin_plugin.js?'.time(), array('jquery'));
             osc_enqueue_script('spam_protection-admin');
             
             osc_add_hook('admin_page_header','sprot_admin_page_header');

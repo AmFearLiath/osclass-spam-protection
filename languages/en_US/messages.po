@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OSClass Spam Protection\n"
-"POT-Creation-Date: 2017-05-13 00:34+0200\n"
-"PO-Revision-Date: 2017-05-13 00:34+0200\n"
+"POT-Creation-Date: 2017-05-13 13:51+0200\n"
+"PO-Revision-Date: 2017-05-13 13:52+0200\n"
 "Last-Translator: \n"
 "Language-Team: Liath <amfearliath@gmx.de>\n"
 "Language: de_DE\n"
@@ -36,7 +36,7 @@ msgid "Email"
 msgstr ""
 
 #: admin/ban_log.php:25 admin/check.php:159 admin/comments_check.php:23
-#: admin/contact_check.php:23 admin/plugin.php:257
+#: admin/contact_check.php:23 admin/plugin.php:336
 msgid "Date"
 msgstr ""
 
@@ -133,7 +133,7 @@ msgid "Stopwords"
 msgstr ""
 
 #: admin/comments.php:18 admin/contact.php:18 admin/plugin.php:126
-#: admin/plugin.php:193 admin/plugin.php:374 admin/plugin.php:413
+#: admin/plugin.php:193 admin/plugin.php:232 admin/plugin.php:271
 #: admin/security.php:17 admin/settings.php:23
 msgid "Save"
 msgstr ""
@@ -273,7 +273,7 @@ msgstr ""
 msgid "Activate"
 msgstr ""
 
-#: admin/comments_check.php:43 admin/contact_check.php:46 admin/plugin.php:268
+#: admin/comments_check.php:43 admin/contact_check.php:46 admin/plugin.php:347
 msgid "Delete"
 msgstr ""
 
@@ -1054,15 +1054,15 @@ msgid "Settings"
 msgstr ""
 
 #: admin/plugin.php:110
-msgid "Export"
+msgid "Mailtemplates"
 msgstr ""
 
 #: admin/plugin.php:111
-msgid "Import"
+msgid "Export"
 msgstr ""
 
 #: admin/plugin.php:112
-msgid "Mailtemplates"
+msgid "Import"
 msgstr ""
 
 #: admin/plugin.php:130
@@ -1154,185 +1154,185 @@ msgid ""
 "for needed changes."
 msgstr ""
 
-#: admin/plugin.php:200
-msgid "Export settings and data"
-msgstr ""
-
-#: admin/plugin.php:203 admin/plugin.php:214
-msgid "Error"
-msgstr ""
-
-#: admin/plugin.php:207
-#, php-format
-msgid ""
-"<strong>Following path does not exist, please create and grant write access "
-"to:</strong><br /><em>%s</em>"
-msgstr ""
-
-#: admin/plugin.php:210
-msgid "Create Folder"
-msgstr ""
-
-#: admin/plugin.php:218
-#, php-format
-msgid ""
-"<strong>Following path is not writable, please ensure that you grant write "
-"access to:</strong><br /><em>%s</em>"
-msgstr ""
-
-#: admin/plugin.php:229
-msgid ""
-"Here you can define which chmod should be set and try to fix this problem. "
-"Otherwise you have to change the permissions manually"
-msgstr ""
-
-#: admin/plugin.php:231
-msgid "Chmod Folder"
-msgstr ""
-
-#: admin/plugin.php:238
-msgid "Select for export"
-msgstr ""
-
-#: admin/plugin.php:242
-msgid "Export plugin settings"
-msgstr ""
-
-#: admin/plugin.php:245
-msgid "Export database"
-msgstr ""
-
-#: admin/plugin.php:255
-msgid "Created exports"
-msgstr ""
-
-#: admin/plugin.php:256
-msgid "Size"
-msgstr ""
-
-#: admin/plugin.php:271
-msgid "Download"
-msgstr ""
-
-#: admin/plugin.php:288
-msgid "Import settings and data"
-msgstr ""
-
-#: admin/plugin.php:291
-msgid "Files on Server"
-msgstr ""
-
-#: admin/plugin.php:293
-msgid "This files can be used for quick import."
-msgstr ""
-
-#: admin/plugin.php:296
-msgid "Import plugin settings"
-msgstr ""
-
-#: admin/plugin.php:300
-msgid "Import database"
-msgstr ""
-
-#: admin/plugin.php:304
-#, php-format
-msgid ""
-"There is no file to import. If you want to import your previous saved files, "
-"copy them to:<br /><em>%s</em>"
-msgstr ""
-
-#: admin/plugin.php:309
-msgid "Upload file for import"
-msgstr ""
-
-#: admin/plugin.php:318
-msgid "Only xml files generated through this plugin allowed"
-msgstr ""
-
-#: admin/plugin.php:321
-msgid "Choose file for import"
-msgstr ""
-
-#: admin/plugin.php:331
-msgid "File ready to import: "
-msgstr ""
-
-#: admin/plugin.php:332
-msgid "Upload & Import"
-msgstr ""
-
-#: admin/plugin.php:343
+#: admin/plugin.php:201
 msgid ""
 "Here you can edit the mailtemplates, which will be used to inform the user "
 "about false login attempts"
 msgstr ""
 
-#: admin/plugin.php:344
+#: admin/plugin.php:202
 #, php-format
 msgid ""
 "If you dont want to generate your own templates, the standard mail templates "
 "will be used. The mails for admins will be always sended to: %s"
 msgstr ""
 
-#: admin/plugin.php:349
+#: admin/plugin.php:207
 msgid ""
 "For adding important informations in your mail, you can use following "
 "placeholders:"
 msgstr ""
 
-#: admin/plugin.php:352
+#: admin/plugin.php:210
 #, php-format
 msgid "This is the name of your page (%s)"
 msgstr ""
 
-#: admin/plugin.php:353
+#: admin/plugin.php:211
 msgid "This is the name of the user who will receive the mail"
 msgstr ""
 
-#: admin/plugin.php:354
+#: admin/plugin.php:212
 msgid "This is the used mail address for the login attempts"
 msgstr ""
 
-#: admin/plugin.php:355
+#: admin/plugin.php:213
 msgid "This is the date for the last false login attempt"
 msgstr ""
 
-#: admin/plugin.php:356
+#: admin/plugin.php:214
 msgid "This is the ip which was used for the false login attempt"
 msgstr ""
 
-#: admin/plugin.php:357
+#: admin/plugin.php:215
 msgid "This link allows the user to automatically unban his account"
 msgstr ""
 
-#: admin/plugin.php:358
+#: admin/plugin.php:216
 msgid "This link redirect the user to the password recovery page"
 msgstr ""
 
-#: admin/plugin.php:359
+#: admin/plugin.php:217
 msgid "This link redirect the admin to the ban list"
 msgstr ""
 
-#: admin/plugin.php:379
+#: admin/plugin.php:237
 msgid "Configure mail templates for false user logins"
 msgstr ""
 
-#: admin/plugin.php:382 admin/plugin.php:400
+#: admin/plugin.php:240 admin/plugin.php:258
 msgid "Send to user"
 msgstr ""
 
-#: admin/plugin.php:384 admin/plugin.php:390 admin/plugin.php:402
-#: admin/plugin.php:408
+#: admin/plugin.php:242 admin/plugin.php:248 admin/plugin.php:260
+#: admin/plugin.php:266
 #, php-format
 msgid "Send test mail to: %s"
 msgstr ""
 
-#: admin/plugin.php:388 admin/plugin.php:406
+#: admin/plugin.php:246 admin/plugin.php:264
 msgid "Send to admin"
 msgstr ""
 
-#: admin/plugin.php:397
+#: admin/plugin.php:255
 msgid "Configure mail templates for false admin logins"
+msgstr ""
+
+#: admin/plugin.php:279
+msgid "Export settings and data"
+msgstr ""
+
+#: admin/plugin.php:282 admin/plugin.php:293
+msgid "Error"
+msgstr ""
+
+#: admin/plugin.php:286
+#, php-format
+msgid ""
+"<strong>Following path does not exist, please create and grant write access "
+"to:</strong><br /><em>%s</em>"
+msgstr ""
+
+#: admin/plugin.php:289
+msgid "Create Folder"
+msgstr ""
+
+#: admin/plugin.php:297
+#, php-format
+msgid ""
+"<strong>Following path is not writable, please ensure that you grant write "
+"access to:</strong><br /><em>%s</em>"
+msgstr ""
+
+#: admin/plugin.php:308
+msgid ""
+"Here you can define which chmod should be set and try to fix this problem. "
+"Otherwise you have to change the permissions manually"
+msgstr ""
+
+#: admin/plugin.php:310
+msgid "Chmod Folder"
+msgstr ""
+
+#: admin/plugin.php:317
+msgid "Select for export"
+msgstr ""
+
+#: admin/plugin.php:321
+msgid "Export plugin settings"
+msgstr ""
+
+#: admin/plugin.php:324
+msgid "Export database"
+msgstr ""
+
+#: admin/plugin.php:334
+msgid "Created exports"
+msgstr ""
+
+#: admin/plugin.php:335
+msgid "Size"
+msgstr ""
+
+#: admin/plugin.php:350
+msgid "Download"
+msgstr ""
+
+#: admin/plugin.php:367
+msgid "Import settings and data"
+msgstr ""
+
+#: admin/plugin.php:370
+msgid "Files on Server"
+msgstr ""
+
+#: admin/plugin.php:372
+msgid "This files can be used for quick import."
+msgstr ""
+
+#: admin/plugin.php:375
+msgid "Import plugin settings"
+msgstr ""
+
+#: admin/plugin.php:379
+msgid "Import database"
+msgstr ""
+
+#: admin/plugin.php:383
+#, php-format
+msgid ""
+"There is no file to import. If you want to import your previous saved files, "
+"copy them to:<br /><em>%s</em>"
+msgstr ""
+
+#: admin/plugin.php:388
+msgid "Upload file for import"
+msgstr ""
+
+#: admin/plugin.php:397
+msgid "Only xml files generated through this plugin allowed"
+msgstr ""
+
+#: admin/plugin.php:400
+msgid "Choose file for import"
+msgstr ""
+
+#: admin/plugin.php:410
+msgid "File ready to import: "
+msgstr ""
+
+#: admin/plugin.php:411
+msgid "Upload & Import"
 msgstr ""
 
 #: admin/security.php:16
@@ -1471,6 +1471,42 @@ msgstr ""
 msgid "Enter email hoster, separated by , (e.g. mail.ru,gmail.com,yahoo.com)"
 msgstr ""
 
+#: admin/security.php:285
+msgid "StopForumSpam"
+msgstr ""
+
+#: admin/security.php:290
+msgid "Check email address"
+msgstr ""
+
+#: admin/security.php:295
+msgid "Check IP"
+msgstr ""
+
+#: admin/security.php:298
+msgid ""
+"This options allows to check used emails and IP's against StopForumSpam for "
+"your registrations"
+msgstr ""
+
+#: admin/security.php:302
+msgid "Max frequency of reports"
+msgstr ""
+
+#: admin/security.php:307
+msgid "Max percentage of suspiciousness"
+msgstr ""
+
+#: admin/security.php:310
+msgid "(0 = high confidence, 100 = low confidence)"
+msgstr ""
+
+#: admin/security.php:313
+msgid ""
+"Here you can define the max frequency of reports and the percentage of max "
+"suspiciousness"
+msgstr ""
+
 #: admin/settings.php:36
 msgid ""
 "This Option activates the whole Spam Protection. Some features are optional "
@@ -1589,96 +1625,96 @@ msgstr ""
 msgid "Beware of editing this file, unless you know what you're doing!!!"
 msgstr ""
 
-#: classes/class.spamprotection.php:212
+#: classes/class.spamprotection.php:221
 msgid "Actions"
 msgstr ""
 
-#: classes/class.spamprotection.php:217
+#: classes/class.spamprotection.php:226
 #, php-format
 msgid "%s Spam found"
 msgstr ""
 
-#: classes/class.spamprotection.php:222
+#: classes/class.spamprotection.php:231
 msgid "Spam found"
 msgstr ""
 
-#: classes/class.spamprotection.php:230
+#: classes/class.spamprotection.php:239
 #, php-format
 msgid "%s Spam comment found"
 msgstr ""
 
-#: classes/class.spamprotection.php:235
+#: classes/class.spamprotection.php:244
 msgid "Spam comment found"
 msgstr ""
 
-#: classes/class.spamprotection.php:243
+#: classes/class.spamprotection.php:252
 #, php-format
 msgid "%s Spam Contact Mail found"
 msgstr ""
 
-#: classes/class.spamprotection.php:248
+#: classes/class.spamprotection.php:257
 msgid "Spam Contact Mail found"
 msgstr ""
 
-#: classes/class.spamprotection.php:256
+#: classes/class.spamprotection.php:265
 #, php-format
 msgid "%s Banned user"
 msgstr ""
 
-#: classes/class.spamprotection.php:261
+#: classes/class.spamprotection.php:270
 msgid "Banned user"
 msgstr ""
 
-#: classes/class.spamprotection.php:502
+#: classes/class.spamprotection.php:515
 msgid "Spam Protection - Banned because of spam ads"
 msgstr ""
 
-#: classes/class.spamprotection.php:1174
+#: classes/class.spamprotection.php:1187
 msgid "Spam Protection - Too many false login attempts"
 msgstr ""
 
-#: classes/class.spamprotection.php:1191
+#: classes/class.spamprotection.php:1204
 #, php-format
 msgid ""
 "Spam Protection - Admin/Mod %s blocked in due to too many false login "
 "attempts"
 msgstr ""
 
-#: classes/class.spamprotection.php:1318
+#: classes/class.spamprotection.php:1331
 msgid "User was blocked because of"
 msgstr ""
 
-#: classes/class.spamprotection.php:1320
+#: classes/class.spamprotection.php:1333
 msgid "User was blocked and banned because of"
 msgstr ""
 
-#: classes/class.spamprotection.php:1322
+#: classes/class.spamprotection.php:1335
 msgid "User was banned because of"
 msgstr ""
 
-#: classes/class.spamprotection.php:1324
+#: classes/class.spamprotection.php:1337
 msgid "too many false logins"
 msgstr ""
 
-#: classes/class.spamprotection.php:1326
+#: classes/class.spamprotection.php:1339
 msgid "spam ads"
 msgstr ""
 
-#: classes/class.spamprotection.php:1441 classes/class.spamprotection.php:1488
+#: classes/class.spamprotection.php:1454 classes/class.spamprotection.php:1501
 msgid "False logins on {PAGE_NAME}"
 msgstr ""
 
-#: classes/class.spamprotection.php:1522 classes/class.spamprotection.php:1530
+#: classes/class.spamprotection.php:1535 classes/class.spamprotection.php:1543
 msgid "Hello {MAIL_USER},"
 msgstr ""
 
-#: classes/class.spamprotection.php:1523 classes/class.spamprotection.php:1531
+#: classes/class.spamprotection.php:1536 classes/class.spamprotection.php:1544
 msgid ""
 "We have detected some false logins for your account {MAIL_USED} on "
 "{PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}"
 msgstr ""
 
-#: classes/class.spamprotection.php:1524 classes/class.spamprotection.php:1532
+#: classes/class.spamprotection.php:1537 classes/class.spamprotection.php:1545
 msgid ""
 "In order to our security policy, we have temporarily disabled your account "
 "and banned the used IP in our System. You can use following link to unban "
@@ -1687,96 +1723,96 @@ msgid ""
 "don't remember your password."
 msgstr ""
 
-#: classes/class.spamprotection.php:1525
+#: classes/class.spamprotection.php:1538
 msgid "Unban your account: <a href=\"{UNBAN_LINK}\">{UNBAN_LINK}</a> "
 msgstr ""
 
-#: classes/class.spamprotection.php:1526
+#: classes/class.spamprotection.php:1539
 msgid "Password recovery: <a href=\"{PASSWORD_LINK}\">{PASSWORD_LINK}</a> "
 msgstr ""
 
-#: classes/class.spamprotection.php:1527 classes/class.spamprotection.php:1535
+#: classes/class.spamprotection.php:1540 classes/class.spamprotection.php:1548
 msgid "Best regards"
 msgstr ""
 
-#: classes/class.spamprotection.php:1533
+#: classes/class.spamprotection.php:1546
 msgid "Unban your account: {UNBAN_LINK} "
 msgstr ""
 
-#: classes/class.spamprotection.php:1534
+#: classes/class.spamprotection.php:1547
 msgid "Password recovery: {PASSWORD_LINK} "
 msgstr ""
 
-#: classes/class.spamprotection.php:1555
+#: classes/class.spamprotection.php:1568
 msgid "Spam Protection - Database need upgrade!"
 msgstr ""
 
-#: classes/class.spamprotection.php:1557
+#: classes/class.spamprotection.php:1570
 msgid ""
 "Since you have upgraded this plugin, the database need an upgrade also.<br /"
 "><strong>To upgrade it now, press the button below.</strong>"
 msgstr ""
 
-#: classes/class.spamprotection.php:1558
+#: classes/class.spamprotection.php:1571
 msgid ""
 "If you want to backup your data before, you can use the export function.<br /"
 ">You will find an import function in the plugin settings."
 msgstr ""
 
-#: classes/class.spamprotection.php:1559
+#: classes/class.spamprotection.php:1572
 msgid ""
 "Of course you can do the upgrade manually.<br /><em>For this case you will "
 "find the database tables here</em>"
 msgstr ""
 
-#: classes/class.spamprotection.php:1569
+#: classes/class.spamprotection.php:1582
 msgid "Export Data"
 msgstr ""
 
-#: classes/class.spamprotection.php:1570
+#: classes/class.spamprotection.php:1583
 msgid "Upgrade now"
 msgstr ""
 
-#: classes/class.spamprotection.php:1571
+#: classes/class.spamprotection.php:1584
 msgid "Test again"
 msgstr ""
 
-#: classes/class.spamprotection.php:1682
+#: classes/class.spamprotection.php:1695
 msgid "The export file could not be created"
 msgstr ""
 
-#: classes/class.spamprotection.php:1687
+#: classes/class.spamprotection.php:1700
 #, php-format
 msgid "Export file %s was created succesfully"
 msgstr ""
 
-#: classes/class.spamprotection.php:1687
+#: classes/class.spamprotection.php:1700
 msgid "for database"
 msgstr ""
 
-#: classes/class.spamprotection.php:1687
+#: classes/class.spamprotection.php:1700
 msgid "for plugin settings"
 msgstr ""
 
-#: classes/class.spamprotection.php:1689
+#: classes/class.spamprotection.php:1702
 msgid "There was an error while creating the export file"
 msgstr ""
 
-#: classes/class.spamprotection.php:1704
+#: classes/class.spamprotection.php:1717
 msgid "This is not a valid import file"
 msgstr ""
 
-#: classes/class.spamprotection.php:1714
+#: classes/class.spamprotection.php:1727
 #, php-format
 msgid "Error while importing settings: %s cannot be saved correctly"
 msgstr ""
 
-#: classes/class.spamprotection.php:1731
+#: classes/class.spamprotection.php:1744
 #, php-format
 msgid "Error while importing data to table %s"
 msgstr ""
 
-#: classes/class.spamprotection.php:1742
+#: classes/class.spamprotection.php:1755
 msgid "Import done"
 msgstr ""
 
@@ -1856,13 +1892,30 @@ msgid ""
 "false login attempts. Please contact support."
 msgstr ""
 
-#: functions/frontend.php:159 functions/frontend.php:161
+#: functions/frontend.php:163 functions/frontend.php:165
 #, php-format
 msgid "Sorry, but you cannot use this email address: %s"
 msgstr ""
 
-#: functions/frontend.php:163
+#: functions/frontend.php:168
 msgid "Sorry, but you need to use a valid email address."
+msgstr ""
+
+#: functions/frontend.php:204
+msgid ""
+"Sorry, but your email address is listed because of spam on <a href=\"https://"
+"www.stopforumspam.com\">StopForumSpam</a>. Due to this, you cannot register "
+"your Account here using this email address, but you can request the deleting "
+"of your email address <a href=\"https://www.stopforumspam.com/removal"
+"\">Here</a>"
+msgstr ""
+
+#: functions/frontend.php:216
+msgid ""
+"Sorry, but your IP is listed because of spam on <a href=\"https://www."
+"stopforumspam.com\">StopForumSpam</a>. Due to this, you cannot register your "
+"Account here, but you can request the deleting of your IP <a href=\"https://"
+"www.stopforumspam.com/removal\">Here</a>"
 msgstr ""
 
 #: functions/params.php:38

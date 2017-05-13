@@ -281,6 +281,41 @@ $data = $sp->_get();
                 </div>
             </fieldset>
             
+            <fieldset>
+                <legend><?php _e("StopForumSpam", "spamprotection"); ?></legend>               
+                <div class="row form-group">
+                    <div class="halfrow">
+                        <label>
+                            <input type="checkbox" name="sp_check_stopforumspam_mail" value="1"<?php if (!empty($data['sp_check_stopforumspam_mail'])) { echo ' checked="checked"'; } ?> />
+                            <?php _e('Check email address', 'spamprotection'); ?>
+                        </label>
+                        <br />
+                        <label>
+                            <input type="checkbox" name="sp_check_stopforumspam_ip" value="1"<?php if (!empty($data['sp_check_stopforumspam_ip'])) { echo ' checked="checked"'; } ?> />
+                            <?php _e('Check IP', 'spamprotection'); ?>
+                        </label>
+                        <br /><br />
+                        <small><?php _e('This options allows to check used emails and IP\'s against StopForumSpam for your registrations', 'spamprotection'); ?></small>
+                    </div>
+                    <div id="sp_stopforumspam_settings" class="halfrow"<?php if ($data['sp_check_stopforumspam_mail'] != '1' && $data['sp_check_stopforumspam_ip'] != '1') { echo ' style="display: none;'; } ?>>
+                        <label for="sp_stopforumspam_freq">
+                            <?php _e('Max frequency of reports', 'spamprotection'); ?>
+                        </label><br />
+                        <input type="text" name="sp_stopforumspam_freq" style="width: 50px;" value="<?php echo (empty($data['sp_stopforumspam_freq']) ? '3' : $data['sp_stopforumspam_freq']); ?>" />
+                        <br />
+                        <label for="sp_stopforumspam_susp">
+                            <?php _e('Max percentage of suspiciousness', 'spamprotection'); ?>
+                        </label><br />
+                        <input type="text" name="sp_stopforumspam_susp" style="width: 50px;" value="<?php echo (empty($data['sp_stopforumspam_susp']) ? '50' : $data['sp_stopforumspam_susp']); ?>" />
+                        <span style="line-height: 28px;"><small><?php _e("(0 = high confidence, 100 = low confidence)", "spamprotection"); ?></small></span>
+                        <br /><br />
+                        
+                        <small><?php _e('Here you can define the max frequency of reports and the percentage of max suspiciousness', 'spamprotection'); ?></small>
+                    </div>
+                    <div style="clear: both;"></div>                
+                </div>
+            </fieldset>
+            
         </div>
     </div>
 </div>

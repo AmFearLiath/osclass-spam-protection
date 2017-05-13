@@ -4,9 +4,9 @@ if (!defined('ABS_PATH')) {
 }
 
 function sprot_style() {
-    osc_enqueue_style('sp-styles', osc_plugin_url('spamprotection/assets/css/style.css').'style.css');
+    osc_enqueue_style('sp-styles', osc_plugin_url('spamprotection/assets/css/style.css').'style.css?'.time());
             
-    osc_register_script('spam_protection-frontend', osc_plugin_url('spamprotection/assets/js/script.js') . 'script.js', array('jquery'));
+    osc_register_script('spam_protection-frontend', osc_plugin_url('spamprotection/assets/js/script.js') . 'script.js?'.time(), array('jquery'));
     osc_enqueue_script('spam_protection-frontend');            
     osc_register_script('spam_protection-hideMail', osc_plugin_url('spamprotection/assets/js/jquery.hideMyEmail.min.js') . 'jquery.hideMyEmail.min.js', array('jquery'));
     osc_enqueue_script('spam_protection-hideMail');
@@ -149,25 +149,75 @@ function sp_add_honeypot_security() {
 function sp_check_user_registrations() {     
     $email = Params::getParam('s_email');
     
-    if (($email = filter_var($email, FILTER_VALIDATE_EMAIL)) !== false) {        
-        $check = spam_prot::newInstance()->_get('sp_check_registrations');
-        $mails = explode(",", spam_prot::newInstance()->_get('sp_check_registration_mails'));
-        $domain = substr(strrchr($email, "@"), 1);
-        $error = false;
-        
-        if ($check == '2') {
-            if (!in_array($domain, $mails)) { $error = sprintf(__("Sorry, but you cannot use this email address: %s", "spamprotection"), $domain); }   
-        } elseif ($check == '3') {
-            if (in_array($domain, $mails)) { $error = sprintf(__("Sorry, but you cannot use this email address: %s", "spamprotection"), $domain); }            
-        }
-    } else { $error = __("Sorry, but you need to use a valid email address.", "spamprotection"); } 
+    $check_mail = spam_prot::newInstance()->_get('sp_check_stopforumspam_mail');
+    $check_ip = spam_prot::newInstance()->_get('sp_check_stopforumspam_ip');
     
-    if ($error) {
-        ob_get_clean();
-        osc_add_flash_error_message($error);
+    if (Params::getParam('action') == 'register_post' && spam_prot::newInstance()->_get('sp_check_registrations') >= '2') {
+        if (($email = filter_var($email, FILTER_VALIDATE_EMAIL)) !== false) {        
+            $check = spam_prot::newInstance()->_get('sp_check_registrations');
+            $mails = explode(",", spam_prot::newInstance()->_get('sp_check_registration_mails'));
+            $domain = substr(strrchr($email, "@"), 1);
+            $error = false;
+            
+            if ($check == '2') {
+                if (!in_array($domain, $mails)) { $error = sprintf(__("Sorry, but you cannot use this email address: %s", "spamprotection"), $domain); }   
+            } elseif ($check == '3') {
+                if (in_array($domain, $mails)) { $error = sprintf(__("Sorry, but you cannot use this email address: %s", "spamprotection"), $domain); }            
+            }
+        } else {
+            $error = __("Sorry, but you need to use a valid email address.", "spamprotection"); 
+        }
         
-        header('Location: '.osc_register_account_url());
-        exit;
+        if ($error) {
+            ob_get_clean();
+            osc_add_flash_error_message($error);        
+            header('Location: '.osc_register_account_url());
+            exit;
+        }
+    } 
+    
+    if ($check_mail == '1' || $check_ip == '1') {
+        
+        $url = 'http://api.stopforumspam.org/api?serial';
+        $frequency = spam_prot::newInstance()->_get('sp_stopforumspam_freq');
+        $confidence = spam_prot::newInstance()->_get('sp_stopforumspam_susp');        
+        
+        if ($check_mail == '1') {
+            $email_encoded = urlencode(iconv('GBK', 'UTF-8', $email)); 
+            $url .= '&email='.$email_encoded; 
+        } if ($check_ip == '1') {            
+            $ip = spam_prot::newInstance()->_IpUserLogin(); 
+            $url .= '&ip='.$ip; 
+        }
+        
+        $data = unserialize(osc_file_get_contents($url));
+        $data_mail = $data['email'];
+        $data_ip = $data['ip'];
+        
+        if (is_array($data_mail)) {
+            
+            $data_freq = $data_mail['frequency'];
+            $data_conf = $data_mail['confidence'];
+            
+            if ($data_freq > $frequency || $data_conf > $confidence) {                
+                ob_get_clean();
+                osc_add_flash_error_message(__("Sorry, but your email address is listed because of spam on <a href=\"https://www.stopforumspam.com\">StopForumSpam</a>. Due to this, you cannot register your Account here using this email address, but you can request the deleting of your email address <a href=\"https://www.stopforumspam.com/removal\">Here</a>", "spamprotection"));        
+                header('Location: '.osc_register_account_url());
+                exit;    
+            }
+        }
+        
+        if (is_array($data_ip)) {            
+            $data_freq = $data_ip['frequency'];
+            $data_conf = $data_ip['confidence'];
+            
+            if ($data_freq > $frequency || $data_conf > $confidence) {                
+                ob_get_clean();
+                osc_add_flash_error_message(__("Sorry, but your IP is listed because of spam on <a href=\"https://www.stopforumspam.com\">StopForumSpam</a>. Due to this, you cannot register your Account here, but you can request the deleting of your IP <a href=\"https://www.stopforumspam.com/removal\">Here</a>", "spamprotection"));        
+                header('Location: '.osc_register_account_url());
+                exit;    
+            }
+        }
     }  
 }
 
