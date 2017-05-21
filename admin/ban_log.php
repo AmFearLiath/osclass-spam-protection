@@ -34,7 +34,7 @@
                             <?php
                                 if (is_numeric($v['i_user_id'])) { 
                                     $user = User::newInstance()->findByPrimaryKey($v['i_user_id']);
-                                    echo '<a href="'.osc_admin_base_url(true).'?page=users&action=edit&id='.$v['i_user_id'].'">'.$user['s_name'].'</a>';
+                                    echo (isset($user['s_name']) ? '<a href="'.osc_admin_base_url(true).'?page=users&action=edit&id='.$v['i_user_id'].'">'.$user['s_name'].'</a>' : '');
                                 } else {
                                     echo '<?php _e("No user found", "spamprotection"); ?>';
                                 }

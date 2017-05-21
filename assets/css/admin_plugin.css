@@ -1,4 +1,4 @@
-@import 'icons.css';
+ @import 'themes.css';
 
 /* OSClass overrides */
 #content-head {
@@ -119,7 +119,8 @@ div#blocked_ads_inner table tr td {
 #sp_security_mainfeatures_user,
 #sp_security_mainfeatures_admin,
 #sp_security_mainfeatures_register,
-#sp_config_options {
+#sp_config_options,
+#sp_register_options {
     color: #000;
     transition: ease all 0.6s;
 }
@@ -192,6 +193,8 @@ div#sp_config {
     border: none;
 }
 
+
+
 #spamprot ul.langtabs { 
     background: transparent; 
     border: none; 
@@ -208,7 +211,7 @@ div#sp_config {
     border: none;
     list-style: none;
     position: relative;
-    top: 1px;
+    top: 0px;
     border-bottom: 0 !important;
 } 
 
@@ -244,7 +247,8 @@ div#sp_config {
 .sp_admin_options, 
 .sp_register_options, 
 .sp_help_section, 
-.sp_config_options {
+.sp_config_options,
+.sp_badtrusted_options {
     width: calc(100% - 200px);
     float: left;
 } 
@@ -326,6 +330,7 @@ div#sp_config {
 #sp_help ul li p {
     margin: 0 0 10px;
 }
+/*
 div#flashmessage {
     position: absolute;
     right: 45px;
@@ -337,8 +342,44 @@ div#flashmessage {
     background: none;
     border: none;
 }
-div#flashmessage a {
-    margin-left: 15px;
+*/
+
+div#flash {
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+div#flashmessage #flash-inner, div#flash #flash-inner {
+    position: relative;
+    margin: 100px auto;
+    width: 400px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 10px;
+}
+
+div#flash a {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #aaa;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    line-height: 18px;
+    transition: ease all .4s
+}
+
+div#flash a:hover {
+    border-color: #666;
+    color: #666;
 }
 
 div#attention {
@@ -620,6 +661,127 @@ span.sp_review_close {
 #spamprot fieldset input[type=text], #spamprot fieldset textarea {
     width: calc(100% - 15px);
 }
+
+
+
+
+#spamprot table.badtrusted {
+    width: 100%;
+}
+
+#spamprot table.badtrusted thead tr {
+    background: #eee;
+}
+
+#spamprot table.badtrusted thead
+ tr td {
+    font-weight: bold;
+}
+
+#spamprot table.badtrusted tr td {
+    padding: 3px;
+}
+
+#spamprot table.badtrusted tr td.name {
+    
+}
+
+#spamprot table.badtrusted tr td.email {
+    width: 200px;
+}
+
+#spamprot table.badtrusted tr td.ads {
+    width: 55px;
+    text-align: center;
+}
+ 
+#spamprot table.badtrusted tr td.comments {
+    width: 55px;
+    text-align: center;
+}
+
+#spamprot table.badtrusted tr td.actions {
+    width: 150px;
+    text-align: center;
+}
+
+#spamprot table.badtrusted tr td.actions input {
+    margin: 5px 12px;
+}
+
+#spamprot a#add_bad_or_trusted{
+    position: absolute;
+    top: -10px;
+    right: 0;
+    cursor: pointer;
+}
+
+div.addBadOrTrusted {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+div.addBadOrTrusted div#BadOrTrusted-inner {
+    position: relative;
+    height: 100%;
+    max-height: 400px;
+    width: 560px;
+    margin: 75px auto;
+    background: rgba(255, 255, 255, 0.95);
+    overflow: overlay;
+}
+
+div.addBadOrTrusted div#BadOrTrusted-inner span {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+}
+
+div.addBadOrTrusted a#BadOrTrusted-close {
+    position: absolute;
+    width: 15px;
+    line-height: 15px;
+    text-align: center;
+    top: 10px;
+    right: 20px;
+    color: #999;
+    border: 1px solid #999;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+div.addBadOrTrusted div#BadOrTrusted-head {
+    padding-top: 45px;
+}
+
+div.addBadOrTrusted div#BadOrTrusted-body {
+    
+}
+
+div.addBadOrTrusted div#BadOrTrusted-body table thead tr {
+    background: #ddd;
+}
+
+div.addBadOrTrusted div#BadOrTrusted-body table tbody tr {
+    height: 45px;
+}
+
+div.addBadOrTrusted div#BadOrTrusted-body table tr td {
+    padding: 5px;
+}
+
+div.addBadOrTrusted div#BadOrTrusted-body table tbody tr:nth-child(even) td {
+    background: #eee;
+}
+
+
+
+
 
 #sp_config_mailtemplates table td {
     padding-right: 10px;

@@ -10,15 +10,15 @@ $(document).ready(function(){
     });
     
     if ($("input[name=sp_activate]").is(":checked")) {            
-        $("#sp_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
+        $("#sp_options").removeClass("disabled").addClass("enabled").find("input, textarea");
     } if ($("input[name=sp_comment_activate]").is(":checked")) {            
-        $("#sp_comment_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
+        $("#sp_comment_options").removeClass("disabled").addClass("enabled").find("input, textarea");
     } if ($("input[name=sp_contact_activate]").is(":checked")) {            
-        $("#sp_contact_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
+        $("#sp_contact_options").removeClass("disabled").addClass("enabled").find("input, textarea");
     } if ($("input[name=sp_security_activate]").is(":checked")) {            
-        $("#sp_security_mainfeatures_user").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
+        $("#sp_security_mainfeatures_user").removeClass("disabled").addClass("enabled").find("input, textarea");
     } if ($("input[name=sp_admin_activate]").is(":checked")) {            
-        $("#sp_security_mainfeatures_admin").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);
+        $("#sp_security_mainfeatures_admin").removeClass("disabled").addClass("enabled").find("input, textarea");
     } if ($("input[name=sp_honeypot]").is(":checked")) {
         $("#honeypot").addClass("visible");        
     } if ($("input[name=sp_blocked]").is(":checked")) {
@@ -39,45 +39,45 @@ $(document).ready(function(){
     
     $(document).on("click", "input[name=sp_activate]", function(){
         if ($("input[name=sp_activate]").is(":checked")) {
-            $("#sp_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);        
+            $("#sp_options").removeClass("disabled").addClass("enabled").find("input, textarea");        
         } else {
-            $("#sp_options").removeClass("enabled").addClass("disabled").find("input, textarea").prop("disabled", true);
+            $("#sp_options").removeClass("enabled").addClass("disabled").find("input, textarea");
             $("input[name=sp_activate]").prop("disabled", false);
         }  
     });
     
     $(document).on("click", "input[name=sp_comment_activate]", function(){
         if ($("input[name=sp_comment_activate]").is(":checked")) {
-            $("#sp_comment_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);        
+            $("#sp_comment_options").removeClass("disabled").addClass("enabled").find("input, textarea");        
         } else {
-            $("#sp_comment_options").removeClass("enabled").addClass("disabled").find("input, textarea").prop("disabled", true);
+            $("#sp_comment_options").removeClass("enabled").addClass("disabled").find("input, textarea");
             $("input[name=sp_comment_activate]").prop("disabled", false);
         }  
     });
     
     $(document).on("click", "input[name=sp_contact_activate]", function(){
         if ($("input[name=sp_contact_activate]").is(":checked")) {
-            $("#sp_contact_options").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);        
+            $("#sp_contact_options").removeClass("disabled").addClass("enabled").find("input, textarea");        
         } else {
-            $("#sp_contact_options").removeClass("enabled").addClass("disabled").find("input, textarea").prop("disabled", true);
+            $("#sp_contact_options").removeClass("enabled").addClass("disabled").find("input, textarea");
             $("input[name=sp_contact_activate]").prop("disabled", false);
         }  
     });
     
     $(document).on("click", "input[name=sp_security_activate]", function(){
         if ($("input[name=sp_security_activate]").is(":checked")) {
-            $("#sp_security_mainfeatures_user").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);        
+            $("#sp_security_mainfeatures_user").removeClass("disabled").addClass("enabled").find("input, textarea");        
         } else {
-            $("#sp_security_mainfeatures_user").removeClass("enabled").addClass("disabled").find("input, textarea").prop("disabled", true);
+            $("#sp_security_mainfeatures_user").removeClass("enabled").addClass("disabled").find("input, textarea");
             $("input[name=sp_security_activate]").prop("disabled", false);
         }  
     });
     
     $(document).on("click", "input[name=sp_admin_activate]", function(){
         if ($("input[name=sp_admin_activate]").is(":checked")) {
-            $("#sp_security_mainfeatures_admin").removeClass("disabled").addClass("enabled").find("input, textarea").prop("disabled", false);        
+            $("#sp_security_mainfeatures_admin").removeClass("disabled").addClass("enabled").find("input, textarea");        
         } else {
-            $("#sp_security_mainfeatures_admin").removeClass("enabled").addClass("disabled").find("input, textarea").prop("disabled", true);
+            $("#sp_security_mainfeatures_admin").removeClass("enabled").addClass("disabled").find("input, textarea");
             $("input[name=sp_admin_activate]").prop("disabled", false);
         }  
     });
@@ -184,25 +184,41 @@ $(document).ready(function(){
     });
     
     $(document).on("click", "ul.langtabs li", function(){
-        var tab_id = $(this).attr('data-tab');        
+        var tab_id      = $(this).attr('data-tab'),
+            addtab      = $(this).closest('form').children("input[name=tab]");
+            findtab     = $(this).closest('form').children("input[name=table]");        
         
         $('ul.langtabs li').removeClass('current');
         $('.langtab-content').removeClass('current');
 
         $(this).addClass('current');
-        $("#"+tab_id).addClass('current');            
+        $("#"+tab_id).addClass('current');
+        
+        if (findtab.length < 1) {
+            $('<input type="hidden" name="table" id="table" value="'+tab_id+'" />').insertAfter(addtab);
+        } else {
+            $(findtab).val(tab_id);    
+        }            
     });
     
     $(document).on("click", "ul.subtabs li", function(){
         var tab_id      = $(this).attr('data-tab'),
             div         = $(this).closest('div'),
-            currentid   = div.parent().prop('id');
+            currentid   = div.parent().prop('id'),
+            addtab      = $(this).closest('form').children("input[name=tab]");
+            findtab     = $(this).closest('form').children("input[name=sub]");
             
         $('#'+currentid+' ul.subtabs li').removeClass('current');
         $('#'+currentid+' .subtab-content').removeClass('current');
 
         $(this).addClass('current');
         $("#"+tab_id).addClass('current');
+        
+        if (findtab.length < 1) {
+            $('<input type="hidden" name="sub" id="sp_subtab" value="'+tab_id+'" />').insertAfter(addtab);
+        } else {
+            $(findtab).val(tab_id);    
+        }
         
         var child       = div.children("div"),
             height      = child.height(),
@@ -406,11 +422,26 @@ $(document).ready(function(){
         }    
     });
     
-    $(document).on("click", "input[name=sp_activate_menu]", function(event){
-        if ($("input[name=sp_activate_menu]").is(":checked")) {
-            $("#sp_menu_appearance_cont, #sp_activate_pulsemenu_cont").fadeIn("slow");    
+    $(document).on("click", "input[name=sp_activate_menu], input[name=sp_activate_topicon]", function(event){
+        var sidebar    = $("input[name=sp_activate_menu]"),
+            topbar     = $("input[name=sp_activate_topicon]");
+        
+        if ($(sidebar).is(":checked")) {            
+            $("#sp_menu_appearance_cont").fadeIn("slow");                
         } else {
-            $("#sp_menu_appearance_cont, #sp_activate_pulsemenu_cont").fadeOut("slow");    
+            $("#sp_menu_appearance_cont").fadeOut("slow");    
+        }
+        
+        if ($(topbar).is(":checked")) {            
+            $("#sp_topicon_appearance_cont").fadeIn("slow");                
+        } else {
+            $("#sp_topicon_appearance_cont").fadeOut("slow");    
+        }
+        
+        if ($(sidebar).is(":checked") || $(topbar).is(":checked")) {            
+            $("#sp_activate_pulsemenu_cont").fadeIn("slow");                
+        } else {
+            $("#sp_activate_pulsemenu_cont").fadeOut("slow");    
         }    
     });
     
@@ -420,6 +451,56 @@ $(document).ready(function(){
         } else {
             $("ul.oscmenu li#menu_spamprotection a").removeClass("pulse");
         }    
+    });
+    
+    $(document).on("click", "input[name=sp_badtrusted_activate]", function(){
+        if ($("input[name=sp_badtrusted_activate]").is(":checked")) {
+            $("#bot_table").fadeIn("slow");        
+        } else {
+            $("#bot_table").fadeOut("slow");
+        }    
+    });
+    
+    $(document).on("keyup", "input[name=searchNewTrusted]", function(event){
+            
+        event.preventDefault();
+        
+        var form    = $(this),
+            val     = form.val(),
+            file    = $("#search_file").val(),
+            data    = form.serialize();
+                    
+        $.ajax({
+            url: file,
+            type: "post",
+            data: data,
+            success: function(data){                        
+                $(".addBadOrTrusted #trusted-body").html(data);            
+            }
+        });
+    });
+    
+    $(document).on("click", "a#add_bad_or_trusted", function(event){  
+        event.preventDefault();
+        $("#addBadOrTrustedUser").fadeIn("slow");
+    });
+    
+    $(document).on("click", "a.action_bot", function(event){  
+        event.preventDefault();
+        
+        var file = $(this).attr("href");
+        
+        $.get(file, function(response) {
+            console.log(response);                                                    
+            $(".addBadOrTrusted #trusted-body").html(response);                        
+        });
+    });
+    
+    $(document).on("change", "#sp_theme", function(event){  
+        event.preventDefault();
+        var val = $(this).val();
+        
+        $("#spamprot").prop("class", val);
     });    
     
 });

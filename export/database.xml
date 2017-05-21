@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<database>
+  <osc_t_ban_rule/>
+  <osc_t_spam_protection_ban_log/>
+  <osc_t_spam_protection_items/>
+  <osc_t_spam_protection_comments/>
+  <osc_t_spam_protection_contacts/>
+  <osc_t_spam_protection_logins/>
+</database>

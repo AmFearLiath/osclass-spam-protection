@@ -6,7 +6,7 @@ if (!defined('OC_ADMIN')) {
 function sprot_admin_page_header($message = false) {
     $info = osc_plugin_get_info("spamprotection/index.php");   
     echo '
-    <h1 style="display: inline-block;font-size: 28px;line-height: 50px; margin-top: -10px;">'.($message ? $message : '<i class="sp_header_icon" style="margin: 0;"></i>'.sprintf(__('Anti Spam & Protection System', 'spamprotection'). ' v'.$info['version'])).'</h1>
+    <h1 style="display: inline-block;font-size: 20px;line-height: 50px; margin-top: -10px;">'.($message ? $message : '<i class="sp_header_icon" style="margin: 0;"></i>'.sprintf(__('Anti Spam & Protection System', 'spamprotection'). ' v'.$info['version'])).'</h1>
     <div style="line-height: 36px; float: right;">
         <a href="https://forums.osclass.org/plugins/(plugin)-spam-protection/msg148758/#msg148758" target="_blank"><button class="btn">OSClass Forum</button></a>
         <a id="sp_review" href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank"><button class="btn">Please Review</button></a>
@@ -34,6 +34,9 @@ function sprot_admin_page_header($message = false) {
 }
 
 function sprot_install() {
+    if (version_compare(phpversion(), '5.5', '<')) { 
+        trigger_error("I'm sorry, but you need to install at least PHP 5.5 to make use of this Plugin", E_USER_ERROR);
+    }
     spam_prot::newInstance()->_install();
 }
 
@@ -68,11 +71,40 @@ function sprot_style_admin_footer() {
     $menu = spam_prot::newInstance()->_get('sp_activate_menu');
     $order = spam_prot::newInstance()->_get('sp_menu_after');
     $pulse = spam_prot::newInstance()->_get('sp_activate_pulsemenu');
+    $topicon = spam_prot::newInstance()->_get('sp_activate_topicon');
+    $toppos = spam_prot::newInstance()->_get('sp_topicon_position');
     
     $items = spam_prot::newInstance()->_countRows('t_item', array('key' => 'b_spam', 'value' => '1'));
     $comments = spam_prot::newInstance()->_countRows('t_comment', array('key' => 'b_spam', 'value' => '1'));
     $contacts = spam_prot::newInstance()->_countRows('t_sp_contacts');
     $bans = spam_prot::newInstance()->_countRows('t_sp_ban_log');
+    
+    $installed = spam_prot::newInstance()->_get('sp_first_install');
+    if ($installed == '1') {
+        spam_prot::newInstance()->_firstInstalled();    
+    }
+    
+    if ($topicon == '1') {
+        echo '
+        <script>
+        $(document).ready(function(){
+            '.($toppos == 'left' ? 
+            '$("div#osc_toolbar_spamprotection").insertAfter("div#osc_toolbar_home");' : 
+            '$("div#osc_toolbar_spamprotection").insertAfter("div#osc_toolbar_logout").css({"float" : "right", "margin-right": "15px"});'
+            ).'                            
+            
+            $("div#osc_toolbar_spamprotection > a").hover(function(){
+                $("div#osc_toolbar_spamprotection > a > i").addClass("hover");
+            },function(){
+                $("div#osc_toolbar_spamprotection > a > i").removeClass("hover");
+            });
+            
+            '.($items > 0 || $comments > 0 || $contacts > 0 || $bans > 0 ? '$("div#osc_toolbar_spamprotection > a > i").addClass("highlight");' : '').'
+            '.($pulse == '1' ? '$("div#osc_toolbar_spamprotection > a > i").addClass("pulse");' : '').'
+        });
+        </script>
+        ';        
+    }
     
     if ($menu == '1' && $order != 'anywhere') {
         echo '
@@ -113,27 +145,30 @@ function sprot_init() {
 }
 
 function sprot_admin_menu_init() {
-    osc_add_admin_submenu_page('tools', __('Anti Spam & Protection', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings'), 'sprot_admin_settings', 'administrator');
+    $sidebar = spam_prot::newInstance()->_get('sp_activate_menu');
+    AdminMenu::newInstance()->add_menu_tools(__('Anti Spam & Protection', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=settings'), 'sprot_admin_settings', 'administrator');
 
-    osc_add_admin_menu_page( __('Anti Spam & Protection', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings'), 'spamprotection', 'administrator' );
-    osc_add_admin_submenu_divider('spamprotection', __('Pages', 'spamprotection'), 'spamprotection_divider', 'administrator');
-    osc_add_admin_submenu_page('spamprotection', __('Dashboard', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings'), 'spamprotection_dashboard', 'administrator');
-    osc_add_admin_submenu_page('spamprotection', __('Settings', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=sp_config'), 'spamprotection_settings', 'administrator');
-    osc_add_admin_submenu_page('spamprotection', __('Help', 'spamprotection'), osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=sp_help'), 'spamprotection_help', 'administrator');
+    if ($sidebar == '1') {
+        osc_add_admin_menu_page( __('Anti Spam & Protection', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=settings'), 'spamprotection', 'administrator' );
+        osc_add_admin_submenu_divider('spamprotection', __('Pages', 'spamprotection'), 'spamprotection_divider', 'administrator');
+        osc_add_admin_submenu_page('spamprotection', __('Dashboard', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=settings'), 'spamprotection_dashboard', 'administrator');
+        osc_add_admin_submenu_page('spamprotection', __('Settings', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config'), 'spamprotection_settings', 'administrator');
+        osc_add_admin_submenu_page('spamprotection', __('Help', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_help'), 'spamprotection_help', 'administrator');
+    }
 }
 
 function sprot_admin_menu() {
     echo '<h3><a href="#">'.__('AntiSpam & SysProt', 'spamprotection').'</a></h3>
     <ul>
-        <li><a href="'.osc_admin_render_plugin_url(SPP_PATH.'admin/config.php&tab=settings') . '">&raquo; '.__('Settings', 'spamprotection').'</a></li>
-        <li><a href="'.osc_admin_render_plugin_url(SPP_PATH.'admin/config.php&tab=help') . '">&raquo; '.__('Help', 'spamprotection').'</a></li>
+        <li><a href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=settings') . '">&raquo; '.__('Settings', 'spamprotection').'</a></li>
+        <li><a href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=help') . '">&raquo; '.__('Help', 'spamprotection').'</a></li>
     </ul>';
 }
 
 function sp_compare_items($options, $item) {
     $return = $options;
     if ($item['b_spam'] == '1') {        
-        $return[] = '<a href="'.osc_admin_render_plugin_url(SPP_PATH . 'admin/check.php&itemid='.$item['pk_i_id']).'">'.__('Check Spam', 'spamprotection').'</a>';
+        $return[] = '<a href="'.osc_admin_render_plugin_url('spamprotection/admin/check.php&itemid='.$item['pk_i_id']).'">'.__('Check Spam', 'spamprotection').'</a>';
     }
     return $return;
 }

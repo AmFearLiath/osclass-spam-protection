@@ -22,7 +22,7 @@ class spam_prot extends DAO {
         $this->_table_sp_items          = '`'.DB_TABLE_PREFIX.'t_spam_protection_items`';
         $this->_table_sp_comments       = '`'.DB_TABLE_PREFIX.'t_spam_protection_comments`';
         $this->_table_sp_contacts       = '`'.DB_TABLE_PREFIX.'t_spam_protection_contacts`';
-        $this->_table_sp_logins         = '`'.DB_TABLE_PREFIX.'t_spam_protection_logins`';
+        $this->_table_sp_logins         = '`'.DB_TABLE_PREFIX.'t_spam_protection_logins`';        
         
         parent::__construct();
     }
@@ -41,15 +41,20 @@ class spam_prot extends DAO {
                 return false;    
             }
         }
+        
         return true;            
     }
     
     function _uninstall() {
         $pref = $this->_sect();                
         Preference::newInstance()->delete(array("s_section" => $pref));    
+        $this->dao->query(sprintf('DROP TABLE %s', $this->_table_sp_ban_log));    
         $this->dao->query(sprintf('DROP TABLE %s', $this->_table_sp_items));    
         $this->dao->query(sprintf('DROP TABLE %s', $this->_table_sp_comments));    
         $this->dao->query(sprintf('DROP TABLE %s', $this->_table_sp_contacts));    
+        $this->dao->query(sprintf('DROP TABLE %s', $this->_table_sp_logins));    
+        $this->dao->query('ALTER TABLE `osc_t_user` DROP `i_reputation`;');    
+        $this->dao->query('ALTER TABLE `osc_t_user` DROP `s_reputation`;');    
     }
     
     function _sect() {
@@ -58,6 +63,7 @@ class spam_prot extends DAO {
     
     function _opt($key = false) {                
         $opts = array(
+            'sp_first_install'              => array('1', 'BOOLEAN'),
             'sp_activate'                   => array('1', 'BOOLEAN'),
             'sp_comment_activate'           => array('1', 'BOOLEAN'),
             'sp_contact_activate'           => array('1', 'BOOLEAN'),
@@ -67,7 +73,7 @@ class spam_prot extends DAO {
             'sp_duplicates_as'              => array('1', 'BOOLEAN'),
             'sp_duplicate_type'             => array('0', 'BOOLEAN'),
             'sp_duplicate_perc'             => array('85', 'BOOLEAN'),
-            'sp_duplicates_time'            => array('30', 'BOOLEAN'),
+            'sp_duplicates_time'            => array('30', 'STRING'),
             'sp_honeypot'                   => array('0', 'BOOLEAN'),
             'sp_contact_honeypot'           => array('0', 'BOOLEAN'),
             'honeypot_name'                 => array('sp_price_range', 'STRING'),
@@ -94,10 +100,10 @@ class spam_prot extends DAO {
             'sp_contact_stopwords'          => array('', 'STRING'),
             'sp_comment_links'              => array('', 'STRING'),
             'sp_contact_links'              => array('', 'STRING'),
-            'sp_security_login_count'       => array('', 'STRING'),
-            'sp_admin_login_count'          => array('', 'STRING'),
-            'sp_security_login_time'        => array('', 'STRING'),
-            'sp_admin_login_time'           => array('', 'STRING'),
+            'sp_security_login_count'       => array('3', 'STRING'),
+            'sp_admin_login_count'          => array('3', 'STRING'),
+            'sp_security_login_time'        => array('30', 'STRING'),
+            'sp_admin_login_time'           => array('30', 'STRING'),
             'sp_security_login_action'      => array('', 'STRING'),
             'sp_admin_login_action'         => array('', 'STRING'),
             'sp_security_login_inform'      => array('0', 'BOOLEAN'),
@@ -106,22 +112,30 @@ class spam_prot extends DAO {
             'sp_admin_login_hp'             => array('0', 'BOOLEAN'),
             'sp_security_register_hp'       => array('0', 'BOOLEAN'),
             'sp_security_recover_hp'        => array('0', 'BOOLEAN'),
-            'sp_security_login_unban'       => array('0', 'STRING'),
-            'sp_admin_login_unban'          => array('0', 'STRING'),
-            'sp_admin_login_cron'           => array('0', 'STRING'),
+            'sp_security_login_unban'       => array('180', 'STRING'),
+            'sp_security_login_cron'        => array('1', 'STRING'),
+            'sp_admin_login_unban'          => array('180', 'STRING'),
+            'sp_admin_login_cron'           => array('1', 'STRING'),
             'sp_activate_topbar'            => array('1', 'BOOLEAN'),
-            'sp_activate_menu'              => array('1', 'BOOLEAN'),
-            'sp_activate_pulsemenu'         => array('1', 'BOOLEAN'),
+            'sp_topbar_type'                => array('text', 'STRING'),
+            'sp_activate_menu'              => array('0', 'BOOLEAN'),
+            'sp_activate_topicon'           => array('1', 'BOOLEAN'),
+            'sp_activate_pulsemenu'         => array('0', 'BOOLEAN'),
             'sp_menu_after'                 => array('menu_dash', 'STRING'),
-            'sp_update_check'               => array('1', 'BOOLEN'),
-            'sp_check_registrations'        => array('1', 'BOOLEN'),
-            'sp_check_registration_mails'   => array('1', 'BOOLEN'),
-            'sp_check_stopforumspam_mail'   => array('0', 'BOOLEN'),
+            'sp_topicon_position'           => array('left', 'STRING'),
+            'sp_update_check'               => array('0', 'BOOLEAN'),
+            'sp_check_registrations'        => array('1', 'BOOLEAN'),
+            'sp_check_registration_mails'   => array('1', 'BOOLEAN'),
+            'sp_check_stopforumspam_mail'   => array('0', 'BOOLEAN'),
+            'sp_check_stopforumspam_ip'     => array('0', 'BOOLEAN'),
             'sp_stopforumspam_freq'         => array('3', 'STRING'),
             'sp_stopforumspam_susp'         => array('50', 'STRING'),
-            'sp_check_stopforumspam_ip'     => array('0', 'BOOLEN'),
-            'sp_check_stopforumspam_ip'     => array('0', 'BOOLEN'),
+            'sp_autoban_stopforumspam'      => array('0', 'BOOLEAN'),
+            'sp_stopforum_unban'            => array('0', 'STRING'),
+            'sp_stopforum_cron'             => array('1', 'STRING'),
+            'sp_badtrusted_activate'        => array('0', 'BOOLEAN'),
             'sp_mailtemplates'              => array('', 'STRING'),
+            'sp_theme'                      => array('black', 'STRING'),
         );
         
         if ($key) { return $opts[$key]; }
@@ -134,78 +148,19 @@ class spam_prot extends DAO {
         if ($opt) {        
             return osc_get_preference($opt, $pref);
         } else {
-            if (!$type) {
-                $opts = array(
-                    'sp_activate'                   => osc_get_preference('sp_activate', $pref),
-                    'sp_comment_activate'           => osc_get_preference('sp_comment_activate', $pref),
-                    'sp_contact_activate'           => osc_get_preference('sp_contact_activate', $pref),
-                    'sp_security_activate'          => osc_get_preference('sp_security_activate', $pref),
-                    'sp_admin_activate'             => osc_get_preference('sp_admin_activate', $pref),
-                    'sp_duplicates'                 => osc_get_preference('sp_duplicates', $pref),
-                    'sp_duplicates_as'              => osc_get_preference('sp_duplicates_as', $pref),
-                    'sp_duplicate_type'             => osc_get_preference('sp_duplicate_type', $pref),
-                    'sp_duplicate_perc'             => osc_get_preference('sp_duplicate_perc', $pref),
-                    'sp_duplicates_time'            => osc_get_preference('sp_duplicates_time', $pref),
-                    'sp_honeypot'                   => osc_get_preference('sp_honeypot', $pref),
-                    'sp_contact_honeypot'           => osc_get_preference('sp_contact_honeypot', $pref),
-                    'honeypot_name'                 => osc_get_preference('honeypot_name', $pref),
-                    'contact_honeypot_name'         => osc_get_preference('contact_honeypot_name', $pref),
-                    'contact_honeypot_value'        => osc_get_preference('contact_honeypot_value', $pref),
-                    'sp_blocked'                    => osc_get_preference('sp_blocked', $pref),
-                    'sp_blocked_tld'                => osc_get_preference('sp_blocked_tld', $pref),
-                    'sp_blockedtype'                => osc_get_preference('sp_blockedtype', $pref),
-                    'sp_comment_blocked'            => osc_get_preference('sp_comment_blocked', $pref),
-                    'sp_comment_blocked_tld'        => osc_get_preference('sp_comment_blocked_tld', $pref),
-                    'sp_comment_blockedtype'        => osc_get_preference('sp_comment_blockedtype', $pref),
-                    'sp_contact_blocked'            => osc_get_preference('sp_contact_blocked', $pref),
-                    'sp_contact_blocked_tld'        => osc_get_preference('sp_contact_blocked_tld', $pref),
-                    'sp_contact_blockedtype'        => osc_get_preference('sp_contact_blockedtype', $pref),
-                    'sp_mxr'                        => osc_get_preference('sp_mxr', $pref),
-                    'blocked'                       => osc_get_preference('blocked', $pref),
-                    'blocked_tld'                   => osc_get_preference('blocked_tld', $pref),
-                    'comment_blocked'               => osc_get_preference('comment_blocked', $pref),
-                    'comment_blocked_tld'           => osc_get_preference('comment_blocked_tld', $pref),
-                    'contact_blocked'               => osc_get_preference('contact_blocked', $pref),
-                    'contact_blocked_tld'           => osc_get_preference('contact_blocked_tld', $pref),
-                    'sp_stopwords'                  => osc_get_preference('sp_stopwords', $pref),
-                    'sp_comment_stopwords'          => osc_get_preference('sp_comment_stopwords', $pref),
-                    'sp_contact_stopwords'          => osc_get_preference('sp_contact_stopwords', $pref),
-                    'sp_comment_links'              => osc_get_preference('sp_comment_links', $pref),
-                    'sp_contact_links'              => osc_get_preference('sp_contact_links', $pref),
-                    'sp_security_login_count'       => osc_get_preference('sp_security_login_count', $pref),
-                    'sp_admin_login_count'          => osc_get_preference('sp_admin_login_count', $pref),
-                    'sp_security_login_time'        => osc_get_preference('sp_security_login_time', $pref),
-                    'sp_admin_login_time'           => osc_get_preference('sp_admin_login_time', $pref),
-                    'sp_security_login_action'      => osc_get_preference('sp_security_login_action', $pref),
-                    'sp_admin_login_action'         => osc_get_preference('sp_admin_login_action', $pref),
-                    'sp_security_login_inform'      => osc_get_preference('sp_security_login_inform', $pref),
-                    'sp_admin_login_inform'         => osc_get_preference('sp_admin_login_inform', $pref),
-                    'sp_security_login_hp'          => osc_get_preference('sp_security_login_hp', $pref),
-                    'sp_admin_login_hp'             => osc_get_preference('sp_admin_login_hp', $pref),
-                    'sp_security_register_hp'       => osc_get_preference('sp_security_register_hp', $pref),
-                    'sp_security_recover_hp'        => osc_get_preference('sp_security_recover_hp', $pref),
-                    'sp_security_login_unban'       => osc_get_preference('sp_security_login_unban', $pref),
-                    'sp_admin_login_unban'          => osc_get_preference('sp_admin_login_unban', $pref),
-                    'sp_security_login_cron'        => osc_get_preference('sp_security_login_cron', $pref),
-                    'sp_admin_login_cron'           => osc_get_preference('sp_admin_login_cron', $pref),
-                    'sp_admin_login_cron'           => osc_get_preference('sp_admin_login_cron', $pref),
-                    'sp_check_registrations'        => osc_get_preference('sp_check_registrations', $pref),
-                    'sp_check_registration_mails'   => osc_get_preference('sp_check_registration_mails', $pref),
-                    'sp_check_stopforumspam_mail'   => osc_get_preference('sp_check_stopforumspam_mail', $pref),
-                    'sp_check_stopforumspam_ip'     => osc_get_preference('sp_check_stopforumspam_ip', $pref),
-                    'sp_stopforumspam_freq'         => osc_get_preference('sp_stopforumspam_freq', $pref),
-                    'sp_stopforumspam_susp'         => osc_get_preference('sp_stopforumspam_susp', $pref),
-                );
-            } else {
-                $opts = array(                
-                    'sp_activate_topbar'        => osc_get_preference('sp_activate_topbar', $pref),
-                    'sp_activate_menu'          => osc_get_preference('sp_activate_menu', $pref),
-                    'sp_activate_pulsemenu'     => osc_get_preference('sp_activate_pulsemenu', $pref),
-                    'sp_menu_after'             => osc_get_preference('sp_menu_after', $pref),
-                    'sp_update_check'           => osc_get_preference('sp_update_check', $pref),
-                    'sp_mailtemplates'          => osc_get_preference('sp_mailtemplates', $pref),
-                );    
+            
+            $this->dao->select('*');
+            $this->dao->from($this->_table_pref);       
+            $this->dao->where('s_section', $pref);       
+            
+            $result = $this->dao->get();
+            if (!$result) { return false; }
+            $opts = array();
+            
+            foreach($result->result() as $k => $v) {
+                $opts[$v['s_name']] = $v['s_value'];
             }
+            
             return $opts;
         }
     }
@@ -215,65 +170,122 @@ class spam_prot extends DAO {
         $comments = $this->_countRows('t_comment', array('key' => 'b_spam', 'value' => '1'));
         $contacts = $this->_countRows('t_sp_contacts');
         $bans = $this->_countRows('t_sp_ban_log');
-        $topbar = false;
+        $pulse = $this->_get('sp_activate_pulsemenu');
+        $sidebar = $this->_get('sp_activate_menu');
+        $topicon = $this->_get('sp_activate_topicon');
+        $topbar = $this->_get('sp_activate_topbar');
+        $toptype = $this->_get('sp_topbar_type');
+            
+        if ($topicon == '1') {
+            osc_add_hook("render_admintoolbar", array($this, "_admin_topicon"));
+        }         
         
         if ($count > 0 || $comments > 0 || $contacts > 0 || $bans > 0) {
-            osc_add_admin_submenu_divider('spamprotection', __('Actions', 'spamprotection'), 'spamprotection_separator', 'administrator');    
-        } if (spam_prot::newInstance()->_get('sp_activate_topbar') == '1') {
-            $topbar = true;   
+            if ($sidebar == '1') {
+                osc_add_admin_submenu_divider('spamprotection', __('Actions', 'spamprotection'), 'spamprotection_separator', 'administrator');
+            }    
         }
         if ($count > 0) {
-            osc_add_admin_submenu_page('spamprotection', sprintf(__('%s Spam found', 'spamprotection'), $count), osc_admin_base_url(true).'?page=items&b_spam=1', 'spamprotection_spam_found', 'administrator');
+            if ($sidebar == '1') {
+                osc_add_admin_submenu_page('spamprotection', sprintf(__('%s Spam found', 'spamprotection'), $count), osc_admin_base_url(true).'?page=items&b_spam=1', 'spamprotection_spam_found', 'administrator');
+            }
             
-            if ($topbar) {
+            if ($topbar == '1') {
                 AdminToolbar::newInstance()->add_menu( array(
-                     'id'        => 'spamprotection',
-                     'title'     => '<i class="circle circle-gray">'.$count.'</i>'.__('Spam found', 'spamprotection'),
+                     'id'        => 'spamprotection_ads',
+                     'title'     => ($toptype == 'text' ? '<i class="circle circle-gray">'.$count.'</i>'.__('Spam found', 'spamprotection') : '<i class="sp-alert ads'.($pulse ? ' pulse' : ' highlight').'"><span>'.$count.'</span></i>'),
                      'href'      => osc_admin_base_url(true).'?page=items&b_spam=1',
-                     'meta'      => array('class' => 'action-btn action-btn-black'),
+                     'meta'      => ($toptype == 'text' ? array('class' => 'action-btn action-btn-black') : array('style' => 'min-width: 0; padding: 0;')),
                      'target'    => '_self'
                  ));
             }
         }
         if ($comments > 0) {
-            osc_add_admin_submenu_page('spamprotection', sprintf(__('%s Spam comment found', 'spamprotection'), $comments), osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/comments_check.php'), 'spamprotection_spamcomment_found', 'administrator');
+            if ($sidebar == '1') {
+                osc_add_admin_submenu_page('spamprotection', sprintf(__('%s Spam comment found', 'spamprotection'), $comments), osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/comments_check.php'), 'spamprotection_spamcomment_found', 'administrator');
+            }
             
-            if ($topbar) {
+            if ($topbar == '1') {
                 AdminToolbar::newInstance()->add_menu( array(
                      'id'        => 'spamprotection_comments',
-                     'title'     => '<i class="circle circle-gray">'.$comments.'</i>'.__('Spam comment found', 'spamprotection'),
+                     'title'     => ($toptype == 'text' ? '<i class="circle circle-gray">'.$comments.'</i>'.__('Spam comment found', 'spamprotection') : '<i class="sp-alert comments'.($pulse ? ' pulse' : ' highlight').'"><span>'.$comments.'</span></i>'),
                      'href'      => osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/comments_check.php'),
-                     'meta'      => array('class' => 'action-btn action-btn-black'),
+                     'meta'      => ($toptype == 'text' ? array('class' => 'action-btn action-btn-black') : array('style' => 'min-width: 0; padding: 0;')),
                      'target'    => '_self'
                  ));
             }
         }
         if ($contacts > 0) {
-            osc_add_admin_submenu_page('spamprotection', sprintf(__('%s Spam Contact Mail found', 'spamprotection'), $contacts), osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/contact_check.php'), 'spamprotection_spamcontact_found', 'administrator');
+            if ($sidebar == '1') {
+                osc_add_admin_submenu_page('spamprotection', sprintf(__('%s Spam Contact Mail found', 'spamprotection'), $contacts), osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/contact_check.php'), 'spamprotection_spamcontact_found', 'administrator');
+            }
             
-            if ($topbar) {
+            if ($topbar == '1') {
                 AdminToolbar::newInstance()->add_menu( array(
                      'id'        => 'spamprotection_contacts',
-                     'title'     => '<i class="circle circle-gray">'.$contacts.'</i>'.__('Spam Contact Mail found', 'spamprotection'),
+                     'title'     => ($toptype == 'text' ? '<i class="circle circle-gray">'.$contacts.'</i>'.__('Spam Contact Mail found', 'spamprotection') : '<i class="sp-alert mails'.($pulse ? ' pulse' : ' highlight').'"><span>'.$contacts.'</span></i>'),
                      'href'      => osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/contact_check.php'),
-                     'meta'      => array('class' => 'action-btn action-btn-black'),
+                     'meta'      => ($toptype == 'text' ? array('class' => 'action-btn action-btn-black') : array('style' => 'min-width: 0; padding: 0;')),
                      'target'    => '_self'
                  ));
             }
         }
         if ($bans > 0) {
-            osc_add_admin_submenu_page('spamprotection', sprintf(__('%s Banned user', 'spamprotection'), $bans), osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php'), 'spamprotection_bans_found', 'administrator');
+            if ($sidebar == '1') {
+                osc_add_admin_submenu_page('spamprotection', sprintf(__('%s Banned user', 'spamprotection'), $bans), osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php'), 'spamprotection_bans_found', 'administrator');
+            }
             
-            if ($topbar) {
+            if ($topbar == '1') {
                 AdminToolbar::newInstance()->add_menu( array(
                      'id'        => 'spamprotection_bans',
-                     'title'     => '<i class="circle circle-gray">'.$bans.'</i>'.__('Banned user', 'spamprotection'),
+                     'title'     => ($toptype == 'text' ? '<i class="circle circle-gray">'.$bans.'</i>'.__('Banned user', 'spamprotection') : '<i class="sp-alert bans'.($pulse ? ' pulse' : ' highlight').'"><span>'.$bans.'</span></i>'),
                      'href'      => osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php'),
-                     'meta'      => array('class' => 'action-btn action-btn-black'),
+                     'meta'      => ($toptype == 'text' ? array('class' => 'action-btn action-btn-black') : array('style' => 'min-width: 0; padding: 0;')),
                      'target'    => '_self'
                  ));
             }
         }
+    }
+    
+    function _admin_topicon() {
+        $count = $this->_countRows('t_item', array('key' => 'b_spam', 'value' => '1'));
+        $comments = $this->_countRows('t_comment', array('key' => 'b_spam', 'value' => '1'));
+        $contacts = $this->_countRows('t_sp_contacts');
+        $bans = $this->_countRows('t_sp_ban_log');
+             
+        echo '
+        <div id="osc_toolbar_spamprotection" style="position: relative;">
+            <a href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=settings').'"><i class="ico-spamprotection topbar"></i></a>
+            <nav class="osc_admin_submenu" id="osc_toolbar_sub_spamprotection" style="position: absolute;">
+                <ul>
+                    <li><a href="'.osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings').'">&raquo; '.__('Dashboard', 'spamprotection').'</a></li>
+                    <li><a href="'.osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=sp_config').'">&raquo; '.__('Settings', 'spamprotection').'</a></li>
+                    <li><a href="'.osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=sp_help').'"'.($count > 0 || $comments > 0 || $contacts > 0 || $bans > 0 ? ' style="border-bottom: 1px solid #fff; margin: 5px 0;"' : '').'>&raquo; '.__('Help', 'spamprotection').'</a></li>
+                    ';            
+            
+            if ($count > 0) { 
+                echo '<li><a href="'.osc_admin_base_url(true).'?page=items&b_spam=1"><i class="circle circle-gray">'.$count.'</i>'.__('Spam ads', 'spamprotection').'</a></li>';
+            }
+            if ($comments > 0) { 
+                echo '<li><a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/comments_check.php').'"><i class="circle circle-gray">'.$comments.'</i>'.__('Spam comments', 'spamprotection').'</a></li>';
+            }
+            if ($contacts > 0) { 
+                echo '<li><a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/contact_check.php').'"><i class="circle circle-gray">'.$contacts.'</i>'.__('Spam mails', 'spamprotection').'</a></li>';
+            }
+            if ($bans > 0) { 
+                echo '<li><a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php').'"><i class="circle circle-gray">'.$bans.'</i>'.__('Bans found', 'spamprotection').'</a></li>';
+            }
+            
+        echo '
+                </ul>
+            </nav>
+        </div>';
+    }
+    
+    function _showPopup($head, $body, $footer, $time, $icon = true, $class = false, $style = false) {
+        return '
+            <div id="flash-inner" '.$class.$style.'><div id="flash-head">'.($icon ? '<div id="flash-close"><a class="ico-close">x</a></div>' : '').''.$head.'</div><div id="flash-body">'.$body.'</div>'.($footer ? '<div id="flash-footer">'.$footer.'</div>' : '').'</div>
+            <script>$("#flashmessage").prop("id", "flash").removeClass(); $(document).ready(function(){ $("#flashmessage, #flash").fadeIn("slow", function(){ '.($time != '0' ? ' $("#flashmessage, #flash").delay('.$time.').fadeOut("slow"); ' : '').'});'.($icon ? ' $(document).on("click", "#flash a.ico-close", function(event){ event.preventDefault; $("#flash").fadeOut("slow"); }); ' : '').'});</script>';    
     }
     
     function _getRow($table, $where = false, $orderBy = false, $orderDir = 'DESC') {
@@ -362,74 +374,77 @@ class spam_prot extends DAO {
         return implode(",", $sort);    
     }
     
-    function _saveSettings($params, $type = false) {
-            
+    function _saveSettings($params, $type = false) {    
         $pref = $this->_sect();
-        $forbidden = array('CSRFName', 'CSRFToken', 'page', 'file', 'action', 'tab', 'subtab', 'settings', 'plugin_settings');
-    
-        if (!$type) {        
-            $data = array(
-                'sp_activate'                   => (isset($params['sp_activate']) ? $params['sp_activate'] : ''),
-                'sp_comment_activate'           => (isset($params['sp_comment_activate']) ? $params['sp_comment_activate'] : ''),
-                'sp_contact_activate'           => (isset($params['sp_contact_activate']) ? $params['sp_contact_activate'] : ''),
-                'sp_security_activate'          => (isset($params['sp_security_activate']) ? $params['sp_security_activate'] : ''),
-                'sp_admin_activate'             => (isset($params['sp_admin_activate']) ? $params['sp_admin_activate'] : ''),
-                'sp_duplicates'                 => (isset($params['sp_duplicates']) ? $params['sp_duplicates'] : ''),
-                'sp_duplicates_as'              => (isset($params['sp_duplicates_as']) ? $params['sp_duplicates_as'] : ''),
-                'sp_duplicate_type'             => (isset($params['sp_duplicate_type']) ? $params['sp_duplicate_type'] : ''),
-                'sp_duplicate_perc'             => (isset($params['sp_duplicate_perc']) ? $params['sp_duplicate_perc'] : ''),
-                'sp_duplicates_time'            => (isset($params['sp_duplicates_time']) ? $params['sp_duplicates_time'] : ''),
-                'sp_honeypot'                   => (isset($params['sp_honeypot']) ? $params['sp_honeypot'] : ''),
-                'sp_contact_honeypot'           => (isset($params['sp_contact_honeypot']) ? $params['sp_contact_honeypot'] : ''),
-                'honeypot_name'                 => (isset($params['honeypot_name']) ? $params['honeypot_name'] : ''),
-                'contact_honeypot_name'         => (isset($params['contact_honeypot_name']) ? $params['contact_honeypot_name'] : ''),
-                'contact_honeypot_value'        => (isset($params['contact_honeypot_value']) ? $params['contact_honeypot_value'] : ''),
-                'sp_blocked'                    => (isset($params['sp_blocked']) ? $params['sp_blocked'] : ''),
-                'sp_blocked_tld'                => (isset($params['sp_blocked_tld']) ? $params['sp_blocked_tld'] : ''),
-                'sp_blockedtype'                => (isset($params['sp_blockedtype']) ? $params['sp_blockedtype'] : ''),
-                'sp_comment_blocked'            => (isset($params['sp_comment_blocked']) ? $params['sp_comment_blocked'] : ''),
-                'sp_comment_blocked_tld'        => (isset($params['sp_comment_blocked_tld']) ? $params['sp_comment_blocked_tld'] : ''),
-                'sp_comment_blockedtype'        => (isset($params['sp_comment_blockedtype']) ? $params['sp_comment_blockedtype'] : ''),
-                'sp_contact_blocked'            => (isset($params['sp_contact_blocked']) ? $params['sp_contact_blocked'] : ''),
-                'sp_contact_blocked_tld'        => (isset($params['sp_contact_blocked_tld']) ? $params['sp_contact_blocked_tld'] : ''),
-                'sp_contact_blockedtype'        => (isset($params['sp_contact_blockedtype']) ? $params['sp_contact_blockedtype'] : ''),
-                'sp_mxr'                        => (isset($params['sp_mxr']) ? $params['sp_mxr'] : ''),
-                'blocked'                       => (isset($params['blocked']) ? $this->_sort($params['blocked']) : ''),
-                'blocked_tld'                   => (isset($params['blocked_tld']) ? $this->_sort($params['blocked_tld']) : ''),
-                'comment_blocked'               => (isset($params['comment_blocked']) ? $this->_sort($params['comment_blocked']) : ''),
-                'comment_blocked_tld'           => (isset($params['comment_blocked_tld']) ? $this->_sort($params['comment_blocked_tld']) : ''),
-                'contact_blocked'               => (isset($params['contact_blocked']) ? $this->_sort($params['contact_blocked']) : ''),
-                'contact_blocked_tld'           => (isset($params['contact_blocked_tld']) ? $this->_sort($params['contact_blocked_tld']) : ''),
-                'sp_stopwords'                  => (isset($params['sp_stopwords']) ? $this->_sort($params['sp_stopwords']) : ''),
-                'sp_comment_stopwords'          => (isset($params['sp_comment_stopwords']) ? $this->_sort($params['sp_comment_stopwords']) : ''),
-                'sp_contact_stopwords'          => (isset($params['sp_contact_stopwords']) ? $this->_sort($params['sp_contact_stopwords']) : ''),
-                'sp_comment_links'              => (isset($params['sp_comment_links']) ? $params['sp_comment_links'] : ''),
-                'sp_contact_links'              => (isset($params['sp_contact_links']) ? $params['sp_contact_links'] : ''),
-                'sp_security_login_count'       => (isset($params['sp_security_login_count']) ? $params['sp_security_login_count'] : ''),
-                'sp_admin_login_count'          => (isset($params['sp_admin_login_count']) ? $params['sp_admin_login_count'] : ''),
-                'sp_security_login_time'        => (isset($params['sp_security_login_time']) ? $params['sp_security_login_time'] : ''),
-                'sp_admin_login_time'           => (isset($params['sp_admin_login_time']) ? $params['sp_admin_login_time'] : ''),
-                'sp_security_login_action'      => (isset($params['sp_security_login_action']) ? $params['sp_security_login_action'] : ''),
-                'sp_admin_login_action'         => (isset($params['sp_admin_login_action']) ? $params['sp_admin_login_action'] : ''),
-                'sp_security_login_inform'      => (isset($params['sp_security_login_inform']) ? $params['sp_security_login_inform'] : ''),
-                'sp_admin_login_inform'         => (isset($params['sp_admin_login_inform']) ? $params['sp_admin_login_inform'] : ''),
-                'sp_security_login_hp'          => (isset($params['sp_security_login_hp']) ? $params['sp_security_login_hp'] : ''),
-                'sp_admin_login_hp'             => (isset($params['sp_admin_login_hp']) ? $params['sp_admin_login_hp'] : ''),
-                'sp_security_register_hp'       => (isset($params['sp_security_register_hp']) ? $params['sp_security_register_hp'] : ''),
-                'sp_security_recover_hp'        => (isset($params['sp_security_recover_hp']) ? $params['sp_security_recover_hp'] : ''),
-                'sp_security_login_unban'       => (isset($params['sp_security_login_unban']) ? $params['sp_security_login_unban'] : ''),
-                'sp_admin_login_unban'          => (isset($params['sp_admin_login_unban']) ? $params['sp_admin_login_unban'] : ''),
-                'sp_security_login_cron'        => (isset($params['sp_security_login_cron']) ? $params['sp_security_login_cron'] : ''),
-                'sp_admin_login_cron'           => (isset($params['sp_admin_login_cron']) ? $params['sp_admin_login_cron'] : ''),
-                'sp_check_registrations'        => (isset($params['sp_check_registrations']) ? $params['sp_check_registrations'] : ''),
-                'sp_check_registration_mails'   => (isset($params['sp_check_registration_mails']) ? $this->_sort($params['sp_check_registration_mails']) : ''),
-                'sp_check_stopforumspam_mail'   => (isset($params['sp_check_stopforumspam_mail']) ? $this->_sort($params['sp_check_stopforumspam_mail']) : ''),
-                'sp_check_stopforumspam_ip'     => (isset($params['sp_check_stopforumspam_ip']) ? $this->_sort($params['sp_check_stopforumspam_ip']) : ''),
-                'sp_stopforumspam_freq'         => (isset($params['sp_stopforumspam_freq']) ? $this->_sort($params['sp_stopforumspam_freq']) : ''),
-                'sp_stopforumspam_susp'         => (isset($params['sp_stopforumspam_susp']) ? $this->_sort($params['sp_stopforumspam_susp']) : ''),
-            );
+        
+        $forbidden = array('CSRFName', 'CSRFToken', 'page', 'file', 'action', 'tab', 'subtab', 'settings', 'plugin_settings', 'sp_htaccess', 'changed_htaccess', 'attention_htaccess', 'save_mailtemplates', 'trusted', 'bad');
+        $sort = array('blocked', 'blocked_tld', 'sp_stopwords', 'comment_blocked', 'comment_blocked_tld', 'sp_comment_stopwords', 'contact_blocked', 'contact_blocked_tld', 'sp_contact_stopwords');
+        
+        $mailtemplates = array('sp_mailtemplates', 'sp_mailuser_user', 'sp_titleuser_user', 'sp_mailuser_admin', 'sp_titleuser_admin', 'sp_mailadmin_user', 'sp_titleadmin_user', 'sp_mailadmin_admin', 'sp_titleadmin_admin');
+        $pluginsettings = array('sp_activate_topbar', 'sp_topbar_type', 'sp_activate_menu', 'sp_activate_topicon', 'sp_activate_pulsemenu', 'sp_menu_after', 'sp_topicon_position', 'sp_update_check', 'sp_theme');
+        
+        if ($type == 'mails') {
+            $data = array();
+            foreach($params as $k => $v) {            
+                if (!in_array($k, $forbidden)) {
+                    $data[$k] = $v;
+                }
+            }            
+            if (!osc_set_preference('sp_mailtemplates', serialize($data), $pref, 'STRING')) {
+                return false;
+            }
+            return true;
+                
+        } elseif ($type == 'plugin') {                    
+            foreach($pluginsettings as $k) {
+                $opt = $this->_opt($k);                
+                if (isset($params[$k])) {                
+                    $value = $params[$k];                
+                    if (in_array($k, $sort)) {
+                        $value = $this->_sort($value);    
+                    } if (!osc_set_preference($k, $value, $pref, $opt[1])) {
+                        return false;
+                    }                    
+                } else {
+                    osc_delete_preference($k, $pref);
+                }            
+            }
+            return true;        
+        } else {
+        
+            if (empty($params['trusted'])) {
+                $this->dao->update($this->_table_user, array('s_reputation' => NULL), array('i_reputation' => '2'));    
+            } else {
+                foreach($params['trusted'] as $k => $v) {
+                    $value = serialize($v);
+                    $this->dao->update($this->_table_user, array('s_reputation' => $value), array('pk_i_id' => $k));
+                }    
+            }
             
-            if (!empty($params['sp_htaccess'])) {
+            if (empty($params['bad'])) {
+                $this->dao->update($this->_table_user, array('s_reputation' => NULL), array('i_reputation' => '1'));    
+            } else {
+                foreach($params['bad'] as $k => $v) {
+                    $value = serialize($v);
+                    $this->dao->update($this->_table_user, array('s_reputation' => $value), array('pk_i_id' => $k));
+                }    
+            }
+            
+            $opts = $this->_opt();
+            foreach($opts as $k => $v) {            
+                if (!in_array($k, $mailtemplates) && !in_array($k, $pluginsettings) && !in_array($k, $forbidden)) {           
+                    if (isset($params[$k])) {                
+                        $value = $params[$k];                
+                        if (in_array($k, $sort)) {
+                            $value = $this->_sort($value);    
+                        } if (!osc_set_preference($k, $value, $pref, $v[1])) {
+                            return false;
+                        }                    
+                    } else {
+                        osc_delete_preference($k, $pref);
+                    }           
+                }            
+            } if (!empty($params['sp_htaccess']) && isset($params['attention_htaccess'])) {
                 $htaccess_file = ABS_PATH.'/.htaccess';
                 $htaccess_writable = is_writable($htaccess_file);
                 if ($htaccess_writable) {
@@ -438,40 +453,12 @@ class spam_prot extends DAO {
                     }    
                 }
             }
-        } elseif ($type == 'mails') {
-            $array = array(
-                'sp_mailuser_user' => $params['sp_mailuser_user'],
-                'sp_mailuser_admin' => $params['sp_mailuser_admin'],
-                'sp_mailadmin_user' => $params['sp_mailadmin_user'],
-                'sp_mailadmin_admin' => $params['sp_mailadmin_admin']
-            );
-            $data = array('sp_mailtemplates' => serialize($params));    
-        } elseif ($type == 'plugin') {
-            $data = array(
-                'sp_activate_topbar'        => (isset($params['sp_activate_topbar']) ? $params['sp_activate_topbar'] : ''),
-                'sp_activate_menu'          => (isset($params['sp_activate_menu']) ? $params['sp_activate_menu'] : ''),
-                'sp_activate_pulsemenu'     => (isset($params['sp_activate_pulsemenu']) ? $params['sp_activate_pulsemenu'] : ''),
-                'sp_menu_after'             => (isset($params['sp_menu_after']) ? $params['sp_menu_after'] : ''),
-                'sp_update_check'           => (isset($params['sp_update_check']) ? $params['sp_update_check'] : ''),
-            );    
-        }
+            return true;    
+        } 
         
-        foreach($data as $k => $v) {
-            if (!in_array($k, $forbidden)) {
-                $opt = $this->_opt($k);
-                if (empty($v)) { 
-                    osc_delete_preference($k, $pref); 
-                } else {
-                    if (!osc_set_preference($k, $v, $pref, $opt[1])) {
-                        return false;
-                    }   
-                }
-                
-            }
-        }
         return true;
     }
-    
+                                                                                                                                         
     function _markAsSpam($data, $reason) {        
         $this->dao->update($this->_table_item, array('b_active' => '0', 'b_spam' => '1'), array('pk_i_id' => $data['pk_i_id']));        
         $this->dao->insert($this->_table_sp_items, array(
@@ -495,7 +482,7 @@ class spam_prot extends DAO {
         $this->dao->insert($this->_table_sp_contacts, array( 
             'fk_i_item_id'      => $data['id'], 
             's_user'            => $data['yourName'], 
-            'fk_i_user_id'      => $data['user_id'], 
+            'fk_i_user_id'      => ($data['user_id'] ? $data['user_id'] : ''), 
             's_user_mail'       => $data['yourEmail'], 
             's_user_phone'      => $data['phoneNumber'], 
             's_user_message'    => $data['message'],
@@ -942,9 +929,18 @@ class spam_prot extends DAO {
         return $result->result();
     }
     
-    function _getItemsByAll() {
+    function _getItemsByAll() {;
+        
+        $search = $this->_get('sp_duplicates_as');
+        $time = $this->_get('sp_duplicates_time');
+        
         $this->dao->select('*');
-        $this->dao->from($this->_table_item);       
+        $this->dao->from($this->_table_item);
+        
+        if ($search == '2' && $time >= '0') {
+            $this->dao->where("dt_pub_date >= '".date("Y-m-d H:i:s", (time()-($time*24*60*60)))."'");    
+            $this->dao->orWhere("dt_mod_date >= '".date("Y-m-d H:i:s", (time()-($time*24*60*60)))."'");    
+        }       
         
         $result = $this->dao->get();
         if (!$result) { return false; }
@@ -954,19 +950,11 @@ class spam_prot extends DAO {
     
     function _getItemData($item, $locale) {
         
-        $time = $this->_get('sp_duplicates_time');
+        $this->dao->select('*');
+        $this->dao->from($this->_table_desc);
         
-        $this->dao->select('d.*');
-        $this->dao->from($this->_table_desc.' as d');
-        
-        if ($time >= '0') {
-            $this->dao->join($this->_table_item.' as i','d.fk_i_item_id = i.pk_i_id','LEFT');
-            $this->dao->where("i.dt_pub_date >= '".date("Y-m-d H:i:s", (time()-($time*24*60*60)))."'");    
-            $this->dao->orWhere("i.dt_mod_date >= '".date("Y-m-d H:i:s", (time()-($time*24*60*60)))."'");    
-        }
-        
-        $this->dao->where("d.fk_i_item_id", $item);
-        $this->dao->where("d.fk_c_locale_code", $locale);
+        $this->dao->where("fk_i_item_id", $item);
+        $this->dao->where("fk_c_locale_code", $locale);
         
         $result = $this->dao->get();
         if (!$result) { return false; }
@@ -1141,20 +1129,7 @@ class spam_prot extends DAO {
             }    
         } else {
             return false;
-        }
-        /*      
-        if (!$this->_checkAccount($email, 'user')) {
-            return false;
-        } else {
-            $user = User::newInstance()->findByEmail($email);
-            if (!osc_verify_password($password, (isset($user['s_password']) ? $user['s_password'] : ''))) {
-                return false;
-                
-            } else {
-                return true;
-            }
-        }
-        */        
+        }        
     }
     
     function _checkAdminLogin($admin, $password) {
@@ -1299,7 +1274,7 @@ class spam_prot extends DAO {
         foreach ($bans AS $k => $v) {
             $this->dao->update($this->_table_user, array('b_enabled' => '1'), array('s_email' => $v['s_email']));
             $this->dao->delete($this->_table_bans, '`s_ip` = "'.$v['s_ip'].'"');
-            $this->dao->delete($this->_table_sp_logins, '`pk_i_id` < "'.$v['pk_i_id'].'"');    
+            $this->dao->delete($this->_table_sp_logins, '`pk_i_id` = "'.$v['pk_i_id'].'"');    
         }
     }
     
@@ -1317,13 +1292,34 @@ class spam_prot extends DAO {
         
         foreach ($bans AS $k => $v) {
             $this->dao->delete($this->_table_bans, '`s_ip` = "'.$v['s_ip'].'"');
-            $this->dao->delete($this->_table_sp_logins, '`pk_i_id` < "'.$v['pk_i_id'].'"');    
+            $this->dao->delete($this->_table_sp_logins, '`pk_i_id` = "'.$v['pk_i_id'].'"');    
+        }
+    }
+    
+    function _unbanStopForumSpam() {
+        $range = $this->_get('sp_stopforum_unban')*60;
+        $time = date("Y-m-d H:i:s", time()-$range);
+        
+        $this->dao->select('*');
+        $this->dao->from($this->_table_sp_logins);
+        $this->dao->where("dt_date_banned < ".$range);
+        
+        $result = $this->dao->get();
+        if ($result && $result->numRows() <= 0) { return false; }
+        
+        $bans = $result->result();
+        
+        foreach ($bans AS $k => $v) {
+            $this->dao->delete($this->_table_bans, '`s_ip` = "'.$v['s_ip'].'"');
+            $this->dao->delete($this->_table_sp_logins, '`pk_i_id` = "'.$v['pk_i_id'].'"');    
         }
     }
     
     function _addBanLog($type, $reason, $email = false, $ip = false, $mode = 'user') {
         
         if (!$ip) { $ip = $this->_IpUserLogin(); }
+        if (osc_is_admin_user_logged_in()) { $ip = ''; }
+        
         if ($email && $mode == 'user') { $user = User::newInstance()->findByEmail($email); }
         elseif ($email && $mode == 'admin') { $user = Admin::newInstance()->findByUsername($email); }
         
@@ -1386,110 +1382,73 @@ class spam_prot extends DAO {
     }
     
     function _informUser($search, $target = 'user') {
+        $ip = $this->_IpUserLogin();
+        $time = osc_format_date(date('Y-m-d H:i:s', time()), osc_date_format().' '.osc_time_format());
         
-        if ($this->_checkAccount($search, $target)) {
-            $ip = $this->_IpUserLogin();
+        if ($target == 'user') {
+            $user = User::newInstance()->findByEmail($search);
             
-            if ($target == 'user') {
-                $user = User::newInstance()->findByEmail($search);
-                
-                $email = $search;
-                $content   = array();
-                $content[] = array(
-                    '{PAGE_NAME}', 
-                    '{MAIL_USER}', 
-                    '{MAIL_USED}', 
-                    '{MAIL_DATE}', 
-                    '{MAIL_IP}', 
-                    '{UNBAN_LINK}', 
-                    '{PASSWORD_LINK}', 
-                    '{BAN_LIST}'
-                );
-                $content[] = array(
-                    osc_page_title(), 
-                    $user['s_name'], 
-                    $search, 
-                    date("Y/m/d H:i", time()), 
-                    $ip, 
-                    '<a href="'.osc_base_url(true).'?page=sp_activate_account&email='.$search.'&token='.md5($user['s_secret']).'">Click here</a>', 
-                    '<a href="'.osc_recover_user_password_url().'">Click here</a>', 
-                    '<a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php').'">Ban List</a>'
-                );
-            } elseif ($target == 'admin') {
-                $user = Admin::newInstance()->findByUsername($search);
-                
-                $email = $user['s_email'];
-                $content   = array();
-                $content[] = array(
-                    '{PAGE_NAME}', 
-                    '{MAIL_USER}', 
-                    '{MAIL_USED}', 
-                    '{MAIL_DATE}', 
-                    '{MAIL_IP}', 
-                    '{UNBAN_LINK}', 
-                    '{PASSWORD_LINK}', 
-                    '{BAN_LIST}'
-                );
-                $content[] = array(
-                    osc_page_title(), 
-                    $user['s_name'], 
-                    $search, 
-                    date("Y/m/d H:i", time()), 
-                    $ip, 
-                    '<a href="'.osc_base_url(true).'?page=sp_activate_account&name='.$search.'&token='.md5($user['s_secret']).'">Click here</a>', 
-                    '<a href="'.osc_admin_base_url(true).'?page=login&action=recover">Click here</a>', 
-                    '<a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php').'">Ban List</a>'
-                );
+            $email = $search;
+            $content   = array();
+            $content[] = array('{PAGE_NAME}', '{MAIL_USER}', '{MAIL_USED}', '{MAIL_DATE}', '{MAIL_IP}', '{UNBAN_LINK}', '{PASSWORD_LINK}', '{BAN_LIST}');
+            $content[] = array(osc_page_title(), (isset($user['s_name']) ? $user['s_name'] : ''), $search, $time, $ip, '<a href="'.osc_base_url(true).'?page=sp_activate_account&email='.$search.'&token='.md5((isset($user['s_secret']) ? $user['s_secret'] : '')).'">Click here</a>', '<a href="'.osc_recover_user_password_url().'">Click here</a>', '<a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php').'">Ban List</a>');
+        } elseif ($target == 'admin') {
+            $user = Admin::newInstance()->findByUsername($search);
+            
+            $email = &$user['s_email'];
+            $content   = array();
+            $content[] = array('{PAGE_NAME}', '{MAIL_USER}', '{MAIL_USED}', '{MAIL_DATE}', '{MAIL_IP}', '{UNBAN_LINK}', '{PASSWORD_LINK}', '{BAN_LIST}');
+            $content[] = array(osc_page_title(), (isset($user['s_name']) ? $user['s_name'] : ''), $search, $time, $ip, '<a href="'.osc_base_url(true).'?page=sp_activate_account&name='.$search.'&token='.md5((isset($user['s_secret']) ? $user['s_secret'] : '')).'">Click here</a>', '<a href="'.osc_admin_base_url(true).'?page=login&action=recover">Click here</a>', '<a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php').'">Ban List</a>');
+        }
+        
+        $target_array = array('admin', 'user');            
+        foreach($target_array as $target2) {
+            
+            $body_extra = '';
+            if ($target2 == 'admin') {
+                $info = osc_plugin_get_info("spamprotection/index.php");
+                $body_extra = "\n\nThis Mail was sended from ".$info['plugin_name'];    
             }
             
-            $target_array = array('user', 'admin');            
-            foreach($target_array as $target2) {
-                
-                $body_extra = '';
-                if ($target2 == 'admin') {
-                    $info = osc_plugin_get_info("spamprotection/index.php");
-                    $body_extra = "\n\nThis Mail was sended from ".$info['plugin_name'];    
-                }
-                
-                $mail_title = __("False logins on {PAGE_NAME}", "spamprotection");
-                $mail_body_plain = nl2br(strip_tags($this->_mailTemplate('plain', $target, $target2).$body_extra));    
-                $mail_body_html = nl2br(strip_tags($this->_mailTemplate('html', $target, $target2).$body_extra));
-                
-                $title = osc_mailBeauty($mail_title, $content);
-                $body_plain  = osc_mailBeauty($mail_body_plain, $content);
-                $body_html  = osc_mailBeauty($mail_body_html, $content);
-                
+            $mail_title = nl2br(strip_tags($this->_titleTemplate($target, $target2)));
+            $mail_body_plain = nl2br(strip_tags($this->_mailTemplate('plain', $target, $target2).$body_extra));    
+            $mail_body_html = nl2br(strip_tags($this->_mailTemplate('html', $target, $target2).$body_extra));
+            
+            $title = osc_mailBeauty($mail_title, $content);
+            $body_plain  = osc_mailBeauty($mail_body_plain, $content);
+            $body_html  = osc_mailBeauty($mail_body_html, $content);
+            
+            if ($target2 == 'admin' || ($target2 == 'user' && $this->_checkAccount($email, 'user'))) {
                 $params = array(
                     'from'      => osc_contact_email(),
                     'from_name' => osc_page_title(),
                     'subject'   => $title,
                     'to'        => ($target2 == 'user' ? $email : osc_contact_email()),
-                    'to_name'   => $user['s_name'],
+                    'to_name'   => ($user['s_name'] ? $user['s_name'] : ''),
                     'body'      => $body_html,
                     'alt_body'  => $body_plain,
                     'reply_to'  => osc_contact_email()
                 );
                 
-                if (!osc_sendMail($params)) {
-                    return false;
-                }    
-            }
-             
-            return true;
-        }    
+                osc_sendMail($params);
+            }    
+        }
+         
+        return true;    
     }
     
     function _testMail($target, $target2, $email) {
         $user = Admin::newInstance()->findByEmail($email);
         $ip = $this->_IpUserLogin();
+        $time = osc_format_date(date('Y-m-d H:i:s', time()), osc_date_format().' '.osc_time_format());
         
         $plain   = array();
         $plain[] = array('{PAGE_NAME}', '{MAIL_USER}', '{MAIL_USED}', '{MAIL_DATE}', '{MAIL_IP}', '{UNBAN_LINK}', '{PASSWORD_LINK}', '{BAN_LIST}');
-        $plain[] = array(osc_page_title(), $user['s_name'], $email, date("Y/m/d H:i", time()), $ip, osc_base_url(true).'?page=sp_activate_account&name='.$email.'&token='.md5($user['s_secret']), osc_admin_base_url(true).'?page=login&action=recover', osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php'));
+        $plain[] = array(osc_page_title(), $user['s_name'], $email, $time, $ip, osc_base_url(true).'?page=sp_activate_account&name='.$email.'&token='.md5($user['s_secret']), osc_admin_base_url(true).'?page=login&action=recover', osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php'));
 
         $html   = array();
         $html[] = array('{PAGE_NAME}', '{MAIL_USER}', '{MAIL_USED}', '{MAIL_DATE}', '{MAIL_IP}', '{UNBAN_LINK}', '{PASSWORD_LINK}', '{BAN_LIST}');
-        $html[] = array(osc_page_title(), $user['s_name'], $email, date("Y/m/d H:i", time()), $ip, '<a href="'.osc_base_url(true).'?page=sp_activate_account&name='.$email.'&token='.md5($user['s_secret']).'">Click here</a>', '<a href="'.osc_admin_base_url(true).'?page=login&action=recover">Click here</a>', '<a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php').'">Ban List</a>');
+        $html[] = array(osc_page_title(), $user['s_name'], $email, $time, $ip, '<a href="'.osc_base_url(true).'?page=sp_activate_account&name='.$email.'&token='.md5($user['s_secret']).'">Click here</a>', '<a href="'.osc_admin_base_url(true).'?page=login&action=recover">Click here</a>', '<a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/ban_log.php').'">Ban List</a>');
 
                 
         $body_extra = '';
@@ -1498,7 +1457,7 @@ class spam_prot extends DAO {
             $body_extra = "\n\nThis Mail was sended from ".$info['plugin_name'];    
         }
         
-        $mail_title = __("False logins on {PAGE_NAME}", "spamprotection");
+        $mail_title = nl2br(strip_tags($this->_titleTemplate($target, $target2)));
         $mail_body_plain = nl2br(strip_tags($this->_mailTemplate('plain', $target, $target2).$body_extra));    
         $mail_body_html = nl2br(strip_tags($this->_mailTemplate('html', $target, $target2).$body_extra));
         
@@ -1517,11 +1476,18 @@ class spam_prot extends DAO {
             'reply_to'  => osc_contact_email()
         );
         
-        if (!osc_sendMail($params)) {
-            return false;
-        }    
-             
-        return true;    
+        osc_sendMail($params);    
+    }
+    
+    function _titleTemplate($target = false, $target2 = false) {
+        
+        $title = unserialize($this->_get('sp_mailtemplates'));
+        
+        if ($title && !empty($title['sp_title'.$target.'_'.$target2])) {
+            return $title['sp_title'.$target.'_'.$target2];    
+        } else {
+            return __("False logins on {PAGE_NAME}", "spamprotection");    
+        }
     }
     
     function _mailTemplate($type = 'html', $target = false, $target2 = false) {
@@ -1549,6 +1515,125 @@ class spam_prot extends DAO {
 {PAGE_NAME}';    
             }
         }
+    }
+    
+    function _addBanRule($type, $data, $reason) {        
+        if ($type == 'email') { $string = 's_email'; $string2 = 's_user_email'; } 
+        elseif ($type == 'ip') { $string = 's_ip'; $string2 = 's_user_ip'; }        
+        $this->dao->insert($this->_table_bans, array('s_name' => $reason, $string => $data));    
+        $this->dao->insert($this->_table_sp_ban_log, array('s_name' => $reason, $string2 => $data));    
+    }
+    
+    function _checkBanRule($email = false, $ip = false) {        
+        $this->dao->select('*');
+        $this->dao->from($this->_table_bans);        
+        
+        $this->dao->where("s_email", $email);
+        $this->dao->orWhere("s_ip", $ip);
+        
+        $result = $this->dao->get();
+        if ($result && $result->numRows() <= 0) { return false; }
+        
+        return true;    
+    }
+    
+    function _isBadOrTrusted($userID, $type = 'ads', $badortrusted = 'trusted') {        
+        $bt = spam_prot::newInstance()->_get('sp_badtrusted_activate'); 
+               
+        if ($bt == '1') {                    
+            $user = User::newInstance()->findByPrimaryKey($userID);
+            $reputation = unserialize($user['s_reputation']);
+                    
+            $trusted = array('ads' => 'trustedads', 'comments' => 'trustedcomments', 'contacts' => 'trustedcontacts');            
+            $bad = array('ads' => 'badads', 'comments' => 'badcomments', 'contacts' => 'badcontacts');
+            
+            if ($badortrusted == 'bad') {
+                if (isset($reputation[$bad[$type]]) && $reputation[$bad[$type]] == '1') {
+                    return true;    
+                }    
+            } else {
+                if (isset($reputation[$trusted[$type]]) && $reputation[$trusted[$type]] == '1') {
+                    return true;    
+                }
+            }          
+                           
+        }
+        
+        return false;        
+    }
+    
+    function _userBadTrusted($table) {
+        $table->addColumn('reputation', '');
+    }
+    
+    function _userBadTrustedData($row, $data) {
+        $rep = '';
+        if ($data['i_reputation'] == '1') {
+            $rep = '
+            <a href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_security&sub=badtrusted&table=bad').'">
+                <i class="sp-icon thumbsdown" style="display: block; width: 32px; height: 32px; transform: scale(0.6);" title="'.__('This user is on your bad user list', 'spamprotection').'"></i>
+            </a>
+            ';    
+        } elseif ($data['i_reputation'] == '2') {
+            $rep = '
+            <a href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_security&sub=badtrusted&table=trusted').'">
+                <i class="sp-icon thumbsup" style="display: block; width: 32px; height: 32px; transform: scale(0.6);" title="'.__('This user is on your trusted user list', 'spamprotection').'"></i>
+            </a>';    
+        }
+        
+        $row['reputation'] = $rep; 
+        return $row ;
+    }
+    
+    function _searchBadOrTrustedUser($search) {
+        
+        $this->dao->select('*');
+        $this->dao->from($this->_table_user);        
+        
+        $this->dao->like("s_name", $search);
+        $this->dao->orLike("s_username", $search);
+        $this->dao->orLike("s_email", $search);
+        $this->dao->orLike("s_country", $search);
+        $this->dao->orLike("s_address", $search);
+        $this->dao->orLike("s_region", $search);
+        $this->dao->orLike("s_city", $search);
+        
+        $result = $this->dao->get();
+        if ($result && $result->numRows() <= 0) { return false; }
+        
+        return $result->result();    
+    }
+    
+    function _userManage($action, $user) {
+        if ($action == 'remove') { $action = NULL; }
+        $this->dao->update($this->_table_user, array('i_reputation' => $action, 's_reputation' => NULL), array('pk_i_id' => $user));
+        osc_redirect_to(osc_admin_base_url(true).'?page=users');    
+    }
+    
+    function _userManageAjax($action, $user) {        
+        if ($action == 'remove') { $action = NULL; }
+        $this->dao->update($this->_table_user, array('i_reputation' => $action, 's_reputation' => NULL), array('pk_i_id' => $user));    
+    }
+
+    function _userManageLinks($options, $user) {
+        $return = $options;
+        
+        if (!$user['i_reputation'] || $user['i_reputation'] == '0') {        
+            $return[] = '<a href="'.osc_admin_base_url(true).'?page=users&adduser=2&user='.$user['pk_i_id'].'">'.__('Trusted User', 'spamprotection').'</a>';
+            $return[] = '<a href="'.osc_admin_base_url(true).'?page=users&adduser=1&user='.$user['pk_i_id'].'">'.__('Bad User', 'spamprotection').'</a>';
+        } elseif ($user['i_reputation'] == '1') {        
+            $return[] = '<a href="'.osc_admin_base_url(true).'?page=users&adduser=2&user='.$user['pk_i_id'].'">'.__('Trusted User', 'spamprotection').'</a>';
+            $return[] = '<a href="'.osc_admin_base_url(true).'?page=users&adduser=remove&user='.$user['pk_i_id'].'">'.__('Remove Bad User', 'spamprotection').'</a>';
+        } elseif ($user['i_reputation'] == '2') {        
+            $return[] = '<a href="'.osc_admin_base_url(true).'?page=users&adduser=1&user='.$user['pk_i_id'].'">'.__('Bad User', 'spamprotection').'</a>';
+            $return[] = '<a href="'.osc_admin_base_url(true).'?page=users&adduser=remove&user='.$user['pk_i_id'].'">'.__('Remove Trusted User', 'spamprotection').'</a>';
+        }
+        
+        return $return;
+    }
+    
+    function _deleteComment($id) {
+        $this->dao->delete($this->_table_comment, '`pk_i_id` = "'.$id.'"');    
     }
     
     function _upgradeDatabaseInfo($error) {
@@ -1692,15 +1777,23 @@ class spam_prot extends DAO {
             $dom->formatOutput = true;
             $dl = $dom->load($xmlFile);
             
-            if (!$dl) { return __("The export file could not be created", "spamprotection"); }
+            if (!$dl) { 
+                $title = '<h1 style="display: inline-block;"><i class="sp-icon attention margin-right float-left"></i>'.__("Attention", "spamprotection").'</h1>'; 
+                $error = __("The export file could not be created", "spamprotection"); 
+            }
             $dom->save($xmlFile);
         }
         
         if ($xml_file){
-            return sprintf(__("Export file %s was created succesfully", "spamprotection"), ($type == 'database' ? __("for database", "spamprotection") : __("for plugin settings", "spamprotection")));
+            $title = '<h1 style="display: inline-block;"><i class="sp-icon attention margin-right float-left"></i>'.__("Success", "spamprotection").'</h1>';
+            $error = sprintf(__("Export file %s was created succesfully", "spamprotection"), ($type == 'database' ? __("for database", "spamprotection") : __("for plugin settings", "spamprotection")));
         } else{
-            return __("There was an error while creating the export file", "spamprotection");
+            $title = '<h1 style="display: inline-block;"><i class="sp-icon attention margin-right float-left"></i>'.__("Attention", "spamprotection").'</h1>';
+            $error = __("There was an error while creating the export file", "spamprotection");
         }
+        
+        $message = spam_prot::newInstance()->_showPopup($title, $error, "", 1500, false);
+        return '<div id="flash">'.$message.'</div>';
     }
     
     function _import($data, $type = 'server') {   
@@ -1714,7 +1807,12 @@ class spam_prot extends DAO {
         $xml = simplexml_load_file($xmlFile); $return = array();
         $type = $xml->getName();
         
-        if (!in_array($type, array('settings', 'database'))) { return __("This is not a valid import file", "spamprotection"); }
+        if (!in_array($type, array('settings', 'database'))) {
+            $title = '<h1 style="display: inline-block;"><i class="sp-icon attention margin-right float-left"></i>'.__("Error", "spamprotection").'</h1>';            
+            $error = __("This is not a valid import file", "spamprotection");
+            $message = spam_prot::newInstance()->_showPopup($title, $error, "", 1500, false);
+            return '<div id="flash">'.$message.'</div>'; 
+        }
         
         $json = json_encode($xml);    
         $array = json_decode($json, TRUE);
@@ -1723,9 +1821,11 @@ class spam_prot extends DAO {
         if ($type == 'settings') {
             if (!empty($array['data'])) {
                 foreach($array['data'] as $v) {
-                    if (!osc_set_preference($v['s_name'], $v['s_value'], $v['s_section'], $v['e_type'])) {
-                        $error .= sprintf(__("Error while importing settings: %s cannot be saved correctly", "spamprotection"), $v['s_name']);    
-                    }    
+                    if (!empty($v['s_value'])) {
+                        if (!osc_set_preference($v['s_name'], $v['s_value'], $v['s_section'], $v['e_type'])) {
+                            $error .= sprintf(__("Error while importing settings: %s cannot be saved correctly", "spamprotection"), $v['s_name'])."\n";    
+                        }    
+                    }   
                 }
             }                
         } elseif ($type == 'database') {
@@ -1747,12 +1847,10 @@ class spam_prot extends DAO {
                 }
             }                
         }
-            
-        if (!empty($error)) {
-            return $error;    
-        }
-                    
-        return __("Import done", "spamprotection");
+        $title = '<h1 style="display: inline-block;"><i class="sp-icon attention margin-right float-left"></i>'.__("Import", "spamprotection").'</h1>';            
+        $error .= __("Import done", "spamprotection");
+        $message = spam_prot::newInstance()->_showPopup($title, $error, "", 1500, false);
+        return '<div id="flash">'.$message.'</div>';
     }
     
     function array_to_xml($array, &$xml_info) {
@@ -1769,6 +1867,57 @@ class spam_prot extends DAO {
                 $xml_info->addChild("$key",htmlspecialchars("$value"));
             }
         }
+    }
+    
+    function _firstInstalled() {
+        $info = osc_plugin_get_info("spamprotection/index.php");
+        $plugin = $info['plugin_name'].' v'.$info['version'];
+        osc_delete_preference('sp_first_install', $this->_sect());
+        
+        echo '
+            <div id="spamprot_installed_overlay" style="display: none;">
+                <div id="spamprot_installed" style="margin-top: 50px; display: none;">
+                    <div class="spamprot_installed_close">x</div>
+                    <div id="spamprot_installed_info">
+                        <h2>'.sprintf(__("Welcome to %s", "spamprotection"), $plugin).'</h2>    
+                        <p>'.__("<strong>Please read this notice carefully.</strong>", "spamprotection").'</p>    
+                        <p>'.__("This plugin changes the behaviour of your whole OSClass installation,<br />because of this please use it wise.", "spamprotection").'</p>    
+                        
+                        <ul style="margin: 25px auto;width: 450px;text-align: left; font-weight: bolder;">
+                            <li style="margin-bottom: 10px"><strong>&raquo;</strong> '.__("Don't activate functions that you don't understand. Take a look in the help to learn more about.", "spamprotection").'</li>    
+                            <li style="margin-bottom: 10px"><strong>&raquo;</strong> '.__("Don't overact if you get alot of spam. You just need to fine tune some options here.", "spamprotection").'</li>        
+                            <li style="margin-bottom: 10px"><strong>&raquo;</strong> '.__("This Plugin can block or ban user and admins. Keep an eye of all actions done on your page.", "spamprotection").'</li>    
+                        </ul>
+                            
+                        <p>'.__("<em>We don't want, that you ban or annoy user without reason ;)</em>", "spamprotection").'</p>                            
+                            
+                        <br />
+                        <p>'.__("<strong>If you are using the check for contact mails, please add some hints into your privacy policy that mails will be saved and moderated, if spam was found inside.</strong>", "spamprotection").'</p>                            
+                        <br />
+                        <p>'.__("Feel free to contact me in OSClass-Forum for any kind of question.<br /><br />Best regards<br />Liath", "spamprotection").'</p>
+                    </div>
+                    
+                    <div id="spamprot_installed_buttons">
+                        <a class="btn btn-green spamprot_installed_close" href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=settings').'">'.__("Plugin Settings", "spamprotection").'</a>
+                        <a class="btn btn-blue spamprot_installed_close" href="https://forums.osclass.org/plugins/(plugin)-spam-protection" target="_blank">'.__("Go to Forum", "spamprotection").'</a>
+                        <a class="btn btn-red spamprot_installed_close">'.__("Close", "spamprotection").'</a>
+                        <div style="clear: both;"></div>
+                    </div>    
+                </div>
+            </div>
+            <script>
+                $(document).ready(function(){
+                    $("#spamprot_installed_overlay").fadeIn(1250, function(){
+                        $("#spamprot_installed").slideDown(1250);    
+                    });
+                    $(document).on("click", ".spamprot_installed_close", function(){
+                        $("#spamprot_installed").slideUp(800, function(){
+                            $("#spamprot_installed_overlay").fadeOut(800);
+                        });
+                    })
+                });
+            </script>
+        ';        
     }   
 }
 ?>

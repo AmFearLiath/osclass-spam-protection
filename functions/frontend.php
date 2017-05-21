@@ -83,7 +83,7 @@ function sp_check_contact_item($data) {
         
         $contactID = spam_prot::newInstance()->_searchSpamContact($uniqid);
         osc_add_flash_error_message(sprintf(__("Your email must be verified by a moderator because it has been identified as spam. After successful verification we will forward your e-mail to the user. Click Delete if you do not want your message to be moderated. <a href='%s'>Delete</a>", "spamprotection"), '/?delete_contact_mail='.$contactID.'&token='.$uniqid));
-        
+
         header('Location: '.osc_item_url());
         exit;
     }       
@@ -173,6 +173,16 @@ function sp_check_user_registrations() {
             header('Location: '.osc_register_account_url());
             exit;
         }
+    }
+                
+    $ip = spam_prot::newInstance()->_IpUserLogin();
+    $check_ban = spam_prot::newInstance()->_checkBanRule($email, $ip);
+    
+    if ($check_ban) {
+        ob_get_clean();
+        osc_add_flash_error_message(__("Sorry, you are not allowed to register an account here. Feel free to contact the support team if you think this is a mistake.", "spamprotection"));        
+        header('Location: '.osc_register_account_url());
+        exit;    
     } 
     
     if ($check_mail == '1' || $check_ip == '1') {
@@ -184,8 +194,7 @@ function sp_check_user_registrations() {
         if ($check_mail == '1') {
             $email_encoded = urlencode(iconv('GBK', 'UTF-8', $email)); 
             $url .= '&email='.$email_encoded; 
-        } if ($check_ip == '1') {            
-            $ip = spam_prot::newInstance()->_IpUserLogin(); 
+        } if ($check_ip == '1') { 
             $url .= '&ip='.$ip; 
         }
         
@@ -197,7 +206,13 @@ function sp_check_user_registrations() {
             $data_freq = $data_mail['frequency'];
             $data_conf = $data_mail['confidence'];
             
-            if ($data_freq >= $frequency || $data_conf >= $confidence) {                
+            if ($data_freq >= $frequency || $data_conf >= $confidence) {
+                $ban = spam_prot::newInstance()->_get('sp_autoban_stopforumspam');
+                
+                if ($ban == '1') {
+                    spam_prot::newInstance()->_addBanRule('email', $email, 'Found on StopForumSpam');    
+                }
+                                
                 ob_get_clean();
                 osc_add_flash_error_message(__("Sorry, but your email address is listed because of spam on <a href=\"https://www.stopforumspam.com\">StopForumSpam</a>. Due to this, you cannot register your Account here using this email address, but you can request the deleting of your email address <a href=\"https://www.stopforumspam.com/removal\">Here</a>", "spamprotection"));        
                 header('Location: '.osc_register_account_url());
@@ -209,7 +224,13 @@ function sp_check_user_registrations() {
             $data_freq = $data_ip['frequency'];
             $data_conf = $data_ip['confidence'];
             
-            if ($data_freq >= $frequency || $data_conf >= $confidence) {                
+            if ($data_freq >= $frequency || $data_conf >= $confidence) {
+                $ban = spam_prot::newInstance()->_get('sp_autoban_stopforumspam');
+                
+                if ($ban == '1') {
+                    spam_prot::newInstance()->_addBanRule('ip', $ip, 'Found on StopForumSpam');    
+                }
+                                
                 ob_get_clean();
                 osc_add_flash_error_message(__("Sorry, but your IP is listed because of spam on <a href=\"https://www.stopforumspam.com\">StopForumSpam</a>. Due to this, you cannot register your Account here, but you can request the deleting of your IP <a href=\"https://www.stopforumspam.com/removal\">Here</a>", "spamprotection"));        
                 header('Location: '.osc_register_account_url());
@@ -217,6 +238,32 @@ function sp_check_user_registrations() {
             }
         }
     }  
+}
+
+function sp_block_baduser_ads() {
+    ob_get_clean();
+    osc_add_flash_error_message(__("Sorry, but you are not allowed to post new ads here. If you think this is a mistake, feel free to contact the support team.", "spamprotection"));        
+    osc_redirect_to(osc_base_url());
+    exit;    
+}
+
+function sp_block_baduser_contact() {
+    echo '
+    <p>'.__("Sorry, but you are not allowed to send contact mails. If you think this is a mistake, feel free to contact the support team").'</p>
+    <script>
+        $(document).ready(function(){
+            $("form#contact_form").html("").append("<p>'.__("Sorry, but you are not allowed to send contact mails. If you think this is a mistake, feel free to contact the support team").'</p>");
+        });
+    </script>
+    ';    
+}
+
+function sp_block_baduser_comment($id) {
+    spam_prot::newInstance()->_deleteComment($id);
+    ob_get_clean();
+    osc_add_flash_error_message(__("Sorry, but you are not allowed to post new comments here. If you think this is a mistake, feel free to contact the support team.", "spamprotection"));        
+    osc_redirect_to(osc_item_url());
+    exit;    
 }
 
 function sp_unban_cron() {

@@ -6,7 +6,7 @@ if (!defined('OC_ADMIN')) {
 }
 
 $sp = new spam_prot;
-$data = $sp->_get();
+
 $htaccess_file = ABS_PATH.'/.htaccess';
 $htaccess_writable = is_writable($htaccess_file);
 if ($htaccess_writable) {
@@ -61,7 +61,7 @@ if ($htaccess_writable) {
                     </div>
                     <div class="floating" id="sp_duplicates_time_cont"<?php if (empty($data['sp_duplicates_as']) || $data['sp_duplicates_as'] != '2') { echo ' style="display: none;"'; } ?>>
                         <label><?php _e('Search in last x days', 'spamprotection'); ?> <small><em><?php _e('(0 to disable)', 'spamprotection'); ?></em></small></label><br />
-                        <input type="text" name="sp_duplicates_time" class="form-control" value="<?php echo (!empty($data['sp_duplicates_time']) ? $data['sp_duplicates_time'] : '30'); ?>" />                        
+                        <input type="text" name="sp_duplicates_time" class="form-control" value="<?php echo (isset($data['sp_duplicates_time']) ? $data['sp_duplicates_time'] : '30'); ?>" />                        
                     </div>
                     
                     <div style="clear: both; margin: 10px;"></div>
@@ -79,7 +79,7 @@ if ($htaccess_writable) {
                         <label>
                             <?php _e('Similar percent', 'spamprotection'); ?>
                         </label><br />
-                        <input type="text" name="sp_duplicate_perc" value="<?php echo (empty($data['sp_duplicate_perc']) ? '85' : $data['sp_duplicate_perc']); ?>" />
+                        <input type="text" name="sp_duplicate_perc" value="<?php echo (isset($data['sp_duplicate_perc']) ? $data['sp_duplicate_perc'] : '85'); ?>" />
                     </div>
                     <div style="clear: both;"></div>
                     <small><?php _e('This Option enables the System to check new ads for duplicates and mark them as spam', 'spamprotection'); ?></small>

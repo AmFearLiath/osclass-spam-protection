@@ -42,6 +42,10 @@ if (Params::getParam('page') == 'sp_activate_account') {
     }        
 }
 
+if (Params::getParam('adduser') && Params::getParam('user')) {
+    $sp->_userManage(Params::getParam('adduser'), Params::getParam('user'));    
+}
+
 // User wants to delete his contact mail
 $delete_mail = Params::getParam('delete_contact_mail');
 if (is_numeric($delete_mail)) {

@@ -3,7 +3,7 @@
 Plugin Name: Anti Spam & Protection System
 Plugin URI: http://amfearliath.tk/osclass-spam-protection/
 Description: Anti Spam & Protection System for Osclass. Secures your ads, comments and contact mails against spam. Protects your login/registration processes and many other features. 
-Version: 1.6.2
+Version: 1.6.4
 Author: Liath
 Author URI: http://amfearliath.tk
 Short Name: spamprotection
@@ -55,15 +55,22 @@ Changelog
 
 1.5.1 - Removed Email ban for form protection
 
-1.5.2 - Added User ban to check ads page, fix problem with clicking id on check ads page, added time range for search in duplicates, added cron to automatically unban user after defined time 
+1.5.2 - Added User ban to check ads page, fix problem with clicking id on check ads page, added time range for search in duplicates, 
+        added cron to automatically unban user after defined time 
 
 1.5.3 - Added Ban overview, some code cleanings, correcting translations 
 
-1.6.0 - Redesigned configuration area, admin login protection, import/export for settings and database, plugin settings, update check and registration check been added. Changed plugin name to Anti Spam & Protection System. 
+1.6.0 - Redesigned configuration area, admin login protection, import/export for settings and database, plugin settings, update check 
+        and registration check been added. Changed plugin name to Anti Spam & Protection System. 
 
 1.6.1 - Added Mailtemplate manager, now mails sended to admin after user/admin has banned
 
-1.6.2 - Added check on StopForumSpam for registrations 
+1.6.2 - Added check on StopForumSpam for registrations
+
+1.6.3 - Fixed bugs for import, change category for ads, sending emails, and paths for configuration files and some display errors. 
+        Added Subject to Mailtemplates, Bad/Trusted user list, Topbar Icon, Themechanger, internal ban if found on StopForumSpam
+        
+1.6.4 - fixed some smaller issues  
 */
 
 define('SPP_PATH', dirname(__FILE__) . '/');
@@ -79,7 +86,7 @@ osc_register_plugin(osc_plugin_path(__FILE__), 'sprot_install');
 
 if (OC_ADMIN) {
     osc_add_hook(osc_plugin_path(__FILE__) . '_uninstall', 'sprot_uninstall');    
-    osc_add_hook(osc_plugin_path(__FILE__) . '_configure', 'sprot_configuration');
+    osc_add_hook(osc_plugin_path(__FILE__) . '_configure', 'sprot_configuration');    
     
     osc_add_hook('admin_header', 'sprot_style_admin');
     osc_add_hook('admin_footer', 'sprot_style_admin_footer');
@@ -96,27 +103,60 @@ if (OC_ADMIN) {
 osc_add_hook('header', 'sprot_style');
 
 if (spam_prot::newInstance()->_get('sp_activate') == '1') {
-    osc_add_hook('posted_item', 'sp_check_item');                        
-    osc_add_hook('edited_item', 'sp_check_item');
+        
+    $trusted = spam_prot::newInstance()->_isBadOrTrusted(osc_logged_user_id(), 'ads', 'trusted');
+    $bad = spam_prot::newInstance()->_isBadOrTrusted(osc_logged_user_id(), 'ads', 'bad');
+        
+    if ($bad) {
+        osc_add_hook('post_item', 'sp_block_baduser_ads');
+        osc_add_hook('before_item_edit', 'sp_block_baduser_ads');
+        
+    } elseif (!$trusted) {
+        if (spam_prot::newInstance()->_get('sp_honeypot') == '1') {
+            osc_add_hook('item_form', 'sp_add_honeypot');
+            osc_add_hook('item_edit', 'sp_add_honeypot');
+        }
+        
+        osc_add_hook('posted_item', 'sp_check_item');                        
+        osc_add_hook('edited_item', 'sp_check_item');
+    }          
 }
 
-if (spam_prot::newInstance()->_get('sp_comment_activate') == '1') {
-    osc_add_hook('add_comment', 'sp_check_comment');                        
-    osc_add_hook('edit_comment', 'sp_check_comment');
-}
-if (osc_is_ad_page()) {
-    if (spam_prot::newInstance()->_get('sp_honeypot') == '1') {
-        osc_add_hook('item_form', 'sp_add_honeypot');
-        osc_add_hook('item_edit', 'sp_add_honeypot');
+if (!osc_is_admin_user_logged_in() && spam_prot::newInstance()->_get('sp_comment_activate') == '1') {
+    $trusted = spam_prot::newInstance()->_isBadOrTrusted(osc_logged_user_id(), 'comments', 'trusted');
+    $bad = spam_prot::newInstance()->_isBadOrTrusted(osc_logged_user_id(), 'comments', 'bad');    
+    
+    if ($bad) {
+        osc_add_hook('add_comment', 'sp_block_baduser_comment');                        
+        osc_add_hook('edit_comment', 'sp_block_baduser_comment');
+        
+    } elseif (!$trusted) {
+        osc_add_hook('add_comment', 'sp_check_comment');                        
+        osc_add_hook('edit_comment', 'sp_check_comment');
     }
-    osc_add_hook('item_contact_form', 'sp_contact_form');
 }
+
+if (spam_prot::newInstance()->_get('sp_contact_activate') == '1') {
+    $trusted = spam_prot::newInstance()->_isBadOrTrusted(osc_logged_user_id(), 'contacts', 'trusted');
+    $bad = spam_prot::newInstance()->_isBadOrTrusted(osc_logged_user_id(), 'contacts', 'bad');    
+    
+    if ($bad) {
+        osc_add_hook('item_contact_form', 'sp_block_baduser_contact');
+        
+    } elseif (!$trusted) {
+        if (spam_prot::newInstance()->_get('sp_contact_honeypot') == '1') {
+            osc_add_hook('item_contact_form', 'sp_contact_form');
+        }
+            
+        osc_add_hook('hook_email_item_inquiry', 'sp_check_contact_item', 1);
+        osc_add_hook('hook_email_contact_user', 'sp_check_contact_user', 1);
+    }
+}
+
 
 
 osc_add_hook('delete_comment', 'sp_delete_comment');
 osc_add_hook('actions_manage_items', 'sp_compare_items');
-osc_add_hook('hook_email_item_inquiry', 'sp_check_contact_item', 1);
-osc_add_hook('hook_email_contact_user', 'sp_check_contact_user', 1);
 
 if ($sp->_get('sp_security_activate') == '1') {
     
@@ -161,8 +201,24 @@ if ($sp->_get('sp_admin_activate') == '1') {
     }    
 }
     
-if (Params::getParam('sp_check_stopforumspam') == '1' || (Params::getParam('action') == 'register_post' && $sp->_get('sp_check_registrations') >= '2')) {        
+if ((Params::getParam('sp_check_stopforumspam_mail') == '1' || Params::getParam('sp_check_stopforumspam_ip') == '1') || (Params::getParam('action') == 'register_post' && $sp->_get('sp_check_registrations') >= '2')) {        
     osc_add_hook('before_user_register', 'sp_check_user_registrations', 1);    
+
+    if (spam_prot::newInstance()->_get('sp_stopforum_unban') > '0') {
+        if (spam_prot::newInstance()->_get('sp_stopforum_cron') == '1') {
+            osc_add_hook('cron_hourly', 'sp_cron_stopforum');
+        } elseif (spam_prot::newInstance()->_get('sp_stopforum_cron') == '2') {
+            osc_add_hook('cron_daily', 'sp_cron_stopforum');
+        } elseif (spam_prot::newInstance()->_get('sp_stopforum_cron') == '3') {
+            osc_add_hook('cron_weekly', 'sp_cron_stopforum');
+        }
+    }
+}
+    
+if ($sp->_get('sp_badtrusted_activate') == '1') {
+    osc_add_hook('actions_manage_users', array($sp, '_userManageLinks'));        
+    osc_add_hook('admin_users_table', array($sp, '_userBadTrusted'));
+    osc_add_filter('users_processing_row', array($sp, '_userBadTrustedData'));    
 }
 
 ?>

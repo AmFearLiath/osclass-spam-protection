@@ -4,6 +4,7 @@ if (!defined('OC_ADMIN')) {
 }
 
 $sp = new spam_prot;
+$data = $sp->_get();
 $settings = false; $help = false;
  
 if (Params::getParam('spam') == 'activate') {
@@ -36,19 +37,39 @@ if (Params::getParam('tab') == 'sp_contact') {
 
 if (Params::getParam('settings') == 'save') {
     $params = Params::getParamsAsArray('', false);
-    if ($sp->_saveSettings($params)) {
+    if ($sp->_saveSettings($params)) {        
         ob_get_clean();
-        osc_add_flash_ok_message(__('<strong>All Settings saved.</strong>', 'spamprotection'), 'admin');
+        $message = $sp->_showPopup(
+            '<h1 style="display: inline-block;"><i class="sp-icon attention margin-right float-left"></i>'.__("<strong>Success.</strong>", "spamprotection").'</h1>', 
+            '<div style="font-size: 18px;">'.__("Settings saved.", "spamprotection").'</div>',
+            '',
+            1500,
+            false,
+            false,
+            'style="width: 400px;"'
+            );
+            
+        osc_add_flash_ok_message($message, 'admin');
         osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
     } else {
         ob_get_clean();
-        osc_add_flash_error_message(__('<strong>Error.</strong> Your settings can not be saved.', 'spamprotection'), 'admin');
+        $message = $sp->_showPopup(
+            '<h1 style="display: inline-block;"><i class="sp-icon attention margin-right float-left"></i>'.__("<strong>Error.</strong>", "spamprotection").'</h1>', 
+            '<div style="font-size: 18px;">'.__("Your settings can not be saved.", "spamprotection").'</div>',
+            '',
+            false,
+            true,
+            false,
+            'style="width: 400px;"'
+            );
+            
+        osc_add_flash_ok_message($message, 'admin');
         osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
     }      
 }
     
 ?>
-<div id="spamprot">
+<div id="spamprot" class="<?php if (isset($data['sp_theme'])) { echo $data['sp_theme']; } ?>">
     <div class="container">
         <ul class="tabs">
             <li class="tab-link<?php if (isset($settings) && $settings) { echo ' current'; } ?>" data-tab="sp_settings"><a><?php _e('Ad Settings', 'spamprotection'); ?></a></li>
@@ -56,7 +77,7 @@ if (Params::getParam('settings') == 'save') {
             <li class="tab-link<?php if (isset($contact) && $contact) { echo ' current'; } ?>" data-tab="sp_contact"><a><?php _e('Contact Settings', 'spamprotection'); ?></a></li>
             <li class="tab-link<?php if (isset($security) && $security) { echo ' current'; } ?>" data-tab="sp_security"><a><?php _e('Security Settings', 'spamprotection'); ?></a></li>
             <li class="tab-link<?php if (isset($help) && $help) { echo ' current'; } ?>" data-tab="sp_help"><a><?php _e('Help', 'spamprotection'); ?></a></li>
-            <li class="tab-link float-right<?php if (isset($config) && $config) { echo ' current'; } ?>" data-tab="sp_config"><a class="sp-icon tools"style="padding: 0;background-color: transparent;border: none;margin: 8px;"></a></li>
+            <li class="tab-link float-right<?php if (isset($config) && $config) { echo ' current'; } ?>" data-tab="sp_config"><a class="sp-icon tools"style="padding: 0;background-color: transparent;border: none;margin: 8px 10px 9px;"></a></li>
         </ul>
         
         <form id="sp_save_settings" action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php'); ?>" method="POST">

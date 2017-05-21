@@ -262,13 +262,33 @@ $info = osc_plugin_get_info("spamprotection/index.php");
             <hr />
             
             <h3><?php _e("StopForumSpam", "spamprotection"); ?></h3>
-            <p><?php _e("If you activate this, all registrations will be checked against StopForumSpam and if they have listed the user ip and/or email address, the user cannot register an account on your page.", "spamprotection"); ?></p>
-            <ul>
-                <li><?php _e('Max frequency of reports', 'spamprotection'); ?> - <small><?php _e('Enter here the amount, how many times a user can be reported at max. (0 - 255)', 'spamprotection'); ?></small></li>
-                <li><?php _e('Max percentage of suspiciousness', 'spamprotection'); ?> - <small><?php _e('Enter here the percentage, how high is the suspiciousness on StopForumSpam (0 = high confidence, 100 = low confidence).', 'spamprotection'); ?></small></li>
-            </ul>
+            
+            <p>
+                <?php _e('Check email address', 'spamprotection'); ?> / <?php _e('Check IP', 'spamprotection'); ?><br />
+                <small><?php _e("If you activate this, all registrations will be checked against <a href=\"https://www.stopforumspam.com/\">StopForumSpam</a> and if they have listed the user ip and/or email address, the user cannot register an account on your page.", "spamprotection"); ?></small>
+            </p>
+            <p>
+                <?php _e('Add Email or IP to Ban list if found on StopForumSpam', 'spamprotection'); ?><br />
+                <small><?php _e('After activating this option, all Email addresses or IP\'s found on StopForumSpam will be banned internal. So you can prevent high data usage between your server and StopForumSpam.', 'spamprotection'); ?></small>
+            </p
+            <p>
+                <?php _e('Max frequency of reports', 'spamprotection'); ?><br />
+                <small><?php _e('Enter here the amount, how many times a user can be reported at max. (0 - 255)', 'spamprotection'); ?></small>
+            </p>
+            <p>
+                <?php _e('Max percentage of suspiciousness', 'spamprotection'); ?><br />
+                <small><?php _e('Enter here the percentage, how high is the suspiciousness on StopForumSpam (0 = high confidence, 100 = low confidence).', 'spamprotection'); ?></small>
+            </p>
             
             <hr />
+            
+            <h2><?php _e("Bad/Trusted User", "spamprotection"); ?></h2>
+            <p><?php _e("This feature will allow you to:", "spamprotection"); ?></p>
+            <ul>
+                <li><?php _e('Add trusted user', 'spamprotection'); ?> - <small><?php _e('This will deactivate all anti spam mechanism for certain options you have set to this user.', 'spamprotection'); ?></small></li>
+                <li><?php _e('Add bad user', 'spamprotection'); ?> - <small><?php _e('This will block the added user for all functions you have set.', 'spamprotection'); ?></small></li>
+            </ul>
+            <p><?php _e("You can set options to each user for new ads, post comments or send contact mails. Users can be set to bad or trusted lists through the regular user page or with the inbuild function you can find in the security settings.", "spamprotection"); ?></p>
         </div>
         
         <div id="sp_help_about" class="subtab-content">
@@ -294,7 +314,7 @@ $info = osc_plugin_get_info("spamprotection/index.php");
             If you find any errors, please report it in the forum and tell it to me. 
             I will try to fix this immediately, so that everyone can use this plugin properly.<br /><br />
             Also i would be glad, when you go back to the market and rate this plugin with some stars. I need weeks to develop this plugin for free, you only need some minutes to rate and review it.<br /><br />
-            <a id="sp_review" href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank"><button class="btn btn-green ratenow"><i class="sp-icon heart small margin-right float-left"></i>Rate and review now</button></a><br /><br />
+            <a id="sp_review" href="https://market.osclass.org/plugins/security/spam-protection_787" target="_blank"><button class="btn btn-green ratenow">Rate and review now</button></a><br /><br />
             <strong>Thanks alot</strong>
             ', 'spamprotection'); ?></p>
         </div>

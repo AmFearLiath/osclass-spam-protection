@@ -7,6 +7,9 @@
 .sp-icon.small {
     transform: scale(0.7);
 }
+.sp-icon.xs {
+    transform: scale(0.5);
+}
 .sp-icon.float-left {
     float: left;
 }
@@ -114,15 +117,32 @@
   background-position: -96px -192px;
 }
 
-.sp-icon.community {
+.sp-icon.comments {
   background-position: -0px -224px;
 }
-.sp-icon.community.hover {
+.sp-icon.comments.hover {
   background-position: -32px -224px;
 }
-.sp-icon.forum {
+.sp-icon.listings {
   background-position: -64px -224px;
 }
-.sp-icon.forum.hover {
+.sp-icon.listings.hover {
   background-position: -96px -224px;
+}
+
+.sp-icon.thumbsdown {
+  background-position: -0px -256px;
+  transition: ease transform .4s;
+}
+.sp-icon.thumbsdown:hover {
+  background-position: -32px -256px;
+  transform: scale(0.7) !important;
+}
+.sp-icon.thumbsup {
+  background-position: -64px -256px;
+  transition: ease transform .4s;
+}
+.sp-icon.thumbsup:hover {
+  background-position: -96px -256px;
+  transform: scale(0.7) !important;
 }

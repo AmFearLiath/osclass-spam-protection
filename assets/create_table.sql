@@ -52,3 +52,5 @@ CREATE TABLE IF NOT EXISTS `/*TABLE_PREFIX*/t_spam_protection_ban_log` (
   `dt_date_banned` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP, 
   PRIMARY KEY (`pk_i_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `/*TABLE_PREFIX*/t_user` ADD `i_reputation` INT(1) NULL DEFAULT NULL AFTER `i_comments`, ADD `s_reputation` INT(1) NULL DEFAULT NULL AFTER `i_reputation`;

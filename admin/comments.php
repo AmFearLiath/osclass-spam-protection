@@ -6,7 +6,6 @@ if (!defined('OC_ADMIN')) {
 }
 
 $sp = new spam_prot;
-$data = $sp->_get();
 
 ?>
 <div class="settings">
