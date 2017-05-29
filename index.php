@@ -3,7 +3,7 @@
 Plugin Name: Anti Spam & Protection System
 Plugin URI: http://amfearliath.tk/osclass-spam-protection/
 Description: Anti Spam & Protection System for Osclass. Secures your ads, comments and contact mails against spam. Protects your login/registration processes and many other features. 
-Version: 1.6.4
+Version: 1.6.8
 Author: Liath
 Author URI: http://amfearliath.tk
 Short Name: spamprotection
@@ -70,7 +70,16 @@ Changelog
 1.6.3 - Fixed bugs for import, change category for ads, sending emails, and paths for configuration files and some display errors. 
         Added Subject to Mailtemplates, Bad/Trusted user list, Topbar Icon, Themechanger, internal ban if found on StopForumSpam
         
-1.6.4 - fixed some smaller issues  
+1.6.4 - fixed some smaller issues, duplicates not longer marked false 
+ 
+1.6.5 - Added IP Ban Table, corrected some sql statements
+  
+1.6.6 - Moved some rows from Table t_user to own table, added fix to copy data and delete not needed rows, changed some stylesheets
+
+1.6.7 - Added Database cleaner to automatically delete unwanted ads, comments, user.
+
+1.6.8 - Global Log added. Fixed small issues.
+  
 */
 
 define('SPP_PATH', dirname(__FILE__) . '/');
@@ -81,7 +90,6 @@ require('functions/index.php');
  
 $sp = new spam_prot;
 
-/* HOOKS */
 osc_register_plugin(osc_plugin_path(__FILE__), 'sprot_install');
 
 if (OC_ADMIN) {
@@ -99,10 +107,40 @@ if (OC_ADMIN) {
     }    
 }
 
+if ((!osc_is_admin_user_logged_in() && !OC_ADMIN) && spam_prot::newInstance()->_get('sp_ipban_activate') == '1' && Params::getParam('page') != 'sp_activate_account') {
+    
+    osc_add_hook('actions_manage_users', array($sp, '_userRowIpBan'));
+
+    $ip =  spam_prot::newInstance()->_IpUserLogin();
+    $ips = spam_prot::newInstance()->_listIpBanTable();
+    $file = osc_base_url().'forbidden.php';
+    
+    if (is_array($ips)) {
+        if (array_key_exists($ip, $ips)) {
+            $mode = spam_prot::newInstance()->_get('sp_ipban_redirect');
+            $url = spam_prot::newInstance()->_get('sp_ipban_redirectURL');
+            
+            if ($mode == '2' && filter_var($url, FILTER_VALIDATE_URL)) {
+                $file = $url;
+            } elseif ($mode == '404') {
+                spam_prot::newInstance()->_addGlobalLog('Banned IP. Redirected to: 404', $ip, 'IP Ban');
+                header("HTTP/1.0 404 Not Found");
+                exit;
+            } elseif ($mode == '500') {
+                spam_prot::newInstance()->_addGlobalLog('Banned IP. Redirected to: 500', $ip, 'IP Ban');
+                echo non_existing_function();
+            } elseif (!file_exists(osc_base_path().'forbidden.php?')) {
+                $file = 'http://google.com';
+            }
+            spam_prot::newInstance()->_addGlobalLog('Banned IP. Redirected to: '.$file, $ip, 'IP Ban');
+            osc_redirect_to($file);    
+        }
+    }    
+}
 
 osc_add_hook('header', 'sprot_style');
 
-if (spam_prot::newInstance()->_get('sp_activate') == '1') {
+if (!osc_is_admin_user_logged_in() && spam_prot::newInstance()->_get('sp_activate') == '1') {
         
     $trusted = spam_prot::newInstance()->_isBadOrTrusted(osc_logged_user_id(), 'ads', 'trusted');
     $bad = spam_prot::newInstance()->_isBadOrTrusted(osc_logged_user_id(), 'ads', 'bad');
@@ -136,7 +174,7 @@ if (!osc_is_admin_user_logged_in() && spam_prot::newInstance()->_get('sp_comment
     }
 }
 
-if (spam_prot::newInstance()->_get('sp_contact_activate') == '1') {
+if (!osc_is_admin_user_logged_in() && spam_prot::newInstance()->_get('sp_contact_activate') == '1') {
     $trusted = spam_prot::newInstance()->_isBadOrTrusted(osc_logged_user_id(), 'contacts', 'trusted');
     $bad = spam_prot::newInstance()->_isBadOrTrusted(osc_logged_user_id(), 'contacts', 'bad');    
     
@@ -213,6 +251,16 @@ if ((Params::getParam('sp_check_stopforumspam_mail') == '1' || Params::getParam(
             osc_add_hook('cron_weekly', 'sp_cron_stopforum');
         }
     }
+}
+
+if (
+spam_prot::newInstance()->_get('sp_delete_expired') == '1' || 
+spam_prot::newInstance()->_get('sp_delete_unactivated') == '1' || 
+spam_prot::newInstance()->_get('sp_delete_spam') == '1' ||
+spam_prot::newInstance()->_get('sp_commdel_unactivated') == '1' || 
+spam_prot::newInstance()->_get('sp_commdel_spam') == '1' ||
+spam_prot::newInstance()->_get('sp_user_unactivated') == '1') {
+    osc_add_hook('cron_hourly', array($sp, '_cleanDatabase'));
 }
     
 if ($sp->_get('sp_badtrusted_activate') == '1') {

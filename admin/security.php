@@ -17,6 +17,8 @@ $table = Params::getParam('table');
         <li class="subtab-link <?php echo (!isset($sub) || $sub == 'admin' ? 'current' : ''); ?>" data-tab="sp_security_mainfeatures_admin"><a><?php _e('Admin Protection', 'spamprotection'); ?></a></li>
         <li class="subtab-link <?php echo (!isset($sub) || $sub == 'register' ? 'current' : ''); ?>" data-tab="sp_security_mainfeatures_register"><a><?php _e('Registrations', 'spamprotection'); ?></a></li>
         <li class="subtab-link <?php echo (!isset($sub) || $sub == 'badtrusted' ? 'current' : ''); ?>" data-tab="sp_security_badtrusted"><a><?php _e('Bad/Trusted User', 'spamprotection'); ?></a></li>
+        <li class="subtab-link <?php echo (!isset($sub) || $sub == 'ipban' ? 'current' : ''); ?>" data-tab="sp_security_ipban"><a><?php _e('IP Ban', 'spamprotection'); ?></a></li>
+        <li class="subtab-link <?php echo (!isset($sub) || $sub == 'cleaner' ? 'current' : ''); ?>" data-tab="sp_security_cleaner"><a><?php _e('Cleaner', 'spamprotection'); ?></a></li>
         <li class="subtab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
     </ul>
 
@@ -143,24 +145,32 @@ $table = Params::getParam('table');
                         <div id="sp_security_login_hp_cont" style="float: left; width: calc(50% - 5px); margin: 0px; padding: 0px 10px 0px 0px;<?php if ((empty($data['sp_security_login_hp']) || $data['sp_security_login_hp'] == '0')) { echo ' display: none;'; } ?>">
                             <strong>../oc-content/themes/yourtheme/user-login.php</strong>
                             <pre><code>&lt;?php osc_run_hook('user_login_form'); ?&gt;</code></pre>
+                        
+                            <br /><div style="clear: both;"></div><br /><br />
+                        
+                            <strong style="font-size: 20px;"><?php _e('Example', 'spamprotection'); ?></strong>
+                            <pre>
+    ...
+    &lt;?php osc_run_hook('user_login_form'); ?&gt;
+&lt;/form&gt;
+                            </pre>
                         </div>
 
                         <div id="sp_security_recover_hp_cont" style="float: left; width: calc(50% - 5px); margin: 0; padding: 0;<?php if ((empty($data['sp_security_recover_hp']) || $data['sp_security_recover_hp'] == '0')) { echo ' display: none;'; } ?>">
                             <strong>../oc-content/themes/yourtheme/user-recover.php</strong>
                             <pre><code>&lt;?php osc_run_hook('user_recover_form'); ?&gt;</code></pre>
-                        </div>
                         
-                        <br /><div style="clear: both;"></div><br /><br />
+                            <br /><div style="clear: both;"></div><br /><br />
                         
-                        <div style="padding: 0;">
                             <strong style="font-size: 20px;"><?php _e('Example', 'spamprotection'); ?></strong>
                             <pre>
-        ...
-        &lt;?php osc_run_hook('user_login_form'); ?&gt;
-    &lt;/form&gt;
+    ...
+    &lt;?php osc_run_hook('user_recover_form'); ?&gt;
+&lt;/form&gt;
                             </pre>
                         </div>
-                        <br /><hr />
+                        
+
                     </div>
                                 
                 </div>
@@ -401,15 +411,19 @@ $table = Params::getParam('table');
                             </thead>
                             <tbody>
                                 <?php
-                                    $trusted = $sp->_getResult('t_user', array('key' => 'i_reputation', 'value' => '2'));
+                                    $trusted = $sp->_getResult('t_sp_users', array('key' => 'i_reputation', 'value' => '2'));
+                                    
                                     if ($trusted) {
                                         foreach($trusted as $v) { 
-                                            $rep = unserialize($v['s_reputation']); ?>
+                                            $user = User::newInstance()->findByPrimaryKey($v['pk_i_id']);
+                                            if (isset($v['s_reputation']) && !empty($v['s_reputation'])) {
+                                                $rep = unserialize($v['s_reputation']);
+                                            }  ?>
                                             <tr>
-                                                <td class="name"><?php echo $v['s_name']; ?></td>
-                                                <td class="email"><?php echo $v['s_email']; ?></td>
-                                                <td class="ads"><?php echo $v['i_items']; ?></td>
-                                                <td class="comments"><?php echo $v['i_comments']; ?></td>
+                                                <td class="name"><?php echo $user['s_name']; ?></td>
+                                                <td class="email"><?php echo $user['s_email']; ?></td>
+                                                <td class="ads"><?php echo $user['i_items']; ?></td>
+                                                <td class="comments"><?php echo $user['i_comments']; ?></td>
                                                 <td class="actions">
                                                     <input type="checkbox" name="trusted[<?php echo $v['pk_i_id']; ?>][trustedads]" value="1"<?php echo (isset($rep['trustedads']) ? ' checked="checked"' : ''); ?> />
                                                     <input type="checkbox" name="trusted[<?php echo $v['pk_i_id']; ?>][trustedcomments]" value="1"<?php echo (isset($rep['trustedcomments']) ? ' checked="checked"' : ''); ?> />
@@ -441,15 +455,18 @@ $table = Params::getParam('table');
                             </thead>
                             <tbody>
                                 <?php
-                                    $trusted = $sp->_getResult('t_user', array('key' => 'i_reputation', 'value' => '1'));
-                                    if ($trusted) {
-                                        foreach($trusted as $v) { 
-                                            $rep = unserialize($v['s_reputation']); ?>
+                                    $bad = $sp->_getResult('t_sp_users', array('key' => 'i_reputation', 'value' => '1'));
+                                    if ($bad) {
+                                        foreach($bad as $v) { 
+                                            $user = User::newInstance()->findByPrimaryKey($v['pk_i_id']);
+                                            if (isset($v['s_reputation']) && !empty($v['s_reputation'])) {
+                                                $rep = unserialize($v['s_reputation']);
+                                            } ?>
                                             <tr>
-                                                <td class="name"><?php echo $v['s_name']; ?></td>
-                                                <td class="email"><?php echo $v['s_email']; ?></td>
-                                                <td class="ads"><?php echo $v['i_items']; ?></td>
-                                                <td class="comments"><?php echo $v['i_comments']; ?></td>
+                                                <td class="name"><?php echo $user['s_name']; ?></td>
+                                                <td class="email"><?php echo $user['s_email']; ?></td>
+                                                <td class="ads"><?php echo $user['i_items']; ?></td>
+                                                <td class="comments"><?php echo $user['i_comments']; ?></td>
                                                 <td class="actions">
                                                     <input type="checkbox" name="bad[<?php echo $v['pk_i_id']; ?>][badads]" value="1"<?php echo (isset($rep['badads']) ? ' checked="checked"' : ''); ?> />
                                                     <input type="checkbox" name="bad[<?php echo $v['pk_i_id']; ?>][badcomments]" value="1"<?php echo (isset($rep['badcomments']) ? ' checked="checked"' : ''); ?> />
@@ -503,6 +520,195 @@ $table = Params::getParam('table');
                 </div>
             </fieldset>
             
+        </div>
+    </div>
+    
+    <div id="sp_ipban_options" class="sp_ipban_options">
+        <div id="sp_security_ipban" class="subtab-content <?php echo (isset($sub) && $sub == 'ipban' ? 'current' : ''); ?>">
+            
+            <fieldset>
+                <legend><?php _e("IP Ban", "spamprotection"); ?></legend>
+                <div class="halfrow">
+                    <label>
+                        <input type="checkbox" name="sp_ipban_activate" value="1"<?php if (!empty($data['sp_ipban_activate'])) { echo ' checked="checked"'; } ?> />
+                        <?php _e('Activate the IP Ban Function', 'spamprotection'); ?>
+                    </label><br />
+                    <small>
+                        <?php _e("Check this option to activate the IP Ban. Choose your favorite action to the right and add unwanted IP's to the table.", "spamprotection"); ?>
+                    </small>
+                </div>
+                <div class="halfrow">
+                
+                    <div id="IpBanCreateFile" style="width: 55%; float:left; padding: 0;">
+                    
+                        <?php if (file_exists(osc_base_path().'forbidden.php')) { ?>
+                        
+                        <label for="sp_ipban_redirect">
+                            <input type="radio" name="sp_ipban_redirect" value="1"<?php if (!isset($data['sp_ipban_redirect']) || $data['sp_ipban_redirect'] == '1') { echo ' checked="checked"'; } ?> />
+                            <?php _e('Use standard file', 'spamprotection'); ?>
+                        </label><br />
+                        <small><?php echo osc_base_url().'forbidden.php'; ?></small>
+                                                        
+                        <?php } else { ?>
+                        
+                        <div>
+                            <?php _e('Create standard file', 'spamprotection'); ?><br />
+                            <a id="openCreateFile" class="btn btn-blue" href="<?php echo osc_ajax_plugin_url('spamprotection/functions/ipban.php&createFile=1'); ?>"><?php _e('Create', 'spamprotection'); ?></a>
+                            <div style="clear: both;"></div>   
+                        </div>
+                        
+                        <?php } ?>
+                    </div>
+                    <div style="width: 45%; float:left; padding: 0;">
+                        <label for="sp_ipban_redirect">
+                            <input type="radio" name="sp_ipban_redirect" value="404"<?php if (!isset($data['sp_ipban_redirect']) || $data['sp_ipban_redirect'] == '404') { echo ' checked="checked"'; } ?> />
+                            <?php _e('Cause 404 Error', 'spamprotection'); ?>
+                        </label><br />
+                        <label for="sp_ipban_redirect">
+                            <input type="radio" name="sp_ipban_redirect" value="500"<?php if (!isset($data['sp_ipban_redirect']) || $data['sp_ipban_redirect'] == '500') { echo ' checked="checked"'; } ?> />
+                            <?php _e('Cause 500 Error', 'spamprotection'); ?>
+                        </label><br />
+                    </div>
+                    
+                    <div style="clear: both;"></div>
+                                       
+                    <br /><br />                            
+                    <label for="sp_ipban_redirectURL">
+                        <input type="radio" name="sp_ipban_redirect" value="2"<?php if (!file_exists(osc_base_path().'forbidden.php') || (isset($data['sp_ipban_redirect']) && $data['sp_ipban_redirect'] == '2')) { echo ' checked="checked"'; } ?> />
+                        <?php _e('Or redirect banned users to', 'spamprotection'); ?><br />
+                        <input type="text" name="sp_ipban_redirectURL" placeholder="Enter URL" value="<?php if (isset($data['sp_ipban_redirectURL'])) { echo $data['sp_ipban_redirectURL']; } ?>" />
+                    </label><br />
+                    <small>
+                        <?php _e('If you want to redirect users to another location, enter URL here.', 'spamprotection'); ?><br />
+                        <strong><?php _e('Don\'t use your base domain, it will cause redirect loops.', 'spamprotection'); ?></strong>
+                    </small>
+                </div>
+            </fieldset>
+            
+            <fieldset style="position: relative;">
+                <legend><?php _e("IP Ban Table", "spamprotection"); ?></legend>
+                <div style="position: absolute; top: 10px; right: 0;">
+                    <a id="addIpToBan" href="<?php echo osc_ajax_plugin_url('spamprotection/functions/ipban.php&do=add'); ?>"><i class="btn btn-green ico ico-32 ico-add-white float-right" style="float: right;width: 11px;height: 16px;transform: scale(0.8);"></i></a>
+                    <input id="addIpBan" name="addIpBan" placeholder="<?php _e('Enter IP', 'spamprotection'); ?>" style="float: right;margin-top: 4px;height: 22px;border-radius: 3px;border: 1px solid #999;padding: 2px;" />    
+                </div>                                                                                        
+                <div class="row form-group">
+                    <table class="ipban" style="margin-top: 30px;">
+                        <thead>
+                            <td style="width: 40px;"></td>
+                            <td style="width: 200px;"><?php _e("IP", "spamprotection"); ?></td>
+                            <td><?php _e("Date added", "spamprotection"); ?></td>
+                        </thead>
+                        <tbody id="dataIpBan">
+                        <?php
+                            $ips = spam_prot::newInstance()->_listIpBanTable();
+                            if (isset($ips) && is_array($ips)) {
+                                foreach($ips as $k => $v) {
+                                    echo '
+                                    <tr>
+                                        <td><a class="deleteIpBan" href="'.osc_ajax_plugin_url('spamprotection/functions/ipban.php&do=delete').'" data-ip="'.$k.'"><i class="sp-icon delete xs"></i></a></td>
+                                        <td>'.$k.'</td>
+                                        <td>'.date("d.m.Y H:i:s", $v).'</td>
+                                    </tr>
+                                    ';
+                                }
+                            } else {
+                                echo '<tr><td colspan="3"><h3>No IP\'s saved</h3></td></tr>';
+                            }    
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+            
+            <div id="IpBanFlash" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <div id="sp_cleaner_options" class="sp_cleaner_options">
+        <div id="sp_security_cleaner" class="subtab-content <?php echo (isset($sub) && $sub == 'cleaner' ? 'current' : ''); ?>">
+            <fieldset>
+                <legend><?php _e("Delete not activated user accounts", "spamprotection"); ?></legend>                
+                <div class="row form-group">                
+                    <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                        <label>
+                            <input type="checkbox" name="sp_user_unactivated" value="1"<?php if (!empty($data['sp_user_unactivated'])) { echo ' checked="checked"'; } ?> />
+                            <?php _e('Delete not activated user', 'spamprotection'); ?>
+                        </label><br />                    
+                        <small><?php _e('Here you can define if not activated user should be deleted automatically after x days.', 'spamprotection'); ?></small>
+                    </div>                
+                    <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                        <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                            <label style="line-height: 28px;">
+                                <?php _e('after', 'spamprotection'); ?>
+                                <input type="text" class="form-control" name="sp_user_unactivated_after" style="width: 50px;" value="<?php if (!empty($data['sp_user_unactivated_after'])) { echo $data['sp_user_unactivated_after']; } ?>" /> <span>Days</span>
+                            </label>
+                        </div>
+                        <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                            <label style="line-height: 28px;">
+                                <?php _e('Max.', 'spamprotection'); ?>
+                                <input type="text" class="form-control" name="sp_user_unactivated_limit" style="width: 50px;" value="<?php if (!empty($data['sp_user_unactivated_limit'])) { echo $data['sp_user_unactivated_limit']; } ?>" /> <span>at once</span>
+                            </label>
+                        </div>                    
+                    </div>                    
+                </div>
+            </fieldset>
+            
+            <fieldset id="settingsUnwantedUser">
+                <legend><?php _e("Delete unused user accounts", "spamprotection"); ?></legend>                
+                <div class="row form-group">            
+                    <div style="float: left; width: calc(45% - 20px); padding: 0 10px;">
+                        <br />
+                        <label for="sp_user_minAge"><?php _e('Select last login date', 'spamprotection'); ?></label>
+                        <input type="text" name="sp_user_minAge" value="<?php echo date('Y-m-d', strtotime(date('Y-m-d', time()).' -1 year')); ?>" />
+                        <br /><br />
+                        <label for="sp_user_maxAcc"><?php _e('Show max. x accounts', 'spamprotection'); ?></label>
+                        <input type="text" name="sp_user_maxAcc" value="25" />
+                        <script>
+                            $("input[name=sp_user_minAge]").datepicker({
+                                maxDate: "-1y",
+                                dateFormat: "yy-mm-dd"
+                            });
+                        </script>
+                    </div>          
+                    <div style="float: left; width: calc(45% - 20px); padding: 0 10px;"> 
+                        <br /><br />
+                        <label for="sp_user_activated">
+                            <input type="checkbox" name="sp_user_activated" />
+                            <?php _e('Must be an activated account', 'spamprotection'); ?>
+                        </label><br />
+                        <label for="sp_user_enabled">
+                            <input type="checkbox" name="sp_user_enabled" />
+                            <?php _e('Must be an enabled account', 'spamprotection'); ?>
+                        </label><br />
+                        <label for="sp_user_zeroads">
+                            <input type="checkbox" name="sp_user_zeroads" checked="checked" />
+                            <?php _e('Must have 0 ads', 'spamprotection'); ?>
+                        </label><br />
+                        <label for="sp_user_noAdmin">
+                            <input type="checkbox" name="sp_user_noAdmin" checked="checked" />
+                            <?php _e('User has no admin account', 'spamprotection'); ?>
+                        </label><br />
+                        <label for="sp_user_neverlogged">
+                            <input type="checkbox" name="sp_user_neverlogged" checked="checked" />
+                            <?php _e('User has never logged in', 'spamprotection'); ?>
+                        </label>          
+                    </div>                    
+                    <div style="float: right; width: 10%;">
+                        <br />
+                        <label>&nbsp;</label><br />
+                        <a id="searchUnwantedUser" class="btn btn-blue" data-link="<?php echo osc_ajax_plugin_url('spamprotection/functions/searchUser.php'); ?>"><?php _e("Search", "spamprotection"); ?></a>
+                    </div>
+                    
+                    <div style="clear: both;"></div>
+                                        
+                </div>
+                
+                <div class="row for-group">
+                    <div id="printUnwantedUser">
+                    
+                    </div>
+                </div>
+            </fieldset>            
         </div>
     </div>
     

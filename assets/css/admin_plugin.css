@@ -120,6 +120,7 @@ div#blocked_ads_inner table tr td {
 #sp_security_mainfeatures_admin,
 #sp_security_mainfeatures_register,
 #sp_config_options,
+#sp_global_log,
 #sp_register_options {
     color: #000;
     transition: ease all 0.6s;
@@ -171,6 +172,7 @@ div#sp_comments,
 div#sp_contact, 
 div#sp_security, 
 div#sp_help,
+div#sp_log,
 div#sp_config {
     position: relative;
     top: 35px;
@@ -246,9 +248,12 @@ div#sp_config {
 .sp_security_options, 
 .sp_admin_options, 
 .sp_register_options, 
+.sp_global_log, 
 .sp_help_section, 
 .sp_config_options,
-.sp_badtrusted_options {
+.sp_badtrusted_options,
+.sp_ipban_options,
+.sp_cleaner_options {
     width: calc(100% - 200px);
     float: left;
 } 
@@ -364,7 +369,7 @@ div#flashmessage #flash-inner, div#flash #flash-inner {
     padding: 10px;
 }
 
-div#flash a {
+div#flash a.ico-close {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -377,7 +382,7 @@ div#flash a {
     transition: ease all .4s
 }
 
-div#flash a:hover {
+div#flash a.ico-close:hover {
     border-color: #666;
     color: #666;
 }
@@ -807,4 +812,81 @@ div#sp_config_mailtemplates > div > div:hover {
 button.ratenow {
     padding: 2px 10px;
     line-height: 30px;
+}
+
+
+
+div#printUnwantedUser {
+    margin-top: 30px;
+}
+
+table#tableUnwantedUser thead tr td {
+    padding: 5px;
+    background-color: #ccc;
+    font-weight: bold;
+}
+
+table#tableUnwantedUser tbody tr td {
+    padding: 5px;
+}
+
+table#tableUnwantedUser tbody tr:nth-child(odd) td {
+    background-color: #ffffff;
+}
+
+table#tableUnwantedUser tbody tr:nth-child(even) td {
+    background-color: #eaeaea;
+}
+
+div#sp_config_log #logTable table {
+    padding-bottom: 20px;
+    width: 100%;
+    overflow: auto;
+}
+
+div#sp_config_log .logHeader {
+    margin: 15px 0;
+}
+
+div#sp_config_log table thead tr td {
+    padding: 10px;
+    background: #ccc;
+}
+
+div#sp_config_log table tbody tr td {
+    padding: 3px;
+}
+
+div#sp_config_log table tbody tr:nth-child(odd) td {
+    background-color: #ffffff;
+}
+
+div#sp_config_log table tbody tr:nth-child(even) td {
+    background-color: #eaeaea;
+}
+
+#logPagination > a.btn {
+    padding: 5px;
+    width: 15px;
+    height: 16px;
+    text-align: center;
+    color: #000;
+    background-color: #f3f3f3;
+}
+
+#logPagination > a.btn.disabled {
+    color: #ddd;
+    background-color: #fafafa;
+    border-color: #eee;
+    cursor: not-allowed;
+}
+
+#logLimitation a.select-box-trigger {
+    width: 130px;
+    margin-right: 5px;
+}
+
+#logPagination a.select-box-trigger {
+    width: 60px;
+    margin-right: 5px;
 }

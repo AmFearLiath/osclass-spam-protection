@@ -4,6 +4,17 @@ if (!defined('ABS_PATH')) {
 }
 
 $sp = new spam_prot;
+$page = Params::getParam('page');
+$ipBan = Params::getParam('addIpBan');
+if (($page == 'items' || $page == 'users')) {
+    if ($page == 'items') {
+        $item = Item::newInstance()->findByPrimaryKey($ipBan);
+    } if (isset($item['s_ip']) && !empty($item['s_ip'])) {
+        $sp->_doIpBan('add', $item['s_ip']);    
+    }
+    
+       
+}
 
 if (Params::getParam('sp_upgrade') == 'upgrade') {
     $sp->_upgradeNow();   
@@ -36,7 +47,7 @@ if (Params::getParam('page') == 'sp_activate_account') {
         
         ob_get_clean();
         osc_add_flash_ok_message(__('<strong>Info!</strong> Your account has been reactivated, you can login as usual.', 'spamprotection'));
-    
+        spam_prot::newInstance()->_addGlobalLog('User account reactivated by user: ', $email, 'User');
         header('Location: '.osc_user_login_url());
         exit;    
     }        

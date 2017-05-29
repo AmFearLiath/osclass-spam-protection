@@ -1,3 +1,1 @@
-<?php 
-/* simple folder protection */ 
-?>
+<?php /* simple folder protection */ ?>

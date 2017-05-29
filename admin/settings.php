@@ -20,6 +20,7 @@ if ($htaccess_writable) {
         <li class="subtab-link" data-tab="sp_emailblock"><a><?php _e('E-Mail Block', 'spamprotection'); ?></a></li>
         <li class="subtab-link" data-tab="sp_stopwords"><a><?php _e('Stopwords', 'spamprotection'); ?></a></li>
         <li class="subtab-link" data-tab="sp_htaccess"><a><?php _e('.htaccess Editor', 'spamprotection'); ?></a></li>
+        <li class="subtab-link" data-tab="sp_cleaner"><a><?php _e('Cleaner', 'spamprotection'); ?></a></li>
         <li class="subtab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
     </ul>
     
@@ -202,6 +203,88 @@ if ($htaccess_writable) {
                 </div>
             </fieldset>        
         </div>
+        
+        <div id="sp_cleaner" class="subtab-content">            
+            <fieldset>
+                <legend><?php _e("Delete unwanted listings", "spamprotection"); ?></legend>
+                <div class="row form-group">                
+                    <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                        <label>
+                            <input type="checkbox" name="sp_delete_expired" value="1"<?php if (!empty($data['sp_delete_expired'])) { echo ' checked="checked"'; } ?> />
+                            <?php _e('Delete expired listings', 'spamprotection'); ?>
+                        </label><br />
+                        <small><?php _e('Here you can define if expired listings should be deleted automatically after x days.', 'spamprotection'); ?></small>
+                    </div>                
+                    <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                        <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                            <label style="line-height: 28px;">
+                                <?php _e('after', 'spamprotection'); ?>
+                                <input type="text" class="form-control" name="sp_delete_expired_after" style="width: 50px;" value="<?php if (!empty($data['sp_delete_expired_after'])) { echo $data['sp_delete_expired_after']; } ?>" /> <span>Days</span>
+                            </label>
+                        </div>
+                        <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                            <label style="line-height: 28px;">
+                                <?php _e('Max.', 'spamprotection'); ?>
+                                <input type="text" class="form-control" name="sp_delete_expired_limit" style="width: 50px;" value="<?php if (!empty($data['sp_delete_expired_limit'])) { echo $data['sp_delete_expired_limit']; } ?>" /> <span>at once</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="clear: both;"></div>
+                
+                <div class="row form-group">                
+                    <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                        <label>
+                            <input type="checkbox" name="sp_delete_unactivated" value="1"<?php if (!empty($data['sp_delete_unactivated'])) { echo ' checked="checked"'; } ?> />
+                            <?php _e('Delete not activated listings', 'spamprotection'); ?>
+                        </label><br />                    
+                        <small><?php _e('Here you can define if not activated listings should be deleted automatically after x days.', 'spamprotection'); ?></small>
+                    </div>                
+                    <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                        <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                            <label style="line-height: 28px;">
+                                <?php _e('after', 'spamprotection'); ?>
+                                <input type="text" class="form-control" name="sp_delete_unactivated_after" style="width: 50px;" value="<?php if (!empty($data['sp_delete_unactivated_after'])) { echo $data['sp_delete_unactivated_after']; } ?>" /> <span>Days</span>
+                            </label>
+                        </div>
+                        <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                            <label style="line-height: 28px;">
+                                <?php _e('Max.', 'spamprotection'); ?>
+                                <input type="text" class="form-control" name="sp_delete_unactivated_limit" style="width: 50px;" value="<?php if (!empty($data['sp_delete_unactivated_limit'])) { echo $data['sp_delete_unactivated_limit']; } ?>" /> <span>at once</span>
+                            </label>
+                        </div>                    
+                    </div>                    
+                </div>
+
+                <div style="clear: both;"></div>
+
+                <div class="row form-group">                
+                    <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                        <label>
+                            <input type="checkbox" name="sp_delete_spam" value="1"<?php if (!empty($data['sp_delete_spam'])) { echo ' checked="checked"'; } ?> />
+                            <?php _e('Delete as spam marked listings', 'spamprotection'); ?>
+                        </label><br />
+                        <small><?php _e('Here you can define if as spam marked listings should be deleted automatically after x days.', 'spamprotection'); ?></small>
+                    </div>                
+                    <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                        <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                            <label style="line-height: 28px;">
+                                <?php _e('after', 'spamprotection'); ?>
+                                <input type="text" class="form-control" name="sp_delete_spam_after" style="width: 50px;" value="<?php if (!empty($data['sp_delete_spam_after'])) { echo $data['sp_delete_spam_after']; } ?>" /> <span>Days</span>
+                            </label>
+                        </div>
+                        <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                            <label style="line-height: 28px;">
+                                <?php _e('Max.', 'spamprotection'); ?>
+                                <input type="text" class="form-control" name="sp_delete_spam_limit" style="width: 50px;" value="<?php if (!empty($data['sp_delete_spam_limit'])) { echo $data['sp_delete_spam_limit']; } ?>" /> <span>at once</span>
+                            </label>
+                        </div>                    
+                    </div>                    
+                </div>
+            </fieldset>        
+        </div>
+        
     </div> 
     
 </div>

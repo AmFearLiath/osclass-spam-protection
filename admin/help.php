@@ -132,6 +132,13 @@ $info = osc_plugin_get_info("spamprotection/index.php");
             
             <h2><?php _e("<a href=\"https://en.wikipedia.org/wiki/.htaccess\">.htaccess</a> Editor", "spamprotection"); ?></h2>            
             <p><?php _e("This is only for experienced users who know what they are doing. Don't use this option because it can cause heavy errors on you whole page!", "spamprotection"); ?></p>
+             
+        
+            <hr />
+            
+            <h2><?php _e("Cleaner", "spamprotection"); ?></h2>            
+            <p><?php _e("This option will clean your database from unwanted items. You can define to delete automatically expired, not activated and as spam marked ads.", "spamprotection"); ?></p>
+            <p><?php _e("Also you can define how long the item has to be expired and how much items should be deleted at once. If your system runs on sharing hosting, try smaller amounts.", "spamprotection"); ?></p>
 
         </div>
         
@@ -166,6 +173,13 @@ $info = osc_plugin_get_info("spamprotection/index.php");
         
             <h2><?php _e("Stopwords", "spamprotection"); ?></h2>            
             <p><?php _e("Save here your \"Badwords\" where you don't want, that they can be used in your comments.", "spamprotection"); ?></p>
+             
+        
+            <hr />
+            
+            <h2><?php _e("Cleaner", "spamprotection"); ?></h2>            
+            <p><?php _e("This option will clean your database from unwanted comments. You can define to delete automatically not activated and as spam marked comments.", "spamprotection"); ?></p>
+            <p><?php _e("Also you can define how long the comment is not activated and how much comments should be deleted at once. If your system runs on sharing hosting, try smaller amounts.", "spamprotection"); ?></p>
         
         </div>
         
@@ -289,6 +303,24 @@ $info = osc_plugin_get_info("spamprotection/index.php");
                 <li><?php _e('Add bad user', 'spamprotection'); ?> - <small><?php _e('This will block the added user for all functions you have set.', 'spamprotection'); ?></small></li>
             </ul>
             <p><?php _e("You can set options to each user for new ads, post comments or send contact mails. Users can be set to bad or trusted lists through the regular user page or with the inbuild function you can find in the security settings.", "spamprotection"); ?></p>
+             
+        
+            <hr />
+            
+            <h2><?php _e("IP Ban", "spamprotection"); ?></h2>            
+            <p><?php _e("Here you can activate and set up the IP Ban Function and the action what should happen to banned IP's", "spamprotection"); ?></p>
+            <ul>
+                <li><strong><?php _e("Use standard file", "spamprotection"); ?></strong> - <?php _e("You can create the file through this plugin and modify it to your own needs", "spamprotection"); ?></strong></li>
+                <li><strong><?php _e("Cause 404 Error", "spamprotection"); ?></strong> - <?php _e("This option redirects the banned user to a fake 404 Page.", "spamprotection"); ?></strong></li>
+                <li><strong><?php _e("Cause 500 Error", "spamprotection"); ?></strong> - <?php _e("This option redirects the banned user to a fake 500 Page.", "spamprotection"); ?></strong></li>
+                <li><strong><?php _e("Or redirect banned users to", "spamprotection"); ?></strong> - <?php _e("Here you can define a page, where the banned user is redirected to.", "spamprotection"); ?></strong></li>
+            </ul>             
+        
+            <hr />
+            
+            <h2><?php _e("Cleaner", "spamprotection"); ?></h2>            
+            <p><?php _e("This option will clean your database from unwanted user accounts. You can define to delete automatically not activated and as spam marked accounts.", "spamprotection"); ?></p>
+            <p><?php _e("Also you can define how long the account is not activated and how much accounts should be deleted at once. If your system runs on sharing hosting, try smaller amounts.", "spamprotection"); ?></p>
         </div>
         
         <div id="sp_help_about" class="subtab-content">

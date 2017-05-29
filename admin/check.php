@@ -96,7 +96,7 @@ if ($user_spams > 0) {
             <a class="btn" onclick="return confirm('Are you sure you want to delete this item?');" href="<?php list($csrfname, $csrftoken) = osc_csrfguard_generate_token(); echo osc_admin_base_url(true).'?page=items&action=delete&id[]='.$id.'&CSRFName='.$csrfname.'&CSRFToken='.$csrftoken; ?>"><?php _e('Delete Ad', 'spamprotection'); ?></a>
             <div style="clear: both; margin: 15px 0;"></div>
             <a class="btn btn-red" onclick="return confirm('Are you sure you want to block this user?');" href="<?php echo osc_admin_base_url(true).'?page=items&spam=block&mail='.$item['s_user_mail']; ?>"><?php _e('Block User', 'spamprotection'); ?></a>
-            <a class="btn btn-red" onclick="return confirm('Are you sure you want to ban this user completely?');" href="<?php echo osc_admin_base_url(true).'?page=items&spam=ban&mail='.$item['s_user_mail']; ?>"><?php _e('Ban User', 'spamprotection'); ?></a>
+            <a class="btn btn-red" onclick="return confirm('Are you sure you want to ban this user completely?');" href="<?php echo osc_admin_base_url(true).'?page=items&addIpBan='.$id; ?>"><?php _e('IP Ban', 'spamprotection'); ?></a>
         </div>
     </div>
     <div class="infobox halfrow">

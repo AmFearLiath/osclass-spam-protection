@@ -36,6 +36,7 @@ div#osc_toolbar_spamprotection > nav.osc_admin_submenu a {
     width: calc(100% - 10px);
     text-align: left;
     line-height: 16px;
+    float: none;
 }
 
 div#osc_toolbar_spamprotection:hover > nav.osc_admin_submenu {

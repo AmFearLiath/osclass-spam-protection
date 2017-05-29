@@ -180,6 +180,7 @@ function sp_check_user_registrations() {
     
     if ($check_ban) {
         ob_get_clean();
+        spam_prot::newInstance()->_addGlobalLog('Registration blocked because of existing ban', $email.'/'.$ip, 'System');
         osc_add_flash_error_message(__("Sorry, you are not allowed to register an account here. Feel free to contact the support team if you think this is a mistake.", "spamprotection"));        
         header('Location: '.osc_register_account_url());
         exit;    
@@ -208,8 +209,10 @@ function sp_check_user_registrations() {
             
             if ($data_freq >= $frequency || $data_conf >= $confidence) {
                 $ban = spam_prot::newInstance()->_get('sp_autoban_stopforumspam');
+                spam_prot::newInstance()->_addGlobalLog('Registration blocked because listed Email address:', $email, 'StopForumSpam');
                 
                 if ($ban == '1') {
+                    spam_prot::newInstance()->_addGlobalLog('Email address banned', $email, 'StopForumSpam');
                     spam_prot::newInstance()->_addBanRule('email', $email, 'Found on StopForumSpam');    
                 }
                                 
@@ -226,9 +229,12 @@ function sp_check_user_registrations() {
             
             if ($data_freq >= $frequency || $data_conf >= $confidence) {
                 $ban = spam_prot::newInstance()->_get('sp_autoban_stopforumspam');
+                spam_prot::newInstance()->_addGlobalLog('Registration blocked because listed IP:', $ip, 'StopForumSpam');
                 
                 if ($ban == '1') {
+                    spam_prot::newInstance()->_addGlobalLog('IP banned:', $ip, 'StopForumSpam');    
                     spam_prot::newInstance()->_addBanRule('ip', $ip, 'Found on StopForumSpam');    
+                    spam_prot::newInstance()->_doIpBan('add', $ip);    
                 }
                                 
                 ob_get_clean();

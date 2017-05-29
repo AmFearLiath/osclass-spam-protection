@@ -53,4 +53,18 @@ CREATE TABLE IF NOT EXISTS `/*TABLE_PREFIX*/t_spam_protection_ban_log` (
   PRIMARY KEY (`pk_i_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `/*TABLE_PREFIX*/t_user` ADD `i_reputation` INT(1) NULL DEFAULT NULL AFTER `i_comments`, ADD `s_reputation` INT(1) NULL DEFAULT NULL AFTER `i_reputation`;
+CREATE TABLE IF NOT EXISTS `/*TABLE_PREFIX*/t_spam_protection_users` ( 
+  `pk_i_id` int(10) NOT NULL,
+  `i_reputation` int(1) UNSIGNED NOT NULL DEFAULT '0',
+  `s_reputation` text, 
+  PRIMARY KEY (`pk_i_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `/*TABLE_PREFIX*/t_spam_protection_global_log` (
+  `pk_i_id` INT NOT NULL AUTO_INCREMENT,
+  `s_reason` TEXT NULL DEFAULT NULL,
+  `s_account` VARCHAR(255) NULL DEFAULT NULL,
+  `s_done` VARCHAR(255) NULL DEFAULT NULL,
+  `dt_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`pk_i_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

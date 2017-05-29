@@ -4,7 +4,8 @@ if (!defined('OC_ADMIN')) {
 }
 
 function sprot_admin_page_header($message = false) {
-    $info = osc_plugin_get_info("spamprotection/index.php");   
+    $info = osc_plugin_get_info("spamprotection/index.php");
+       
     echo '
     <h1 style="display: inline-block;font-size: 20px;line-height: 50px; margin-top: -10px;">'.($message ? $message : '<i class="sp_header_icon" style="margin: 0;"></i>'.sprintf(__('Anti Spam & Protection System', 'spamprotection'). ' v'.$info['version'])).'</h1>
     <div style="line-height: 36px; float: right;">

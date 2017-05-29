@@ -14,6 +14,7 @@ $sp = new spam_prot;
         <li class="subtab-link current" data-tab="sp_comm_mainfeatures"><a><?php _e('Main Settings', 'spamprotection'); ?></a></li>
         <li class="subtab-link " data-tab="sp_comm_emailblock"><a><?php _e('E-Mail Block', 'spamprotection'); ?></a></li>
         <li class="subtab-link " data-tab="sp_comm_stopwords"><a><?php _e('Stopwords', 'spamprotection'); ?></a></li>
+        <li class="subtab-link " data-tab="sp_comm_cleaner"><a><?php _e('Cleaner', 'spamprotection'); ?></a></li>
         <li class="subtab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
     </ul>
     
@@ -110,6 +111,61 @@ $sp = new spam_prot;
                     <textarea class="form-control" name="sp_comment_stopwords" style="height: 200px;"><?php if (!empty($data['sp_comment_stopwords'])) { echo $data['sp_comment_stopwords']; } ?></textarea>
                 </div>
             </fieldset>         
+        </div>
+        
+        <div id="sp_comm_cleaner" class="subtab-content">            
+            <fieldset>
+                <legend><?php _e("Delete unwanted comments", "spamprotection"); ?></legend>                
+                <div class="row form-group">                
+                    <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                        <label>
+                            <input type="checkbox" name="sp_commdel_unactivated" value="1"<?php if (!empty($data['sp_commdel_unactivated'])) { echo ' checked="checked"'; } ?> />
+                            <?php _e('Delete not activated comments', 'spamprotection'); ?>
+                        </label><br />                    
+                        <small><?php _e('Here you can define if not activated comments should be deleted automatically after x days.', 'spamprotection'); ?></small>
+                    </div>                
+                    <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                        <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                            <label style="line-height: 28px;">
+                                <?php _e('after', 'spamprotection'); ?>
+                                <input type="text" class="form-control" name="sp_commdel_unactivated_after" style="width: 50px;" value="<?php if (!empty($data['sp_commdel_unactivated_after'])) { echo $data['sp_commdel_unactivated_after']; } ?>" /> <span>Days</span>
+                            </label>
+                        </div>
+                        <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                            <label style="line-height: 28px;">
+                                <?php _e('Max.', 'spamprotection'); ?>
+                                <input type="text" class="form-control" name="sp_commdel_unactivated_limit" style="width: 50px;" value="<?php if (!empty($data['sp_commdel_unactivated_limit'])) { echo $data['sp_commdel_unactivated_limit']; } ?>" /> <span>at once</span>
+                            </label>
+                        </div>                    
+                    </div>                    
+                </div>
+
+                <div style="clear: both;"></div>
+
+                <div class="row form-group">                
+                    <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                        <label>
+                            <input type="checkbox" name="sp_commdel_spam" value="1"<?php if (!empty($data['sp_commdel_spam'])) { echo ' checked="checked"'; } ?> />
+                            <?php _e('Delete as spam marked comments', 'spamprotection'); ?>
+                        </label><br />
+                        <small><?php _e('Here you can define if as spam marked comments should be deleted automatically after x days.', 'spamprotection'); ?></small>
+                    </div>                
+                    <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                        <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                            <label style="line-height: 28px;">
+                                <?php _e('after', 'spamprotection'); ?>
+                                <input type="text" class="form-control" name="sp_commdel_spam_after" style="width: 50px;" value="<?php if (!empty($data['sp_commdel_spam_after'])) { echo $data['sp_commdel_spam_after']; } ?>" /> <span>Days</span>
+                            </label>
+                        </div>
+                        <div style="float: left; width: calc(50% - 20px); padding: 10px;">
+                            <label style="line-height: 28px;">
+                                <?php _e('Max.', 'spamprotection'); ?>
+                                <input type="text" class="form-control" name="sp_commdel_spam_limit" style="width: 50px;" value="<?php if (!empty($data['sp_commdel_spam_limit'])) { echo $data['sp_commdel_spam_limit']; } ?>" /> <span>at once</span>
+                            </label>
+                        </div>                    
+                    </div>                    
+                </div>
+            </fieldset>        
         </div>            
         
     </div> 

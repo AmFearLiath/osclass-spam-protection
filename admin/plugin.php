@@ -207,6 +207,7 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
         <li class="subtab-link <?php echo (isset($subtab) && $subtab == 'mailtemplates' ? 'current' : ''); ?>" data-tab="sp_config_mailtemplates"><a><?php _e('Mailtemplates', 'spamprotection'); ?></a></li>
         <li class="subtab-link <?php echo (isset($subtab) && $subtab == 'export' ? 'current' : ''); ?>" data-tab="sp_config_export"><a><?php _e('Export', 'spamprotection'); ?></a></li>
         <li class="subtab-link <?php echo (isset($subtab) && $subtab == 'import' ? 'current' : ''); ?>" data-tab="sp_config_import"><a><?php _e('Import', 'spamprotection'); ?></a></li>
+        <li class="subtab-link <?php echo (isset($subtab) && $subtab == 'log' ? 'current' : ''); ?>" data-tab="sp_config_log"><a><?php _e('Global Log', 'spamprotection'); ?></a></li>
     </ul>
 
     <div id="sp_config_options" class="sp_config_options">
@@ -575,6 +576,10 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
                 </script>        
             </fieldset>
             <?php if (!empty($import)) { echo $import; } ?>
+        </div>
+
+        <div id="sp_config_log" class="subtab-content <?php echo (isset($subtab) && $subtab == 'log' ? 'current' : ''); ?>">
+            <?php include_once(osc_plugin_path('spamprotection/functions/log.php')); ?>
         </div>
     </div>
 </div>
