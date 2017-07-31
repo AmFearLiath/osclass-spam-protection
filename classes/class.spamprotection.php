@@ -8,6 +8,7 @@ class spam_prot extends DAO {
             self::$instance = new self ;
         }
         return self::$instance ;
+        return self::$instance ;
     }
     
     function __construct() {
@@ -91,6 +92,8 @@ class spam_prot extends DAO {
             'sp_security_activate'          => array('1', 'BOOLEAN'),
             'sp_admin_activate'             => array('1', 'BOOLEAN'),
             'sp_ipban_activate'             => array('0', 'BOOLEAN'),
+            'sp_activate_inform'            => array('0', 'BOOLEAN'),
+            'sp_block_messages'             => array('1', 'BOOLEAN'),
             'sp_duplicates'                 => array('1', 'BOOLEAN'),
             'sp_duplicates_as'              => array('1', 'BOOLEAN'),
             'sp_duplicate_type'             => array('0', 'BOOLEAN'),
@@ -179,6 +182,9 @@ class spam_prot extends DAO {
             'sp_user_unactivated'           => array('0', 'BOOLEAN'),
             'sp_user_unactivated_after'     => array('360', 'STRING'),
             'sp_user_unactivated_limit'     => array('100', 'STRING'),
+            'sp_globallog_activate'         => array('0', 'BOOLEAN'),
+            'sp_globallog_limit'            => array('25', 'STRING'),
+            'sp_globallog_lifetime'         => array('1 week', 'STRING'),
         );
         
         if ($key) { return $opts[$key]; }
@@ -209,7 +215,7 @@ class spam_prot extends DAO {
     }
     
     function _admin_menu_draw() {
-        $count = $this->_countRows('t_item', array('key' => 'b_spam', 'value' => '1'));
+        $count = $this->_countRows('t_item', array(array('key' => 'b_spam', 'value' => '1'), array('key' => 'b_active', 'value' => '0')));
         $comments = $this->_countRows('t_comment', array('key' => 'b_spam', 'value' => '1'));
         $contacts = $this->_countRows('t_sp_contacts');
         $bans = $this->_countRows('t_sp_ban_log');
@@ -236,7 +242,7 @@ class spam_prot extends DAO {
             if ($topbar == '1') {
                 AdminToolbar::newInstance()->add_menu( array(
                      'id'        => 'spamprotection_ads',
-                     'title'     => ($toptype == 'text' ? '<i class="circle circle-gray">'.$count.'</i>'.__('Spam found', 'spamprotection') : '<i class="sp-alert ads'.($pulse ? ' pulse' : ' highlight').'"><span>'.$count.'</span></i>'),
+                     'title'     => ($toptype == 'text' ? '<i class="circle circle-gray">'.$count.'</i>'.__('Spam ad', 'spamprotection') : '<i class="sp-alert ads'.($pulse ? ' pulse' : ' highlight').'"><span>'.$count.'</span></i>'),
                      'href'      => osc_admin_base_url(true).'?page=items&b_spam=1',
                      'meta'      => ($toptype == 'text' ? array('class' => 'action-btn action-btn-black') : array('style' => 'min-width: 0; padding: 0;')),
                      'target'    => '_self'
@@ -251,7 +257,7 @@ class spam_prot extends DAO {
             if ($topbar == '1') {
                 AdminToolbar::newInstance()->add_menu( array(
                      'id'        => 'spamprotection_comments',
-                     'title'     => ($toptype == 'text' ? '<i class="circle circle-gray">'.$comments.'</i>'.__('Spam comment found', 'spamprotection') : '<i class="sp-alert comments'.($pulse ? ' pulse' : ' highlight').'"><span>'.$comments.'</span></i>'),
+                     'title'     => ($toptype == 'text' ? '<i class="circle circle-gray">'.$comments.'</i>'.__('Spam comment', 'spamprotection') : '<i class="sp-alert comments'.($pulse ? ' pulse' : ' highlight').'"><span>'.$comments.'</span></i>'),
                      'href'      => osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/comments_check.php'),
                      'meta'      => ($toptype == 'text' ? array('class' => 'action-btn action-btn-black') : array('style' => 'min-width: 0; padding: 0;')),
                      'target'    => '_self'
@@ -266,7 +272,7 @@ class spam_prot extends DAO {
             if ($topbar == '1') {
                 AdminToolbar::newInstance()->add_menu( array(
                      'id'        => 'spamprotection_contacts',
-                     'title'     => ($toptype == 'text' ? '<i class="circle circle-gray">'.$contacts.'</i>'.__('Spam Contact Mail found', 'spamprotection') : '<i class="sp-alert mails'.($pulse ? ' pulse' : ' highlight').'"><span>'.$contacts.'</span></i>'),
+                     'title'     => ($toptype == 'text' ? '<i class="circle circle-gray">'.$contacts.'</i>'.__('Spam Mail', 'spamprotection') : '<i class="sp-alert mails'.($pulse ? ' pulse' : ' highlight').'"><span>'.$contacts.'</span></i>'),
                      'href'      => osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/contact_check.php'),
                      'meta'      => ($toptype == 'text' ? array('class' => 'action-btn action-btn-black') : array('style' => 'min-width: 0; padding: 0;')),
                      'target'    => '_self'
@@ -291,20 +297,17 @@ class spam_prot extends DAO {
     }
     
     function _admin_topicon() {
-        $count = $this->_countRows('t_item', array('key' => 'b_spam', 'value' => '1'));
+        $count = $this->_countRows('t_item', array(array('key' => 'b_spam', 'value' => '1'), array('key' => 'b_active', 'value' => '0')));
         $comments = $this->_countRows('t_comment', array('key' => 'b_spam', 'value' => '1'));
         $contacts = $this->_countRows('t_sp_contacts');
         $bans = $this->_countRows('t_sp_ban_log');
              
         echo '
-        <div id="osc_toolbar_spamprotection" style="position: relative;">
-            <a href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=settings').'"><i class="ico-spamprotection topbar"></i></a>
-            <nav class="osc_admin_submenu" id="osc_toolbar_sub_spamprotection" style="position: absolute;">
-                <ul>
-                    <li><a href="'.osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=settings').'">&raquo; '.__('Dashboard', 'spamprotection').'</a></li>
-                    <li><a href="'.osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=sp_config').'">&raquo; '.__('Settings', 'spamprotection').'</a></li>
-                    <li><a href="'.osc_admin_render_plugin_url(SPP_PATH . 'admin/config.php&tab=sp_help').'"'.($count > 0 || $comments > 0 || $contacts > 0 || $bans > 0 ? ' style="border-bottom: 1px solid #fff;"' : '').'>&raquo; '.__('Help', 'spamprotection').'</a></li>
-                    ';            
+        <div id="osc_toolbar_spamprotection" style="position: relative !important;margin: 0 15px 0 -15px;">
+            <a href="'.osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=settings').'"><i class="ico-spamprotection topbar"></i></a>
+            <nav class="osc_admin_submenu" id="osc_toolbar_sub_spamprotection" style="position: absolute;">';                            
+            
+            echo '<ul>';
             
             if ($count > 0) { 
                 echo '<li><a href="'.osc_admin_base_url(true).'?page=items&b_spam=1"><i class="circle circle-gray">'.$count.'</i>'.__('Spam ads', 'spamprotection').'</a></li>';
@@ -320,8 +323,13 @@ class spam_prot extends DAO {
             }
             
         echo '
+                    <li><a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)) . 'admin/main.php&tab=settings').'"'.($count > 0 || $comments > 0 || $contacts > 0 || $bans > 0 ? ' style="border-top: 1px solid #fff;"' : '').'>&raquo; '.__('Dashboard', 'spamprotection').'</a></li>
+                    <li><a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)) . 'admin/main.php&tab=sp_config').'">&raquo; '.__('Settings', 'spamprotection').'</a></li>
+                    <li><a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)) . 'admin/main.php&tab=sp_config&subtab=log').'">&raquo; '.__('Global Log', 'spamprotection').'</a></li>
+                    <li><a href="'.osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)) . 'admin/main.php&tab=sp_help').'">&raquo; '.__('Help', 'spamprotection').'</a></li>
                 </ul>
             </nav>
+            
         </div>';
     }
     
@@ -400,7 +408,6 @@ class spam_prot extends DAO {
     }
     
     function _countRows($table, $where = false) {
-        
         if ($table == 't_item') { $table = $this->_table_item; }
         elseif ($table == 't_user')  { $table = $this->_table_user; }
         elseif ($table == 't_bans')  { $table = $this->_table_bans; }
@@ -413,7 +420,13 @@ class spam_prot extends DAO {
         $this->dao->from($table);
         
         if (is_array($where)) {
-            $this->dao->where($where['key'], $where['value']);    
+            if (count($where, COUNT_RECURSIVE) > 2) {
+                foreach($where as $v) {
+                    $this->dao->where($v['key'], $v['value']); 
+                }   
+            } else {
+                $this->dao->where($where['key'], $where['value']);    
+            }  
         }        
         
         $result = $this->dao->get();
@@ -429,14 +442,16 @@ class spam_prot extends DAO {
         return implode(",", $sort);    
     }
     
-    function _saveSettings($params, $type = false) {    
+    function _saveSettings($params, $type = false) {
+        
         $pref = $this->_sect();
         
-        $forbidden = array('CSRFName', 'CSRFToken', 'page', 'file', 'action', 'tab', 'subtab', 'settings', 'plugin_settings', 'sp_htaccess', 'changed_htaccess', 'attention_htaccess', 'save_mailtemplates', 'trusted', 'bad', 'sp_ipban_table', 'sp_user_minAge', 'sp_user_maxAcc', 'deleteUserID', 'sp_user_zeroads', 'sp_user_activated', 'sp_user_enabled', 'sp_user_noAdmin', 'sp_user_neverlogged');
+        $forbidden = array('CSRFName', 'CSRFToken', 'page', 'file', 'action', 'tab', 'subtab', 'settings', 'plugin_settings', 'save_mailtemplates', 'trusted', 'bad', 'sp_ipban_table', 'sp_user_minAge', 'sp_user_maxAcc', 'deleteUserID', 'sp_user_zeroads', 'sp_user_activated', 'sp_user_enabled', 'sp_user_noAdmin', 'sp_user_neverlogged');
         $sort = array('blocked', 'blocked_tld', 'sp_stopwords', 'comment_blocked', 'comment_blocked_tld', 'sp_comment_stopwords', 'contact_blocked', 'contact_blocked_tld', 'sp_contact_stopwords');
         
         $mailtemplates = array('sp_mailtemplates', 'sp_mailuser_user', 'sp_titleuser_user', 'sp_mailuser_admin', 'sp_titleuser_admin', 'sp_mailadmin_user', 'sp_titleadmin_user', 'sp_mailadmin_admin', 'sp_titleadmin_admin');
-        $pluginsettings = array('sp_activate_topbar', 'sp_topbar_type', 'sp_activate_menu', 'sp_activate_topicon', 'sp_activate_pulsemenu', 'sp_menu_after', 'sp_topicon_position', 'sp_update_check', 'sp_theme');
+        $pluginsettings = array('sp_activate_topbar', 'sp_topbar_type', 'sp_activate_menu', 'sp_activate_topicon', 'sp_activate_pulsemenu', 'sp_menu_after', 'sp_topicon_position', 'sp_update_check', 'sp_theme', 'sp_globallog_activate', 'sp_globallog_limit', 'sp_globallog_lifetime');
+        $null = array('sp_globallog_lifetime');
         
         if ($type == 'mails') {
             $data = array();
@@ -453,10 +468,14 @@ class spam_prot extends DAO {
         } elseif ($type == 'plugin') {                    
             foreach($pluginsettings as $k) {
                 $opt = $this->_opt($k);                
-                if (isset($params[$k])) {                
-                    $value = $params[$k];
+                if (isset($params[$k]) || in_array($k, $null)) {
+                    
+                    if (!isset($params[$k])) { $value = '0'; }                
+                    else { $value = $params[$k]; }
+                    
                     if (in_array($k, $sort)) {
-                        $value = $this->_sort($value);    
+                        $value = $this->_sort($value);
+                            
                     } if (!osc_set_preference($k, $value, $pref, $opt[1])) {
                         return false;
                     }                    
@@ -497,14 +516,6 @@ class spam_prot extends DAO {
                         osc_delete_preference($k, $pref);
                     }           
                 }            
-            } if (!empty($params['sp_htaccess']) && isset($params['attention_htaccess'])) {
-                $htaccess_file = ABS_PATH.'/.htaccess';
-                $htaccess_writable = is_writable($htaccess_file);
-                if ($htaccess_writable) {
-                    if (!file_put_contents($htaccess_file, $params['sp_htaccess'])) {
-                        return false;                       
-                    }    
-                }
             }
             return true;    
         } 
@@ -512,9 +523,8 @@ class spam_prot extends DAO {
         return true;
     }
                                                                                                                                          
-    function _markAsSpam($data, $reason) {
-        $this->_addGlobalLog('Ad marked as spam', $data['pk_i_id'], 'System');        
-        $this->dao->update($this->_table_item, array('b_enabled' => '0', 'b_spam' => '1'), array('pk_i_id' => $data['pk_i_id']));        
+    function _markAsSpam($data, $reason) {        
+        $this->dao->update($this->_table_item, array('b_enabled' => '0', 'b_active' => '0', 'b_spam' => '1'), array('pk_i_id' => $data['pk_i_id']));        
         $this->dao->insert($this->_table_sp_items, array(
             'fk_i_item_id'  => $data['fk_i_item_id'], 
             'fk_i_user_id'  => $data['fk_i_user_id'], 
@@ -522,9 +532,8 @@ class spam_prot extends DAO {
             's_user_mail'   => $data['s_contact_email']));
     }
     
-    function _markCommentAsSpam($data, $reason) {
-        $this->_addGlobalLog('Comment marked as spam', $data['s_author_email'], 'System');        
-        $this->dao->update($this->_table_comment, array('b_enabled' => '0', 'b_spam' => '1'), array('pk_i_id' => $data['pk_i_id']));        
+    function _markCommentAsSpam($data, $reason) {               
+        $this->dao->update($this->_table_comment, array('b_enabled' => '0', 'b_active' => '0', 'b_spam' => '1'), array('pk_i_id' => $data['pk_i_id']));        
         $this->dao->insert($this->_table_sp_comments, array(
             'fk_i_comment_id'   => $data['pk_i_id'], 
             'fk_i_item_id'      => $data['fk_i_item_id'], 
@@ -533,9 +542,7 @@ class spam_prot extends DAO {
             's_user_mail'       => $data['s_author_email']));        
     }
     
-    function _markContactAsSpam($data, $reason, $token) {
-        $this->_addGlobalLog('Contact mail marked as spam', $data['id'], 'System');
-                
+    function _markContactAsSpam($data, $reason, $token) { 
         $this->dao->insert($this->_table_sp_contacts, array( 
             'fk_i_item_id'      => $data['id'], 
             's_user'            => $data['yourName'], 
@@ -550,20 +557,16 @@ class spam_prot extends DAO {
     }
     
     function _spamAction($type, $id, $ip = false) {
-        $admin = Admin::newInstance()->findByPrimaryKey(osc_logged_admin_id());
                         
         if ($type == 'activate') {
-            $this->dao->update($this->_table_item, array('b_spam' => '0', 'b_enabled' => '1', 'b_active' => '1'), array('pk_i_id' => $id));
-            $this->_addGlobalLog('Ad activated', $id, $admin['s_name']);    
+            $this->dao->update($this->_table_item, array('b_spam' => '0', 'b_enabled' => '1', 'b_active' => '1'), array('pk_i_id' => $id));    
         } elseif ($type == 'block') {
             $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $id));
             $this->_addBanLog('block', 'spam', $id, $ip);
-            $this->_addGlobalLog('Blocked because of spam', $id, $admin['s_name']);    
         } elseif ($type == 'ban') {
             $reason = __("Spam Protection - Banned because of spam ads", "spamprotection");
             $this->dao->insert($this->_table_bans, array('s_name' => $reason, 's_email' => $id));
-            $this->_addBanLog('ban', 'spam', $id, $ip);
-            $this->_addGlobalLog('Banned because of spam', $id, $admin['s_name']);    
+            $this->_addBanLog('ban', 'spam', $id, $ip);    
         }        
         return false;
     }
@@ -626,7 +629,7 @@ class spam_prot extends DAO {
         // Check for Honeypot
         if ($this->_get('sp_honeypot') == '1') {
             if ($this->_checkHoneypot($params)) {                 
-                $this->_addGlobalLog('Honeypot detected while posting ad', '', 'System');
+                $this->_addGlobalLog('Honeypot detected while posting ad', $item['pk_i_id'], 'System');
                 return array('params' => $item, 'reason' => 'Bot detected. The Honeypot was filled while creating an ad');    
             }
         }         
@@ -635,7 +638,7 @@ class spam_prot extends DAO {
         $blocked = $this->_get('blocked');
         if ($this->_get('sp_blocked') == '1' && !empty($blocked)) {
             if ($this->_checkBlocked($item['s_contact_email'])) {                 
-                $this->_addGlobalLog('Blocked email address found while posting ad', $item['s_contact_email'], 'System');
+                $this->_addGlobalLog('Blocked email address found while posting ad for itemID: '.$item['pk_i_id'], $item['s_contact_email'], 'System');
                 return array('params' => $item, 'reason' => 'Blocked E-Mail-Address found.');    
             }
         }         
@@ -644,7 +647,7 @@ class spam_prot extends DAO {
         $blocked_tld = $this->_get('blocked_tld');
         if ($this->_get('sp_blocked_tld') == '1' && !empty($blocked_tld)) {
             if ($this->_checkBlockedTLD($item['s_contact_email'])) {                 
-                $this->_addGlobalLog('Blocked email hoster found while posting ad', $item['s_contact_email'], 'System');
+                $this->_addGlobalLog('Blocked email hoster found while posting ad for itemID: '.$item['pk_i_id'], $item['s_contact_email'], 'System');
                 return array('params' => $item, 'reason' => 'Blocked E-Mail-Address TLD found.');    
             }
         }         
@@ -653,7 +656,7 @@ class spam_prot extends DAO {
         if ($this->_get('sp_mxr') == '1') {
             $check = $this->_validateMail($item['s_contact_email'], true);
             if ($check['status'] == false) {                 
-                $this->_addGlobalLog('No MX Record found while posting ad', $item['s_contact_email'], 'System');
+                $this->_addGlobalLog('No MX Record found while posting ad for itemID: '.$item['pk_i_id'], $item['s_contact_email'], 'System');
                 return array('params' => $item, 'reason' => $check['message']);    
             }
         }
@@ -662,7 +665,7 @@ class spam_prot extends DAO {
         if ($this->_get('sp_stopwords')) {
             $stopwords = $this->_checkStopwords($item);
             if ($stopwords) {                 
-                $this->_addGlobalLog('Stopword found in ad', $stopwords, 'System');
+                $this->_addGlobalLog('Stopword found in ad for itemID: '.$item['pk_i_id'], $stopwords, 'System');
                 return array('params' => $item, 'reason' => 'Bad/Stopword found ('.$stopwords.').');    
             }
         }          
@@ -684,14 +687,14 @@ class spam_prot extends DAO {
                 foreach ($items as $ik => $iv) {
                     $checkTitle = $this->_checkForTitle($iv['pk_i_id'], $item['fk_i_item_id'], $lk);
                     if ($checkTitle && $item['pk_i_id'] != $iv['pk_i_id']) {                 
-                        $this->_addGlobalLog('Duplicate title for itemID '.$iv['pk_i_id'].'detected: '.(is_numeric($checkTitle) ? 'Similarity: '.$checkTitle.'%' : ''), '', 'System');
+                        $this->_addGlobalLog('Duplicate title for itemID '.$iv['pk_i_id'].' detected: '.(is_numeric($checkTitle) ? 'Similarity: '.$checkTitle.'%' : ''), '', 'System');
                         return array('params' => $item, 'reason' => '<a href="'.osc_admin_base_url(true).'?page=items&action=item_edit&id='.$iv['pk_i_id'].'">Duplicate title found for ItemID: '.$iv['pk_i_id'].'. '.(is_numeric($checkTitle) ? 'Similarity: '.$checkTitle.'%' : '').'</a>');    
                     }
                     
                     if ($this->_get('sp_duplicates') == '1') {
                         $checkDescription = $this->_checkForDescription($iv['pk_i_id'], $item['fk_i_item_id'], $lk);
                         if ($checkDescription && $item['pk_i_id'] != $iv['pk_i_id']) {                 
-                            $this->_addGlobalLog('Duplicate description for itemID '.$iv['pk_i_id'].'detected: '.(is_numeric($checkDescription) ? 'Similarity: '.$checkDescription.'%' : ''), '', 'System');
+                            $this->_addGlobalLog('Duplicate description for itemID '.$iv['pk_i_id'].' detected: '.(is_numeric($checkDescription) ? 'Similarity: '.$checkDescription.'%' : ''), '', 'System');
                             return array('params' => $item, 'reason' => '<a href="'.osc_admin_base_url(true).'?page=items&action=item_edit&id='.$iv['pk_i_id'].'">Duplicate description found for ItemID: '.$iv['pk_i_id'].'. '.(is_numeric($checkDescription) ? 'Similarity: '.$checkDescription.'%' : '').'</a>');    
                         }    
                     }       
@@ -900,7 +903,7 @@ class spam_prot extends DAO {
                     } if (!!preg_match('#\b' . preg_quote($search, '#') . '\b#i', $description)) {
                         return $sv;
                     }    
-                } else {
+                } else if (isset($search)) {
                     if (strpos($title, $search) !== false) {
                         return $sv;
                     } if (strpos($description, $search) !== false) {
@@ -925,7 +928,7 @@ class spam_prot extends DAO {
                 } if (!!preg_match('#\b' . preg_quote($search, '#') . '\b#i', $description)) {
                     return $sv;
                 }    
-            } else {
+            } else if (isset($search)) {
                 if (strpos($title, $search) !== false) {
                     return $sv;
                 } if (strpos($description, $search) !== false) {
@@ -947,7 +950,7 @@ class spam_prot extends DAO {
                 if (!!preg_match('#\b' . preg_quote($search, '#') . '\b#i', $message)) {
                     return $sv;
                 }   
-            } else {
+            } else if (isset($search)) {
                 if (strpos($message, $search) !== false) {
                     return $sv;
                 }    
@@ -1222,6 +1225,51 @@ class spam_prot extends DAO {
         }        
     }
     
+    function _checkUserBan($email, $ip) {
+        
+        $table = unserialize($this->_get('sp_ipban_table'));
+        if (in_array($ip, $table)) {
+            return true;
+        }
+            
+        $this->dao->select('*');
+        $this->dao->from($this->_table_user);
+        $this->dao->where("s_email", $email);
+        
+        $result = $this->dao->get();
+        if (!$result || $result->numRows() <= 0) {
+            return false; 
+        }
+        
+        $user = $result->row();
+        if ($user['b_enabled'] == '0') {
+            return true;
+        }        
+        
+        return false;        
+    }
+    
+    function _handleUserLogin($email, $ip) {
+        
+        $action = $this->_get('sp_security_login_action');
+        $reason = __("Spam Protection - Too many false login attempts", "spamprotection");
+        
+        if ($action == '1') {
+            //$this->_addGlobalLog('User account blocked', $email, 'Login Limit');
+            $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));            
+            $this->_addBanLog('block', 'falselogin', $email, $ip);    
+        } elseif ($action == '2') {
+            //$this->_addGlobalLog('User account banned', $email, 'Login Limit');
+            $this->_doIpBan('add', $ip);
+            $this->_addBanLog('ban', 'falselogin', $email, $ip);    
+        } elseif ($action == '3') {
+            //$this->_addGlobalLog('User account blocked and banned', $email, 'Login Limit');
+            $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));
+            $this->_doIpBan('add', $ip);
+            $this->_addBanLog('blockban', 'falselogin', $email, $ip);    
+        }
+    }
+    
     function _checkAdminLogin($admin, $password) {
         if (!osc_verify_password($password, (isset($admin['s_password']) ? $admin['s_password'] : ''))) {
             return false;
@@ -1232,6 +1280,11 @@ class spam_prot extends DAO {
     }
     
     function _checkAdminBan($ip) {
+        
+        $table = unserialize($this->_get('sp_ipban_table'));
+        if (in_array($ip, $table)) {
+            return true;
+        }
             
         $this->dao->select('*');
         $this->dao->from($this->_table_bans);
@@ -1246,41 +1299,20 @@ class spam_prot extends DAO {
         return false;        
     }
     
-    function _handleUserLogin($email, $ip) {
-        
-        $action = $this->_get('sp_security_login_action');
-        $reason = __("Spam Protection - Too many false login attempts", "spamprotection");
-        
-        if ($action == '1') {
-            $this->_addGlobalLog('User account blocked', $email, 'Login Limit');
-            $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));            
-            $this->_addBanLog('block', 'falselogin', $email, $ip);    
-        } elseif ($action == '2') {
-            $this->_addGlobalLog('User account banned', $email, 'Login Limit');
-            $this->_doIpBan('add', $ip);
-            $this->_addBanLog('ban', 'falselogin', $email, $ip);    
-        } elseif ($action == '3') {
-            $this->_addGlobalLog('User account blocked and banned', $email, 'Login Limit');
-            $this->dao->update($this->_table_user, array('b_enabled' => '0'), array('s_email' => $email));
-            $this->_doIpBan('add', $ip);
-            $this->_addBanLog('blockban', 'falselogin', $email, $ip);    
-        }
-    }
-    
     function _handleAdminLogin($name, $ip) {
         $action = $this->_get('sp_admin_login_action');
         $reason = sprintf(__("Spam Protection - Admin/Mod %s blocked in due to too many false login attempts", "spamprotection"), $name);
         
         if ($action == '1') {
-            $this->_addGlobalLog('Admin account blocked', $name, 'Login Limit');            
+            //$this->_addGlobalLog('Admin account blocked', $name, 'Login Limit');            
             $this->_addBanLog('block', 'falselogin', $name, $ip, 'admin');    
         } elseif ($action == '2') {
-            $this->_addGlobalLog('Admin account banned', $name, 'Login Limit');
-            $this->dao->delete($this->_table_sp_logins, '`s_name` = "'.$name.'"');
+            //$this->_addGlobalLog('Admin account banned', $name, 'Login Limit');
+            //$this->dao->delete($this->_table_sp_logins, '`s_name` = "'.$name.'"');
             $this->_doIpBan('add', $ip);
             $this->_addBanLog('ban', 'falselogin', $name, $ip, 'admin');    
         } elseif ($action == '3') {
-            $this->_addGlobalLog('Admin account blocked and banned', $name, 'Login Limit');
+            //$this->_addGlobalLog('Admin account blocked and banned', $name, 'Login Limit');
             $this->_doIpBan('add', $ip);
             $this->_addBanLog('blockban', 'falselogin', $name, $ip, 'admin');    
         }
@@ -1369,7 +1401,7 @@ class spam_prot extends DAO {
         $bans = $result->result();
         
         foreach ($bans AS $k => $v) {
-            $this->_addGlobalLog('User account unbanned', $v['s_email'], 'Cron');
+            $this->_addGlobalLog('Remove from ban_log', $v['s_email'], 'Cron');
             $this->dao->update($this->_table_user, array('b_enabled' => '1'), array('s_email' => $v['s_email']));
             $this->dao->delete($this->_table_bans, '`s_ip` = "'.$v['s_ip'].'"');
             $this->_doIpBan('delete', $v['s_ip']);
@@ -1390,7 +1422,7 @@ class spam_prot extends DAO {
         $bans = $result->result();
         
         foreach ($bans AS $k => $v) {
-            $this->_addGlobalLog('Admin account unbanned', $v['s_name'], 'Cron');
+            $this->_addGlobalLog('Remove from ban_log', $v['s_name'], 'Cron');
             $this->dao->delete($this->_table_bans, '`s_ip` = "'.$v['s_ip'].'"');
             $this->_doIpBan('delete', $v['s_ip']);
             $this->dao->delete($this->_table_sp_logins, '`pk_i_id` = "'.$v['pk_i_id'].'"');    
@@ -1437,8 +1469,6 @@ class spam_prot extends DAO {
         } elseif ($reason == 'spam') {
             $reason_sql = $reason_sql.'&nbsp;'.__("spam ads", "spamprotection");
         }
-
-        $this->_addGlobalLog($reason_sql, $user['s_name'], 'Login Limit');
         
         if ($this->dao->insert($this->_table_sp_ban_log, array('i_user_id' => (isset($user['pk_i_id']) ? $user['pk_i_id'] : false), 's_user_email' => $email, 's_user_ip' => $ip, 's_reason' => $reason_sql))) {
             return true;    
@@ -1679,13 +1709,13 @@ class spam_prot extends DAO {
         
         if (isset($user['i_reputation']) && $user['i_reputation'] == '1') {
             $rep = '
-            <a href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_security&sub=badtrusted&table=bad').'">
+            <a href="'.osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_security&sub=badtrusted&table=bad').'">
                 <i class="sp-icon thumbsdown" style="display: block; width: 32px; height: 32px; transform: scale(0.6);" title="'.__('This user is on your bad user list', 'spamprotection').'"></i>
             </a>
             ';    
         } elseif (isset($user['i_reputation']) && $user['i_reputation'] == '2') {
             $rep = '
-            <a href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_security&sub=badtrusted&table=trusted').'">
+            <a href="'.osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_security&sub=badtrusted&table=trusted').'">
                 <i class="sp-icon thumbsup" style="display: block; width: 32px; height: 32px; transform: scale(0.6);" title="'.__('This user is on your trusted user list', 'spamprotection').'"></i>
             </a>';    
         }
@@ -2087,7 +2117,7 @@ class spam_prot extends DAO {
                         
                         <ul style="margin: 25px auto;width: 450px;text-align: left; font-weight: bolder;">
                             <li style="margin-bottom: 10px"><strong>&raquo;</strong> '.__("Don't activate functions that you don't understand. Take a look in the help to learn more about.", "spamprotection").'</li>    
-                            <li style="margin-bottom: 10px"><strong>&raquo;</strong> '.__("Don't overact if you get alot of spam. You just need to fine tune some options here.", "spamprotection").'</li>        
+                            <li style="margin-bottom: 10px"><strong>&raquo;</strong> '.__("Don't overreact if you get a lot of spam. You just need to fine tune some options here.", "spamprotection").'</li>        
                             <li style="margin-bottom: 10px"><strong>&raquo;</strong> '.__("This Plugin can block or ban user and admins. Keep an eye of all actions done on your page.", "spamprotection").'</li>    
                         </ul>
                             
@@ -2100,7 +2130,7 @@ class spam_prot extends DAO {
                     </div>
                     
                     <div id="spamprot_installed_buttons">
-                        <a class="btn btn-green spamprot_installed_close" href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=settings').'">'.__("Plugin Settings", "spamprotection").'</a>
+                        <a class="btn btn-green spamprot_installed_close" href="'.osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=settings').'">'.__("Plugin Settings", "spamprotection").'</a>
                         <a class="btn btn-blue spamprot_installed_close" href="https://forums.osclass.org/plugins/(plugin)-spam-protection" target="_blank">'.__("Go to Forum", "spamprotection").'</a>
                         <a class="btn btn-red spamprot_installed_close">'.__("Close", "spamprotection").'</a>
                         <div style="clear: both;"></div>
@@ -2127,33 +2157,33 @@ class spam_prot extends DAO {
         if ($this->_get('sp_delete_expired') == '1') {
             $interval = $this->_get('sp_delete_expired_after');   
             $limit = $this->_get('sp_delete_expired_limit');
-            $this->_cleanDatabaseDo('expired', $interval, $limit);   
+            $this->_cleanDatabaseDo('expired', $interval, $limit, 'ads');   
         } if ($this->_get('sp_delete_unactivated') == '1') {
             $interval = $this->_get('sp_delete_unactivated_after');   
             $limit = $this->_get('sp_delete_unactivated_limit');
-            $this->_cleanDatabaseDo('unactivated', $interval, $limit);            
+            $this->_cleanDatabaseDo('unactivated', $interval, $limit, 'ads');            
         } if ($this->_get('sp_delete_spam') == '1') {
             $interval = $this->_get('sp_delete_spam_after');   
             $limit = $this->_get('sp_delete_spam_limit');
-            $this->_cleanDatabaseDo('spam', $interval, $limit);            
+            $this->_cleanDatabaseDo('spam', $interval, $limit, 'ads');            
         }
         
         /* clearing comments */
         if ($this->_get('sp_commdel_unactivated') == '1') {
             $interval = $this->_get('sp_commdel_unactivated_after');   
             $limit = $this->_get('sp_commdel_unactivated_limit');
-            $this->_cleanDatabaseDo('unactivated', $interval, $limit);            
+            $this->_cleanDatabaseDo('unactivated', $interval, $limit, 'comments');            
         } if ($this->_get('sp_commdel_spam') == '1') {
             $interval = $this->_get('sp_commdel_spam_after');   
             $limit = $this->_get('sp_commdel_spam_limit');
-            $this->_cleanDatabaseDo('spam', $interval, $limit);            
+            $this->_cleanDatabaseDo('spam', $interval, $limit, 'comments');            
         }
         
         /* clearing user */
         if ($this->_get('sp_user_unactivated') == '1') {
             $interval = $this->_get('sp_user_unactivated_after');   
             $limit = $this->_get('sp_user_unactivated_limit');
-            $this->_cleanDatabaseDo('unactivateduser', $interval, $limit);            
+            $this->_cleanDatabaseDo('unactivateduser', $interval, $limit, 'user');            
         }    
     }
     
@@ -2285,7 +2315,20 @@ class spam_prot extends DAO {
     }
     
     function _addGlobalLog($action, $account, $done) {
-        $this->dao->insert($this->_table_sp_globallog, array('s_reason' => $action, 's_account' => $account, 's_done' => $done));        
+        $activate = $this->_get('sp_globallog_activate');
+        if (isset($activate) && $activate = '1') {
+            $this->dao->insert($this->_table_sp_globallog, array('s_reason' => $action, 's_account' => $account, 's_done' => $done));    
+        }                 
+    }
+    
+    function _clearGlobalLog($by, $lifetime = false) {
+        if ($lifetime) {
+            $time = date('Y-m-d H:i:s', strtotime($lifetime));
+        } else {
+            $time = date('Y-m-d H:i:s', time());    
+        }
+        $this->dao->delete($this->_table_sp_globallog, 'dt_date >= "'.$time.'"');
+        $this->_addGlobalLog('Global log was cleared', '', $by);        
     }
     
     function _countGlobalLog() {
