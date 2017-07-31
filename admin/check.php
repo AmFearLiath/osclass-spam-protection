@@ -9,10 +9,13 @@ $sp = new spam_prot;
 $id = Params::getParam('itemid');
 
 $item = $sp->_getRow('t_sp_items', array('key' => 'fk_i_item_id', 'value' => $id), 'pk_i_id', 'DESC');
-$item_spam = $sp->_getResult('t_item_description', array('key' => 'fk_i_item_id', 'value' => $item['fk_i_item_id']));
-$user = $sp->_getRow('t_user', array('key' => 'pk_i_id', 'value' => $item['fk_i_user_id']));
-$user_spams = $sp->_countRows('t_sp_items', array('key' => 's_user_mail', 'value' => $item['s_user_mail']));
+$item_info = Item::newInstance()->findByPrimaryKey($id);
 
+if (isset($item) && !empty($item)) {
+    $item_spam = $sp->_getResult('t_item_description', array('key' => 'fk_i_item_id', 'value' => $item['fk_i_item_id']));
+    $user = $sp->_getRow('t_user', array('key' => 'pk_i_id', 'value' => $item['fk_i_user_id']));
+    $user_spams = $sp->_countRows('t_sp_items', array('key' => 's_user_mail', 'value' => $item['s_user_mail']));
+}
 if ($user_spams > 0) {
     $item_spams = $sp->_getResult('t_sp_items', array('key' => 's_user_mail', 'value' => $item['s_user_mail']));
 }
@@ -60,12 +63,6 @@ if ($user_spams > 0) {
                 <td class="value"><?php echo '<a href="'.osc_admin_base_url(true).'?page=users&action=edit&id='.$item['fk_i_user_id'].'">'.$item['s_user_mail'].'</a>'; ?></td>
             </tr>
             <?php } ?>
-            <?php if (isset($user['s_city']) || isset($user['s_country'])) { ?>
-            <tr>
-                <td class="key"><?php _e('Location', 'spamprotection'); ?></td>
-                <td class="value"><?php echo $user['s_city'].', '.$user['s_country']; ?></td>
-            </tr>
-            <?php } ?>
             <?php if (isset($user['dt_reg_date'])) { ?>
             <tr>
                 <td class="key"><?php _e('Date registered', 'spamprotection'); ?></td>
@@ -89,13 +86,19 @@ if ($user_spams > 0) {
                 <td class="key"><?php _e('Ad Date', 'spamprotection'); ?></td>
                 <td class="value"><?php if (isset($item['dt_date'])) { echo $item['dt_date']; } ?></td>
             </tr>
+            <?php if (isset($item_info['s_city']) || isset($item_info['s_country'])) { ?>
+            <tr>
+                <td class="key"><?php _e('Location', 'spamprotection'); ?></td>
+                <td class="value"><?php echo (isset($item_info['s_city']) ? $item_info['s_city'].', ' : '').$item_info['s_country']; ?></td>
+            </tr>
+            <?php } ?>
         </table>
         
         <div class="actionbuttons">
             <a class="btn btn-submit" onclick="return confirm('Are you sure you want to activate this item?');" href="<?php echo osc_admin_base_url(true).'?page=items&spam=activate&item='.$id; ?>"><?php _e('Activate Ad', 'spamprotection'); ?></a>
-            <a class="btn" onclick="return confirm('Are you sure you want to delete this item?');" href="<?php list($csrfname, $csrftoken) = osc_csrfguard_generate_token(); echo osc_admin_base_url(true).'?page=items&action=delete&id[]='.$id.'&CSRFName='.$csrfname.'&CSRFToken='.$csrftoken; ?>"><?php _e('Delete Ad', 'spamprotection'); ?></a>
+            <a class="btn" onclick="return confirm('Are you sure you want to delete this item?');" href="<?php list($csrfname, $csrftoken) = osc_csrfguard_generate_token(); echo osc_admin_base_url(true).'?page=items&action=delete&spam=del&id[]='.$id.'&CSRFName='.$csrfname.'&CSRFToken='.$csrftoken; ?>"><?php _e('Delete Ad', 'spamprotection'); ?></a>
             <div style="clear: both; margin: 15px 0;"></div>
-            <a class="btn btn-red" onclick="return confirm('Are you sure you want to block this user?');" href="<?php echo osc_admin_base_url(true).'?page=items&spam=block&mail='.$item['s_user_mail']; ?>"><?php _e('Block User', 'spamprotection'); ?></a>
+            <a class="btn btn-red" onclick="return confirm('Are you sure you want to block this user?');" href="<?php echo osc_admin_base_url(true).'?page=items&spam=block&mail='.(isset($item['s_user_mail']) ? $item['s_user_mail'] : ''); ?>"><?php _e('Block User', 'spamprotection'); ?></a>
             <a class="btn btn-red" onclick="return confirm('Are you sure you want to ban this user completely?');" href="<?php echo osc_admin_base_url(true).'?page=items&addIpBan='.$id; ?>"><?php _e('IP Ban', 'spamprotection'); ?></a>
         </div>
     </div>

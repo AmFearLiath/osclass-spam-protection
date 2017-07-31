@@ -9,7 +9,7 @@
   <data>
     <s_section>plugin_spamprotection</s_section>
     <s_name>blocked_tld</s_name>
-    <s_value>mail.ru</s_value>
+    <s_value/>
     <e_type>STRING</e_type>
   </data>
   <data>
@@ -56,12 +56,6 @@
   </data>
   <data>
     <s_section>plugin_spamprotection</s_section>
-    <s_name>htaccess_warning</s_name>
-    <s_value>1</s_value>
-    <e_type>BOOLEAN</e_type>
-  </data>
-  <data>
-    <s_section>plugin_spamprotection</s_section>
     <s_name>sp_activate</s_name>
     <s_value>1</s_value>
     <e_type>BOOLEAN</e_type>
@@ -93,7 +87,7 @@
   <data>
     <s_section>plugin_spamprotection</s_section>
     <s_name>sp_admin_login_action</s_name>
-    <s_value>2</s_value>
+    <s_value>1</s_value>
     <e_type>STRING</e_type>
   </data>
   <data>
@@ -146,14 +140,8 @@
   </data>
   <data>
     <s_section>plugin_spamprotection</s_section>
-    <s_name>sp_blocked</s_name>
-    <s_value>1</s_value>
-    <e_type>BOOLEAN</e_type>
-  </data>
-  <data>
-    <s_section>plugin_spamprotection</s_section>
     <s_name>sp_blockedtype</s_name>
-    <s_value>words</s_value>
+    <s_value>substr</s_value>
     <e_type>STRING</e_type>
   </data>
   <data>
@@ -171,7 +159,7 @@
   <data>
     <s_section>plugin_spamprotection</s_section>
     <s_name>sp_check_registration_mails</s_name>
-    <s_value/>
+    <s_value>1</s_value>
     <e_type>BOOLEAN</e_type>
   </data>
   <data>
@@ -188,13 +176,43 @@
   </data>
   <data>
     <s_section>plugin_spamprotection</s_section>
-    <s_name>sp_comment_activate</s_name>
+    <s_name>sp_commdel_spam</s_name>
     <s_value>1</s_value>
     <e_type>BOOLEAN</e_type>
   </data>
   <data>
     <s_section>plugin_spamprotection</s_section>
-    <s_name>sp_comment_blocked</s_name>
+    <s_name>sp_commdel_spam_after</s_name>
+    <s_value>3</s_value>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_commdel_spam_limit</s_name>
+    <s_value>100</s_value>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_commdel_unactivated</s_name>
+    <s_value>1</s_value>
+    <e_type>BOOLEAN</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_commdel_unactivated_after</s_name>
+    <s_value>3</s_value>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_commdel_unactivated_limit</s_name>
+    <s_value>100</s_value>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_comment_activate</s_name>
     <s_value>1</s_value>
     <e_type>BOOLEAN</e_type>
   </data>
@@ -230,12 +248,6 @@
   </data>
   <data>
     <s_section>plugin_spamprotection</s_section>
-    <s_name>sp_contact_blocked</s_name>
-    <s_value>1</s_value>
-    <e_type>BOOLEAN</e_type>
-  </data>
-  <data>
-    <s_section>plugin_spamprotection</s_section>
     <s_name>sp_contact_blockedtype</s_name>
     <s_value>substr</s_value>
     <e_type>STRING</e_type>
@@ -261,7 +273,61 @@
   <data>
     <s_section>plugin_spamprotection</s_section>
     <s_name>sp_contact_stopwords</s_name>
-    <s_value>test</s_value>
+    <s_value/>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_delete_expired</s_name>
+    <s_value>1</s_value>
+    <e_type>BOOLEAN</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_delete_expired_after</s_name>
+    <s_value>3</s_value>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_delete_expired_limit</s_name>
+    <s_value>100</s_value>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_delete_spam</s_name>
+    <s_value>1</s_value>
+    <e_type>BOOLEAN</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_delete_spam_after</s_name>
+    <s_value>3</s_value>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_delete_spam_limit</s_name>
+    <s_value>100</s_value>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_delete_unactivated</s_name>
+    <s_value>1</s_value>
+    <e_type>BOOLEAN</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_delete_unactivated_after</s_name>
+    <s_value>3</s_value>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_delete_unactivated_limit</s_name>
+    <s_value>100</s_value>
     <e_type>STRING</e_type>
   </data>
   <data>
@@ -279,8 +345,8 @@
   <data>
     <s_section>plugin_spamprotection</s_section>
     <s_name>sp_duplicates_time</s_name>
-    <s_value>30</s_value>
-    <e_type>BOOLEAN</e_type>
+    <s_value>10</s_value>
+    <e_type>STRING</e_type>
   </data>
   <data>
     <s_section>plugin_spamprotection</s_section>
@@ -302,8 +368,32 @@
   </data>
   <data>
     <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_ipban_activate</s_name>
+    <s_value>1</s_value>
+    <e_type>BOOLEAN</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_ipban_redirect</s_name>
+    <s_value>1</s_value>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_ipban_redirectURL</s_name>
+    <s_value/>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_ipban_table</s_name>
+    <s_value>a:0:{}</s_value>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
     <s_name>sp_mailtemplates</s_name>
-    <s_value>a:16:{s:4:"page";s:7:"plugins";s:6:"action";s:12:"renderplugin";s:4:"file";s:31:"spamprotection/admin/config.php";s:8:"CSRFName";s:24:"CSRF1809492991_648697078";s:9:"CSRFToken";s:128:"9f70d74e430ae174ed692308b8642a53546c69ece46c9bf7a7d448c16c1a250cdf39536761c30a497745b8033bf084881280fb2e77f8b585def41abf5c526945";s:3:"tab";s:9:"sp_config";s:6:"subtab";s:13:"mailtemplates";s:18:"save_mailtemplates";s:4:"true";s:17:"sp_titleuser_user";s:53:"Too many false logins on {PAGE_NAME} for your account";s:16:"sp_mailuser_user";s:581:"Hello {MAIL_USER}
+    <s_value>a:8:{s:17:"sp_titleuser_user";s:53:"Too many false logins on {PAGE_NAME} for your account";s:16:"sp_mailuser_user";s:581:"Hello {MAIL_USER}
 
 We have detected some false logins for your account {MAIL_USED} on {PAGE_NAME}. Last false login was on {MAIL_DATE} from IP {MAIL_IP}
 
@@ -350,31 +440,13 @@ Please go to your {BAN_LIST} and check the ban.";}</s_value>
   </data>
   <data>
     <s_section>plugin_spamprotection</s_section>
-    <s_name>sp_mxr</s_name>
-    <s_value>1</s_value>
-    <e_type>BOOLEAN</e_type>
-  </data>
-  <data>
-    <s_section>plugin_spamprotection</s_section>
     <s_name>sp_security_activate</s_name>
     <s_value>1</s_value>
     <e_type>BOOLEAN</e_type>
   </data>
   <data>
     <s_section>plugin_spamprotection</s_section>
-    <s_name>sp_security_admin_hp</s_name>
-    <s_value>1</s_value>
-    <e_type>BOOLEAN</e_type>
-  </data>
-  <data>
-    <s_section>plugin_spamprotection</s_section>
     <s_name>sp_security_login_action</s_name>
-    <s_value>2</s_value>
-    <e_type>STRING</e_type>
-  </data>
-  <data>
-    <s_section>plugin_spamprotection</s_section>
-    <s_name>sp_security_login_check</s_name>
     <s_value>1</s_value>
     <e_type>STRING</e_type>
   </data>
@@ -453,7 +525,7 @@ Please go to your {BAN_LIST} and check the ban.";}</s_value>
   <data>
     <s_section>plugin_spamprotection</s_section>
     <s_name>sp_stopwords</s_name>
-    <s_value>test</s_value>
+    <s_value/>
     <e_type>STRING</e_type>
   </data>
   <data>
@@ -479,5 +551,23 @@ Please go to your {BAN_LIST} and check the ban.";}</s_value>
     <s_name>sp_update_check</s_name>
     <s_value>1</s_value>
     <e_type>BOOLEAN</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_user_unactivated</s_name>
+    <s_value>1</s_value>
+    <e_type>BOOLEAN</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_user_unactivated_after</s_name>
+    <s_value>5</s_value>
+    <e_type>STRING</e_type>
+  </data>
+  <data>
+    <s_section>plugin_spamprotection</s_section>
+    <s_name>sp_user_unactivated_limit</s_name>
+    <s_value>100</s_value>
+    <e_type>STRING</e_type>
   </data>
 </settings>

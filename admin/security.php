@@ -19,7 +19,7 @@ $table = Params::getParam('table');
         <li class="subtab-link <?php echo (!isset($sub) || $sub == 'badtrusted' ? 'current' : ''); ?>" data-tab="sp_security_badtrusted"><a><?php _e('Bad/Trusted User', 'spamprotection'); ?></a></li>
         <li class="subtab-link <?php echo (!isset($sub) || $sub == 'ipban' ? 'current' : ''); ?>" data-tab="sp_security_ipban"><a><?php _e('IP Ban', 'spamprotection'); ?></a></li>
         <li class="subtab-link <?php echo (!isset($sub) || $sub == 'cleaner' ? 'current' : ''); ?>" data-tab="sp_security_cleaner"><a><?php _e('Cleaner', 'spamprotection'); ?></a></li>
-        <li class="subtab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
+        <li class="subtab-link" data-tab="sp_security_save"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
     </ul>
 
     <div id="sp_security_options" class="sp_security_options">
@@ -53,7 +53,21 @@ $table = Params::getParam('table');
                             <label>
                                 <?php _e('Unban accounts after', 'spamprotection'); ?>
                             </label><br />
-                            <input type="text" name="sp_security_login_unban" style="width: 50px;" value="<?php echo (isset($data['sp_security_login_unban']) ? $data['sp_security_login_unban'] : '180'); ?>" />        
+                            <datalist id="sp_security_login_unban_data">
+                                <option value="0">Deakt.</option>
+                                <option value="60">1 Std.</option>
+                                <option value="180">3 Std.</option>
+                                <option value="720">12 Std.</option>
+                                <option value="1440">1 Tag</option>
+                                <option value="4320">3 Tage</option>
+                                <option value="21600">15 Tage</option>
+                                <option value="43200">1 Monat</option>
+                                <option value="259200">6 Monate</option>
+                                <option value="518400">1 Jahr</option>
+                                <option value="1555200">3 Jahr</option>
+                                <option value="2592000">5 Jahr</option>
+                            </datalist>
+                            <input type="text" list="sp_security_login_unban_data" name="sp_security_login_unban" style="width: 50px;" value="<?php echo (isset($data['sp_security_login_unban']) ? $data['sp_security_login_unban'] : '180'); ?>" />        
                             <span style="display: inline-block;height: 28px;line-height: 28px;vertical-align: middle;">mins</span>
                         </div>
                         <div class="floating">
@@ -129,7 +143,10 @@ $table = Params::getParam('table');
                     <div style="clear: both;"></div>
        
                     <br />
-                    <div id="sp_security_login_honeypots"<?php if ((empty($data['sp_security_login_hp']) || $data['sp_security_login_hp'] == '0') && (empty($data['sp_security_recover_hp']) || $data['sp_security_recover_hp'] == '0')) { echo ' style="display: none;"'; } ?>>    
+                    <div id="honeypotInfo">
+                        <i class="sp-icon info small float-left"></i><?php _e("Important Info", "spamprotection"); ?>
+                    </div>
+                    <div id="sp_security_login_honeypots" style="display: none;"<?php  echo ' '; ?>>    
                         <br /><hr /><br />
                         <div style="margin-bottom: 15px;">
                             <div class="floating">
@@ -142,7 +159,7 @@ $table = Params::getParam('table');
                             <div style="clear: both;"></div> 
                         </div>   
                         
-                        <div id="sp_security_login_hp_cont" style="float: left; width: calc(50% - 5px); margin: 0px; padding: 0px 10px 0px 0px;<?php if ((empty($data['sp_security_login_hp']) || $data['sp_security_login_hp'] == '0')) { echo ' display: none;'; } ?>">
+                        <div id="sp_security_login_hp_cont" style="float: left; width: calc(50% - 5px); margin: 0px; padding: 0px 10px 0px 0px;">
                             <strong>../oc-content/themes/yourtheme/user-login.php</strong>
                             <pre><code>&lt;?php osc_run_hook('user_login_form'); ?&gt;</code></pre>
                         
@@ -156,7 +173,7 @@ $table = Params::getParam('table');
                             </pre>
                         </div>
 
-                        <div id="sp_security_recover_hp_cont" style="float: left; width: calc(50% - 5px); margin: 0; padding: 0;<?php if ((empty($data['sp_security_recover_hp']) || $data['sp_security_recover_hp'] == '0')) { echo ' display: none;'; } ?>">
+                        <div id="sp_security_recover_hp_cont" style="float: left; width: calc(50% - 5px); margin: 0; padding: 0;">
                             <strong>../oc-content/themes/yourtheme/user-recover.php</strong>
                             <pre><code>&lt;?php osc_run_hook('user_recover_form'); ?&gt;</code></pre>
                         
@@ -210,7 +227,21 @@ $table = Params::getParam('table');
                             <label>
                                 <?php _e('Unban accounts after', 'spamprotection'); ?>
                             </label><br />
-                            <input type="text" name="sp_admin_login_unban" style="width: 50px;" value="<?php echo (isset($data['sp_admin_login_unban']) ? $data['sp_admin_login_unban'] : '180'); ?>" />        
+                            <datalist id="sp_admin_login_unban_data">
+                                <option value="0">Deakt.</option>
+                                <option value="60">1 Std.</option>
+                                <option value="180">3 Std.</option>
+                                <option value="720">12 Std.</option>
+                                <option value="1440">1 Tag</option>
+                                <option value="4320">3 Tage</option>
+                                <option value="21600">15 Tage</option>
+                                <option value="43200">1 Monat</option>
+                                <option value="259200">6 Monate</option>
+                                <option value="518400">1 Jahr</option>
+                                <option value="1555200">3 Jahr</option>
+                                <option value="2592000">5 Jahr</option>
+                            </datalist>                                
+                            <input type="text" list="sp_admin_login_unban_data" name="sp_admin_login_unban" style="width: 50px;" value="<?php echo (isset($data['sp_admin_login_unban']) ? $data['sp_admin_login_unban'] : '180'); ?>" />        
                             <span style="display: inline-block;height: 28px;line-height: 28px;vertical-align: middle;">mins</span>
                         </div>
                         <div class="floating">
@@ -322,7 +353,21 @@ $table = Params::getParam('table');
                                 <label>
                                     <?php _e('Unban accounts after', 'spamprotection'); ?>
                                 </label><br />
-                                <input type="text" name="sp_stopforum_unban" style="width: 50px;" value="<?php echo (isset($data['sp_stopforum_unban']) ? $data['sp_admin_login_unban'] : '180'); ?>" />        
+                                <datalist id="sp_stopforum_unban_data">
+                                    <option value="0">Deakt.</option>
+                                    <option value="60">1 Std.</option>
+                                    <option value="180">3 Std.</option>
+                                    <option value="720">12 Std.</option>
+                                    <option value="1440">1 Tag</option>
+                                    <option value="4320">3 Tage</option>
+                                    <option value="21600">15 Tage</option>
+                                    <option value="43200">1 Monat</option>
+                                    <option value="259200">6 Monate</option>
+                                    <option value="518400">1 Jahr</option>
+                                    <option value="1555200">3 Jahr</option>
+                                    <option value="2592000">5 Jahr</option>
+                                </datalist>
+                                <input type="text" list="sp_stopforum_unban_data" name="sp_stopforum_unban" style="width: 50px;" value="<?php echo (isset($data['sp_stopforum_unban']) ? $data['sp_admin_login_unban'] : '180'); ?>" />        
                                 <span style="display: inline-block;height: 28px;line-height: 28px;vertical-align: middle;">mins</span>
                             </div>
                             <div class="floating" style="float: right;">
@@ -340,18 +385,28 @@ $table = Params::getParam('table');
                         </div>
                     
                     </div>
-                    <div id="sp_stopforumspam_settings" class="halfrow"<?php if (!isset($data['sp_check_stopforumspam_mail']) && $data['sp_check_stopforumspam_mail'] != '1' && !isset($data['sp_check_stopforumspam_ip']) && $data['sp_check_stopforumspam_ip'] != '1') { echo ' style="display: none;'; } ?>>
+                    <div id="sp_stopforumspam_settings" class="halfrow"<?php if (empty($data['sp_check_stopforumspam_mail']) && empty($data['sp_check_stopforumspam_ip'])) { echo ' style="display: none;'; } ?>>
                         <label for="sp_stopforumspam_freq">
                             <?php _e('Max frequency of reports', 'spamprotection'); ?>
                         </label><br />
                         <input type="text" name="sp_stopforumspam_freq" style="width: 50px;" value="<?php echo (isset($data['sp_stopforumspam_freq']) ? $data['sp_stopforumspam_freq'] : '3'); ?>" />
-                        <span style="line-height: 28px;"><small><?php _e("(0 - 255)", "spamprotection"); ?></small></span>
-                        <br />
+                        <span>
+                            <small style="display: inline-block; margin-left: 5px;">
+                                <?php _e("(0 - 255)", "spamprotection"); ?><br />
+                                <?php _e("3 = Default", "spamprotection"); ?>
+                            </small>
+                        </span>
+                        <br /><br />
                         <label for="sp_stopforumspam_susp">
                             <?php _e('Max percentage of suspiciousness', 'spamprotection'); ?>
                         </label><br />
                         <input type="text" name="sp_stopforumspam_susp" style="width: 50px;" value="<?php echo (isset($data['sp_stopforumspam_susp']) ? $data['sp_stopforumspam_susp'] : '50'); ?>" />
-                        <span style="line-height: 28px;"><small><?php _e("(0 = high confidence, 100 = low confidence)", "spamprotection"); ?></small></span>
+                        <span>
+                            <small style="display: inline-block; margin-left: 5px;">
+                                <?php _e("(0 = high confidence, 100 = low confidence)", "spamprotection"); ?><br />
+                                <?php _e("50 = Default", "spamprotection"); ?>
+                            </small>
+                        </span>
                         <br /><br />
                         
                         <small><?php _e('Here you can define the max frequency of reports and the percentage of max suspiciousness', 'spamprotection'); ?></small>
@@ -483,7 +538,7 @@ $table = Params::getParam('table');
                     <div id="addBadOrTrustedUser" class="addBadOrTrusted" style="display: none;">
                         <div id="BadOrTrusted-inner">
                             <span><?php _e("Organize bad and trusted user", "spamprotection"); ?></span>
-                            <a href="<?php echo osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/config.php&tab=sp_security&sub=badtrusted'); ?>" id="BadOrTrusted-close">x</a>
+                            <a href="<?php echo osc_admin_render_plugin_url(osc_plugin_folder(dirname(__FILE__)).'admin/main.php&tab=sp_security&sub=badtrusted'); ?>" id="BadOrTrusted-close">x</a>
                         
                             <div id="BadOrTrusted-head">
                                 <div class="form-group" style="width: 50%; float: right; padding-right: 20px;">
@@ -528,71 +583,89 @@ $table = Params::getParam('table');
             
             <fieldset>
                 <legend><?php _e("IP Ban", "spamprotection"); ?></legend>
-                <div class="halfrow">
-                    <label>
-                        <input type="checkbox" name="sp_ipban_activate" value="1"<?php if (!empty($data['sp_ipban_activate'])) { echo ' checked="checked"'; } ?> />
-                        <?php _e('Activate the IP Ban Function', 'spamprotection'); ?>
-                    </label><br />
-                    <small>
-                        <?php _e("Check this option to activate the IP Ban. Choose your favorite action to the right and add unwanted IP's to the table.", "spamprotection"); ?>
-                    </small>
-                </div>
-                <div class="halfrow">
-                
-                    <div id="IpBanCreateFile" style="width: 55%; float:left; padding: 0;">
-                    
-                        <?php if (file_exists(osc_base_path().'forbidden.php')) { ?>
-                        
-                        <label for="sp_ipban_redirect">
-                            <input type="radio" name="sp_ipban_redirect" value="1"<?php if (!isset($data['sp_ipban_redirect']) || $data['sp_ipban_redirect'] == '1') { echo ' checked="checked"'; } ?> />
-                            <?php _e('Use standard file', 'spamprotection'); ?>
+                <div class="row form-group">
+                    <div class="halfrow" style="width: 44%;">
+                        <label>
+                            <input type="checkbox" name="sp_ipban_activate" value="1"<?php if (!empty($data['sp_ipban_activate'])) { echo ' checked="checked"'; } ?> />
+                            <?php _e('Activate the IP Ban Function', 'spamprotection'); ?>
                         </label><br />
-                        <small><?php echo osc_base_url().'forbidden.php'; ?></small>
-                                                        
-                        <?php } else { ?>
+                        <small>
+                            <?php _e("Check this option to activate the IP Ban. Choose your favorite action to the right and add unwanted IP's to the table.", "spamprotection"); ?>
+                        </small>
+                    </div>
+                    <div class="halfrow" style="width: 48%;">
+                    
+                        <div id="IpBanCreateFile" style="width: 55%; float:left; padding: 0;">
                         
-                        <div>
-                            <?php _e('Create standard file', 'spamprotection'); ?><br />
-                            <a id="openCreateFile" class="btn btn-blue" href="<?php echo osc_ajax_plugin_url('spamprotection/functions/ipban.php&createFile=1'); ?>"><?php _e('Create', 'spamprotection'); ?></a>
-                            <div style="clear: both;"></div>   
+                            <?php if (file_exists(osc_base_path().'forbidden.php')) { ?>
+                            
+                            <label for="sp_ipban_redirect">
+                                <input type="radio" name="sp_ipban_redirect" value="1"<?php if (!isset($data['sp_ipban_redirect']) || $data['sp_ipban_redirect'] == '1') { echo ' checked="checked"'; } ?> />
+                                <?php _e('Use standard file', 'spamprotection'); ?>
+                            </label><br />
+                            <small><?php echo '../forbidden.php'; ?></small>
+                                                            
+                            <?php } else { ?>
+                            
+                            <div>
+                                <?php _e('Create standard file', 'spamprotection'); ?><br />
+                                <a id="openCreateFile" class="btn btn-blue" href="<?php echo osc_ajax_plugin_url('spamprotection/functions/ipban.php&createFile=1'); ?>"><?php _e('Create', 'spamprotection'); ?></a>
+                                <div style="clear: both;"></div>   
+                            </div>
+                            
+                            <?php } ?>
+                        </div>
+                        <div style="width: 45%; float:left; padding: 0;">
+                            <label for="sp_ipban_redirect">
+                                <input type="radio" name="sp_ipban_redirect" value="404"<?php if (isset($data['sp_ipban_redirect']) && $data['sp_ipban_redirect'] == '404') { echo ' checked="checked"'; } ?> />
+                                <?php _e('Cause 404 Error', 'spamprotection'); ?>
+                            </label><br />
+                            <label for="sp_ipban_redirect">
+                                <input type="radio" name="sp_ipban_redirect" value="500"<?php if (isset($data['sp_ipban_redirect']) && $data['sp_ipban_redirect'] == '500') { echo ' checked="checked"'; } ?> />
+                                <?php _e('Cause 500 Error', 'spamprotection'); ?>
+                            </label><br />
                         </div>
                         
-                        <?php } ?>
+                        <div style="clear: both;"></div>                            
+                        
                     </div>
-                    <div style="width: 45%; float:left; padding: 0;">
-                        <label for="sp_ipban_redirect">
-                            <input type="radio" name="sp_ipban_redirect" value="404"<?php if (!isset($data['sp_ipban_redirect']) || $data['sp_ipban_redirect'] == '404') { echo ' checked="checked"'; } ?> />
-                            <?php _e('Cause 404 Error', 'spamprotection'); ?>
-                        </label><br />
-                        <label for="sp_ipban_redirect">
-                            <input type="radio" name="sp_ipban_redirect" value="500"<?php if (!isset($data['sp_ipban_redirect']) || $data['sp_ipban_redirect'] == '500') { echo ' checked="checked"'; } ?> />
-                            <?php _e('Cause 500 Error', 'spamprotection'); ?>
-                        </label><br />
-                    </div>
-                    
-                    <div style="clear: both;"></div>
-                                       
-                    <br /><br />                            
-                    <label for="sp_ipban_redirectURL">
-                        <input type="radio" name="sp_ipban_redirect" value="2"<?php if (!file_exists(osc_base_path().'forbidden.php') || (isset($data['sp_ipban_redirect']) && $data['sp_ipban_redirect'] == '2')) { echo ' checked="checked"'; } ?> />
-                        <?php _e('Or redirect banned users to', 'spamprotection'); ?><br />
-                        <input type="text" name="sp_ipban_redirectURL" placeholder="Enter URL" value="<?php if (isset($data['sp_ipban_redirectURL'])) { echo $data['sp_ipban_redirectURL']; } ?>" />
-                    </label><br />
-                    <small>
-                        <?php _e('If you want to redirect users to another location, enter URL here.', 'spamprotection'); ?><br />
-                        <strong><?php _e('Don\'t use your base domain, it will cause redirect loops.', 'spamprotection'); ?></strong>
-                    </small>
                 </div>
+                
+                <div style="clear: both;"></div>
+                    
+                <div class="row form-group">
+                    <div class="halfrow" style="width: 44%;">                                
+                        <span style="float: left;">                                
+                            <i class="sp-icon info margin-right"></i>
+                        </span>                                
+                        <span style="float: left;">                                
+                            <small>
+                                <?php _e('If you want to redirect users to another location, enter URL here.', 'spamprotection'); ?><br />
+                                <strong><?php _e('Don\'t use your base domain, it will cause redirect loops.', 'spamprotection'); ?></strong>
+                            </small>
+                        </span>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <div class="halfrow" style="width: 48%;">
+                        <label for="sp_ipban_redirectURL">
+                            <input type="radio" name="sp_ipban_redirect" value="2"<?php if (isset($data['sp_ipban_redirect']) && $data['sp_ipban_redirect'] == '2') { echo ' checked="checked"'; } ?> />
+                            <?php _e('Or redirect banned users to', 'spamprotection'); ?><br />
+                            <input type="text" name="sp_ipban_redirectURL" placeholder="Enter URL" value="<?php if (isset($data['sp_ipban_redirectURL'])) { echo $data['sp_ipban_redirectURL']; } ?>" />
+                        </label>
+                    </div>                        
+                    <div style="clear: both;"></div>
+                </div>
+                
             </fieldset>
             
             <fieldset style="position: relative;">
                 <legend><?php _e("IP Ban Table", "spamprotection"); ?></legend>
-                <div style="position: absolute; top: 10px; right: 0;">
-                    <a id="addIpToBan" href="<?php echo osc_ajax_plugin_url('spamprotection/functions/ipban.php&do=add'); ?>"><i class="btn btn-green ico ico-32 ico-add-white float-right" style="float: right;width: 11px;height: 16px;transform: scale(0.8);"></i></a>
-                    <input id="addIpBan" name="addIpBan" placeholder="<?php _e('Enter IP', 'spamprotection'); ?>" style="float: right;margin-top: 4px;height: 22px;border-radius: 3px;border: 1px solid #999;padding: 2px;" />    
+                <div style="position: absolute;top: 15px;right: 0;">
+                    <a id="addIpToBan" href="<?php echo osc_ajax_plugin_url('spamprotection/functions/ipban.php&do=add'); ?>"><i class="btn btn-green ico ico-32 ico-add-white float-right" style="float: right;width: 11px;height: 16px;margin-top: 5px;"></i></a>
+                    <input id="addIpBan" name="addIpBan" placeholder="<?php _e('Enter IP', 'spamprotection'); ?>" style="float: right;margin: 5px 5px 0 0;height: 29px;border-radius: 3px;border: 1px solid #999;padding: 2px;" />    
                 </div>                                                                                        
                 <div class="row form-group">
-                    <table class="ipban" style="margin-top: 30px;">
+                    <table class="ipban" style="margin-top: 50px;">
                         <thead>
                             <td style="width: 40px;"></td>
                             <td style="width: 200px;"><?php _e("IP", "spamprotection"); ?></td>
@@ -626,7 +699,7 @@ $table = Params::getParam('table');
     
     <div id="sp_cleaner_options" class="sp_cleaner_options">
         <div id="sp_security_cleaner" class="subtab-content <?php echo (isset($sub) && $sub == 'cleaner' ? 'current' : ''); ?>">
-            <fieldset>
+            <fieldset>                               
                 <legend><?php _e("Delete not activated user accounts", "spamprotection"); ?></legend>                
                 <div class="row form-group">                
                     <div style="float: left; width: calc(50% - 20px); padding: 10px;">
@@ -656,13 +729,30 @@ $table = Params::getParam('table');
             <fieldset id="settingsUnwantedUser">
                 <legend><?php _e("Delete unused user accounts", "spamprotection"); ?></legend>                
                 <div class="row form-group">            
-                    <div style="float: left; width: calc(45% - 20px); padding: 0 10px;">
-                        <br />
-                        <label for="sp_user_minAge"><?php _e('Select last login date', 'spamprotection'); ?></label>
-                        <input type="text" name="sp_user_minAge" value="<?php echo date('Y-m-d', strtotime(date('Y-m-d', time()).' -1 year')); ?>" />
-                        <br /><br />
-                        <label for="sp_user_maxAcc"><?php _e('Show max. x accounts', 'spamprotection'); ?></label>
-                        <input type="text" name="sp_user_maxAcc" value="25" />
+                    <div style="float: left; width: calc(33.33333% - 20px); margin: 0 10px;">
+                    
+                        <div style="float: left; width: calc(40% - 10px); margin: 0 10px 0 0;">
+                            <label for="sp_user_minAge"><?php _e('Last Login', 'spamprotection'); ?></label>
+                            <input type="text" name="sp_user_minAge" style="cursor: pointer;" value="<?php echo date('Y-m-d', strtotime(date('Y-m-d', time()).' -1 year')); ?>" />
+                        </div>
+                        <div style="float: left; width: calc(40% - 10px); margin: 0 0 0 10px;">
+                            <label for="sp_user_maxAcc"><?php _e('Limit', 'spamprotection'); ?></label>
+                            <input type="text" list="sp_user_maxAcc_list" name="sp_user_maxAcc" value="25" />
+                            <datalist id="sp_user_maxAcc_list">
+                                <option value="25">25 Acc.</option>
+                                <option value="50">50 Acc.</option>
+                                <option value="100">100 Acc.</option>
+                            </datalist>
+                        </div>
+                        <div style="float: left; width: calc(20% - 10px); margin: 0 0 0 10px;">
+                            <div style="">
+                                <label>&nbsp;</label>
+                                <a id="searchUnwantedUser" class="btn btn-blue" data-link="<?php echo osc_ajax_plugin_url('spamprotection/functions/searchUser.php'); ?>"><?php _e("Search", "spamprotection"); ?></a>
+                            </div>
+                        </div>
+                        
+                        <div style="clear: both;"></div>
+                        
                         <script>
                             $("input[name=sp_user_minAge]").datepicker({
                                 maxDate: "-1y",
@@ -670,33 +760,33 @@ $table = Params::getParam('table');
                             });
                         </script>
                     </div>          
-                    <div style="float: left; width: calc(45% - 20px); padding: 0 10px;"> 
-                        <br /><br />
+                    <div style="float: left; width: calc(33.33333% - 20px); margin: 0 10px;"> 
+                        <label for="sp_user_banned">
+                            <input class="sp_check_unwanted" type="checkbox" name="sp_user_banned" />
+                            <strong><?php _e('Must be banned', 'spamprotection'); ?></strong>
+                        </label><br />
                         <label for="sp_user_activated">
-                            <input type="checkbox" name="sp_user_activated" />
+                            <input class="sp_check_unwanted" type="checkbox" name="sp_user_activated" />
                             <?php _e('Must be an activated account', 'spamprotection'); ?>
                         </label><br />
                         <label for="sp_user_enabled">
-                            <input type="checkbox" name="sp_user_enabled" />
+                            <input class="sp_check_unwanted" type="checkbox" name="sp_user_enabled" />
                             <?php _e('Must be an enabled account', 'spamprotection'); ?>
-                        </label><br />
+                        </label>          
+                    </div>                    
+                    <div style="float: left; width: calc(33.33333% - 20px); margin: 0 10px;">
                         <label for="sp_user_zeroads">
-                            <input type="checkbox" name="sp_user_zeroads" checked="checked" />
+                            <input class="sp_check_unwanted" type="checkbox" name="sp_user_zeroads" checked="checked" />
                             <?php _e('Must have 0 ads', 'spamprotection'); ?>
                         </label><br />
                         <label for="sp_user_noAdmin">
-                            <input type="checkbox" name="sp_user_noAdmin" checked="checked" />
-                            <?php _e('User has no admin account', 'spamprotection'); ?>
+                            <input class="sp_check_unwanted" type="checkbox" name="sp_user_noAdmin" checked="checked" />
+                            <span style="color: red;"><?php _e('User has no admin account', 'spamprotection'); ?></span>
                         </label><br />
                         <label for="sp_user_neverlogged">
-                            <input type="checkbox" name="sp_user_neverlogged" checked="checked" />
-                            <?php _e('User has never logged in', 'spamprotection'); ?>
-                        </label>          
-                    </div>                    
-                    <div style="float: right; width: 10%;">
-                        <br />
-                        <label>&nbsp;</label><br />
-                        <a id="searchUnwantedUser" class="btn btn-blue" data-link="<?php echo osc_ajax_plugin_url('spamprotection/functions/searchUser.php'); ?>"><?php _e("Search", "spamprotection"); ?></a>
+                            <input class="sp_check_unwanted" type="checkbox" name="sp_user_neverlogged" checked="checked" />
+                            <span style="color: #00bf00;"><?php _e('User has never logged in', 'spamprotection'); ?></span>
+                        </label>    
                     </div>
                     
                     <div style="clear: both;"></div>
@@ -710,6 +800,12 @@ $table = Params::getParam('table');
                 </div>
             </fieldset>            
         </div>
+        
+        <div id="sp_security_save" class="subtab-content" style=" width: 250px; margin: 10% auto; text-align: center;">
+            <h1 style="display: inline-block;"><i style="margin: 0 20px 0 -20px" class="sp-icon attention margin-right float-left rotateX"></i><?php _e("<strong>Saving</strong>", "spamprotection"); ?></h1> 
+            <div style="font-size: 18px;"><?php _e("Saving data, please be patient.", "spamprotection"); ?></div> 
+        </div>
+        
     </div>
     
     

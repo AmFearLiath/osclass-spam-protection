@@ -146,7 +146,7 @@ $(document).ready(function(){
             $("#contact_blocked_tld").removeClass("visible");
         }    
     });
-    
+    /*
     $(document).on("click", "input[name=sp_security_login_hp], input[name=sp_security_recover_hp]", function(){
         
         var login   = $("input[name=sp_security_login_hp]"),
@@ -170,7 +170,7 @@ $(document).ready(function(){
             $("#sp_security_recover_hp_cont").fadeOut("slow");
         }    
     });
-    
+    */
     $(document).on("click", "ul.tabs li", function(){
         var tab_id = $(this).attr('data-tab');
 
@@ -241,94 +241,12 @@ $(document).ready(function(){
         $("#contact_validname").html("").css("color", "");    
     });
     
-    /*
-    $(document).on("keyup", "input[name=honeypot_name]", function(){
-        var string  = $(this).val(),
-            reg     = new RegExp("^[A-z0-9_-]+$");
-            
-        if (string.length < 1) {
-            $(this).removeClass("valid invalid");
-            $("#validname").html("").css("color", "");
-        } else if (reg.test(string)) {
-            $(this).removeClass("invalid").addClass("valid");            
-            $("#validname").html("valid").css("color", "green");
-        } else {
-            $(this).removeClass("valid").addClass("invalid");
-            $("#validname").html("invalid").css("color", "red");
-        }    
-    });
-    
-    $(document).on("keyup", "input[name=contact_honeypot_name]", function(){
-        var string  = $(this).val(),
-            reg     = new RegExp("^[A-z0-9_-]+$");
-            
-        if (string.length < 1) {
-            $(this).removeClass("valid invalid");
-            $("#contact_validname").html("").css("color", "");
-        } else if (reg.test(string)) {
-            $(this).removeClass("invalid").addClass("valid");            
-            $("#contact_validname").html("valid").css("color", "green");
-        } else {
-            $(this).removeClass("valid").addClass("invalid");
-            $("#contact_validname").html("invalid").css("color", "red");
-        }    
-    });
-    */
-    
-    $(document).on("keyup", "textarea[name=sp_htaccess]", function(){
-        if ($("input[name=changed_htaccess]").length < 1) {
-            $('<input type="hidden" name="changed_htaccess" value="1" />').insertAfter("textarea[name=sp_htaccess]");
-        }    
-    });
-    
-    $(document).on("focus", "textarea[name=sp_htaccess]", function(){
-        if ($("input[name=attention_htaccess]").length < 1) {
-            $("#attention").fadeToggle(1000, function(){
-                $("#attention_content").fadeToggle(800);                
-            });
-        }
-            
-    });
-    
-    $(document).on("click", "#attention_ok", function(event){
-        event.preventDefault();
-        $("#attention_content").fadeToggle(500, function(){
-            $("#attention").fadeToggle(400);
-            if ($("input[name=attention_htaccess]").length < 1) {
-                $('<input type="hidden" name="attention_htaccess" value="1" />').insertAfter("textarea[name=sp_htaccess]");
-            }
-        });    
-    });
-    
-    $(document).on("click", "#attention_save", function(event){
-        event.preventDefault();
-        var file = $(this).data("file");
-        $("#attention_content").fadeToggle(500, function(){
-            $("#attention").fadeToggle(400);
-            if ($("input[name=attention_htaccess]").length < 1) {
-                $('<input type="hidden" name="attention_htaccess" value="1" />').insertAfter("textarea[name=sp_htaccess]");
-                $.get(file+'?htaccess=save', function(result){ });
-            }
-        });    
-    });
-    
+        
     $(document).on("click", "#sp_review", function(event){
         event.preventDefault();
         $("#sp_review_wrap").fadeToggle("slow");  
     });
     
-    $(document).on("submit", "#sp_save_settings", function(event) {
-        event.preventDefault();
-        var changed = $("input[name=changed_htaccess]").val();
-        if (changed && changed == '1') {
-            if (confirm('Your .htaccess was modified. You really want to save?')) {
-                $("input[name=changed_htaccess]").remove();
-                this.submit();   
-            }
-        } else {
-            this.submit();
-        }
-    })
     
     $(document).on("click", ".viewToggle", function(event){
         event.preventDefault();
@@ -458,7 +376,7 @@ $(document).ready(function(){
         }    
     });
     
-    $(document).on("keyup", "input[name=searchNewTrusted]", function(event){
+    $(document).on("change paste", "input[name=searchNewTrusted]", function(event){
             
         event.preventDefault();
         
@@ -562,11 +480,11 @@ $(document).ready(function(){
         }
     });
     
-    $(document).on("click", "a#searchUnwantedUser", function(event){            
-        event.preventDefault();
+    $(document).on("click", "a#searchUnwantedUser, input.sp_check_unwanted", function(event){            
+        //event.preventDefault();
         
         var form    = $("#settingsUnwantedUser"),
-            file    = $(this).data("link"),
+            file    = $("#searchUnwantedUser").data("link"),
             data    = form.serialize();
                     
         $.ajax({
@@ -600,9 +518,16 @@ $(document).ready(function(){
     
     
     
-    $(document).on("click", ".logSearch, .logPagination", function(event){
-        event.preventDefault();
+    $(document).on("click change", ".logSearch, .logPagination, select[name=logLimit]", function(event){
 
+        event.preventDefault();
+        var type    = event.type,
+            element = $(this).attr("name");
+        
+        if (element == "logLimit" && type == "click") {
+            return true;    
+        }
+        
         var form    = $("#logDetails"),
             file    = $("input[name=logLink]").val(),
             search  = $("input[name=logSearch]").val(),
@@ -618,11 +543,18 @@ $(document).ready(function(){
             success: function(data){
                 var source = $('<div>' + data + '</div>');            
                 table = source.find('#logTable').html();            
-                pages = source.find('#logPagination').html();            
+                pagin = source.find('#logPagination').html();            
+                pages = source.find('#logPages').html();            
                 $("#logTable").html(table);            
-                $("#logPagination").html(pages);            
+                $("#logPagination").html(pagin);            
+                $("#logPages").html(pages);            
             }
         });
+    });
+    
+    $(document).on("click", "#honeypotInfo", function(event){
+        event.preventDefault();
+        $("#sp_security_login_honeypots").slideToggle("slow");
     });    
     
 });

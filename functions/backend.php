@@ -75,7 +75,7 @@ function sprot_style_admin_footer() {
     $topicon = spam_prot::newInstance()->_get('sp_activate_topicon');
     $toppos = spam_prot::newInstance()->_get('sp_topicon_position');
     
-    $items = spam_prot::newInstance()->_countRows('t_item', array('key' => 'b_spam', 'value' => '1'));
+    $items = spam_prot::newInstance()->_countRows('t_item', array(array('key' => 'b_spam', 'value' => '1'), array('key' => 'b_active', 'value' => '0')));
     $comments = spam_prot::newInstance()->_countRows('t_comment', array('key' => 'b_spam', 'value' => '1'));
     $contacts = spam_prot::newInstance()->_countRows('t_sp_contacts');
     $bans = spam_prot::newInstance()->_countRows('t_sp_ban_log');
@@ -90,18 +90,18 @@ function sprot_style_admin_footer() {
         <script>
         $(document).ready(function(){
             '.($toppos == 'left' ? 
-            '$("div#osc_toolbar_spamprotection").insertAfter("div#osc_toolbar_home");' : 
-            '$("div#osc_toolbar_spamprotection").insertAfter("div#osc_toolbar_logout").css({"float" : "right", "margin-right": "15px"});'
+            '$("#osc_toolbar_spamprotection").insertBefore("#osc_toolbar_home");' : 
+            '$("#osc_toolbar_spamprotection").insertBefore("#osc_toolbar_logout").css({"float" : "right", "margin-right": "15px"});'
             ).'                            
             
             $("div#osc_toolbar_spamprotection > a").hover(function(){
-                $("div#osc_toolbar_spamprotection > a > i").addClass("hover");
+                $("#osc_toolbar_spamprotection > a > i").addClass("hover");
             },function(){
-                $("div#osc_toolbar_spamprotection > a > i").removeClass("hover");
+                $("#osc_toolbar_spamprotection > a > i").removeClass("hover");
             });
             
-            '.($items > 0 || $comments > 0 || $contacts > 0 || $bans > 0 ? '$("div#osc_toolbar_spamprotection > a > i").addClass("highlight");' : '').'
-            '.($pulse == '1' ? '$("div#osc_toolbar_spamprotection > a > i").addClass("pulse");' : '').'
+            '.($items > 0 || $comments > 0 || $contacts > 0 || $bans > 0 ? '$("#osc_toolbar_spamprotection > a > i").addClass("highlight");' : '').'
+            '.($pulse == '1' ? '$("#osc_toolbar_spamprotection > a > i").addClass("pulse");' : '').'
         });
         </script>
         ';        
@@ -130,7 +130,7 @@ function sprot_style_admin_footer() {
 }
 
 function sprot_configuration() {
-    osc_admin_render_plugin(SPP_PATH . '/admin/config.php&tab=settings');
+    osc_admin_render_plugin('spamprotection/admin/main.php');
 }
 
 function sprot_init() {      
@@ -147,28 +147,28 @@ function sprot_init() {
 
 function sprot_admin_menu_init() {
     $sidebar = spam_prot::newInstance()->_get('sp_activate_menu');
-    AdminMenu::newInstance()->add_menu_tools(__('Anti Spam & Protection', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=settings'), 'sprot_admin_settings', 'administrator');
+    AdminMenu::newInstance()->add_menu_tools(__('Anti Spam & Protection', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=settings'), 'sprot_admin_settings', 'administrator');
 
     if ($sidebar == '1') {
-        osc_add_admin_menu_page( __('Anti Spam & Protection', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=settings'), 'spamprotection', 'administrator' );
+        osc_add_admin_menu_page( __('Anti Spam & Protection', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=settings'), 'spamprotection', 'administrator' );
         osc_add_admin_submenu_divider('spamprotection', __('Pages', 'spamprotection'), 'spamprotection_divider', 'administrator');
-        osc_add_admin_submenu_page('spamprotection', __('Dashboard', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=settings'), 'spamprotection_dashboard', 'administrator');
-        osc_add_admin_submenu_page('spamprotection', __('Settings', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config'), 'spamprotection_settings', 'administrator');
-        osc_add_admin_submenu_page('spamprotection', __('Help', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_help'), 'spamprotection_help', 'administrator');
+        osc_add_admin_submenu_page('spamprotection', __('Dashboard', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=settings'), 'spamprotection_dashboard', 'administrator');
+        osc_add_admin_submenu_page('spamprotection', __('Settings', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_config'), 'spamprotection_settings', 'administrator');
+        osc_add_admin_submenu_page('spamprotection', __('Help', 'spamprotection'), osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_help'), 'spamprotection_help', 'administrator');
     }
 }
 
 function sprot_admin_menu() {
     echo '<h3><a href="#">'.__('AntiSpam & SysProt', 'spamprotection').'</a></h3>
     <ul>
-        <li><a href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=settings') . '">&raquo; '.__('Settings', 'spamprotection').'</a></li>
-        <li><a href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=help') . '">&raquo; '.__('Help', 'spamprotection').'</a></li>
+        <li><a href="'.osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=settings') . '">&raquo; '.__('Settings', 'spamprotection').'</a></li>
+        <li><a href="'.osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=help') . '">&raquo; '.__('Help', 'spamprotection').'</a></li>
     </ul>';
 }
 
 function sp_compare_items($options, $item) {
     $return = $options;
-    if ($item['b_spam'] == '1') {        
+    if ($item['b_spam'] == '1' && $item['b_active'] == '0') {        
         $return[] = '<a href="'.osc_admin_render_plugin_url('spamprotection/admin/check.php&itemid='.$item['pk_i_id']).'">'.__('Check Spam', 'spamprotection').'</a>';
     }
     return $return;
@@ -177,7 +177,17 @@ function sp_compare_items($options, $item) {
 function sp_check_admin_login() {
     
     $data = Params::getParamsAsArray();
-    $data_token = $data['token']; $data_user = $data['user']; $data_pass = $data['password'];
+    
+    if (isset($data['token'])) {
+        $data_token = $data['token'];    
+    }
+    if (isset($data['user'])) {
+        $data_user = $data['user'];    
+    }
+    if (isset($data['password'])) {
+        $data_pass = $data['password'];    
+    }
+
     
     $admin = Admin::newInstance()->findByUsername($data_user);
     if ($admin) { $admin_name = $admin['s_username']; $admin_email = $admin['s_email']; }
@@ -255,5 +265,10 @@ function sp_admin_login() {
 
 function sp_unban_cron_admin() {
     spam_prot::newInstance()->_unbanAdmin();    
+}
+
+function sp_cron_globallog() {
+    $lifetime = spam_prot::newInstance()->_get('sp_globallog_lifetime');
+    spam_prot::newInstance()->_clearGlobalLog('cron', $lifetime);    
 }
 ?>

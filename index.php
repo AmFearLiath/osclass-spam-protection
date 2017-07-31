@@ -3,7 +3,7 @@
 Plugin Name: Anti Spam & Protection System
 Plugin URI: http://amfearliath.tk/osclass-spam-protection/
 Description: Anti Spam & Protection System for Osclass. Secures your ads, comments and contact mails against spam. Protects your login/registration processes and many other features. 
-Version: 1.6.8
+Version: 1.7.1
 Author: Liath
 Author URI: http://amfearliath.tk
 Short Name: spamprotection
@@ -79,11 +79,14 @@ Changelog
 1.6.7 - Added Database cleaner to automatically delete unwanted ads, comments, user.
 
 1.6.8 - Global Log added. Fixed small issues.
+
+1.6.9 - Settings for global logs added. Fixed small issues.
+
+1.7.0 - Added an option to block messages after an ad is posted and added an option to inform the user, that the ad has to be moderated.
+
+1.7.1 - Fixed some Bugs (https://forums.osclass.org/plugins/(plugin)-spam-protection/msg153469/#msg153469)
   
 */
-
-define('SPP_PATH', dirname(__FILE__) . '/');
-define('SPP_URL', osc_plugin_url(__FILE__));
 
 require('classes/class.spamprotection.php'); 
 require('functions/index.php');
@@ -242,7 +245,7 @@ if ($sp->_get('sp_admin_activate') == '1') {
 if ((Params::getParam('sp_check_stopforumspam_mail') == '1' || Params::getParam('sp_check_stopforumspam_ip') == '1') || (Params::getParam('action') == 'register_post' && $sp->_get('sp_check_registrations') >= '2')) {        
     osc_add_hook('before_user_register', 'sp_check_user_registrations', 1);    
 
-    if (spam_prot::newInstance()->_get('sp_stopforum_unban') > '0') {
+    if ($sp->_get('sp_stopforum_unban') > '0') {
         if (spam_prot::newInstance()->_get('sp_stopforum_cron') == '1') {
             osc_add_hook('cron_hourly', 'sp_cron_stopforum');
         } elseif (spam_prot::newInstance()->_get('sp_stopforum_cron') == '2') {
@@ -254,13 +257,19 @@ if ((Params::getParam('sp_check_stopforumspam_mail') == '1' || Params::getParam(
 }
 
 if (
-spam_prot::newInstance()->_get('sp_delete_expired') == '1' || 
-spam_prot::newInstance()->_get('sp_delete_unactivated') == '1' || 
-spam_prot::newInstance()->_get('sp_delete_spam') == '1' ||
-spam_prot::newInstance()->_get('sp_commdel_unactivated') == '1' || 
-spam_prot::newInstance()->_get('sp_commdel_spam') == '1' ||
-spam_prot::newInstance()->_get('sp_user_unactivated') == '1') {
+$sp->_get('sp_delete_expired') == '1' || 
+$sp->_get('sp_delete_unactivated') == '1' || 
+$sp->_get('sp_delete_spam') == '1' ||
+$sp->_get('sp_commdel_unactivated') == '1' || 
+$sp->_get('sp_commdel_spam') == '1' ||
+$sp->_get('sp_user_unactivated') == '1') {
     osc_add_hook('cron_hourly', array($sp, '_cleanDatabase'));
+}
+
+$globallog = $sp->_get('sp_globallog_lifetime');
+
+if (isset($globallog) && $globallog != '0') {
+    osc_add_hook('cron_daily', 'sp_cron_globallog');
 }
     
 if ($sp->_get('sp_badtrusted_activate') == '1') {
@@ -269,4 +278,33 @@ if ($sp->_get('sp_badtrusted_activate') == '1') {
     osc_add_filter('users_processing_row', array($sp, '_userBadTrustedData'));    
 }
 
+function rsearch($folder, $pattern) {
+    $dir = new RecursiveDirectoryIterator($folder);
+    $ite = new RecursiveIteratorIterator($dir);
+    $files = new RegexIterator($ite, $pattern, RegexIterator::GET_MATCH);
+    $fileList = array();
+    foreach($files as $file) {
+        $fileList = array_merge($fileList, $file);
+    }
+    return $fileList;
+}
+
+//$files = rsearch(osc_base_path(), '/.*php/');
+//echo md5(serialize($files));
+
+function GetDirectorySize($path){
+    
+    $bytestotal = 0; 
+    $path = realpath($path);
+    
+    if ($path !== false && $path != '' && file_exists($path)) {
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object) {
+            $bytestotal += $object->getSize();
+        }
+    }
+    
+    return $bytestotal;
+}
+
+//echo GetDirectorySize(osc_base_path());
 ?>

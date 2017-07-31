@@ -22,14 +22,7 @@ if (!empty($age)) {
 
 if (isset($user) && !empty($user)) {
     echo '
-<small>
-    <div style="float: left;">
-        '.__("Legend", "spamprotection").': <span style="color: #00bf00;">'.__("Never logged in", "spamprotection").'</span>, <span style="color: red;">'.__("Has admin account", "spamprotection").'</span>, <span style="color: #00;">'.__("Normal user account", "spamprotection").'</span>
-    </div>
-    <div style="float: right;">
-        '.__("Selected accounts", "spamprotection").': <span id="markedAccounts">0</span>
-    </div>
-</small>
+
 <table id="tableUnwantedUser" style="width: 100%;">
     <thead>
         <tr>

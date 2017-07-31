@@ -5,18 +5,25 @@ if (!defined('ABS_PATH')) {
 
 function sprot_style() {
     osc_enqueue_style('sp-styles', osc_plugin_url('spamprotection/assets/css/style.css').'style.css?'.time());
-            
-    osc_register_script('spam_protection-frontend', osc_plugin_url('spamprotection/assets/js/script.js') . 'script.js?'.time(), array('jquery'));
-    osc_enqueue_script('spam_protection-frontend');            
-    osc_register_script('spam_protection-hideMail', osc_plugin_url('spamprotection/assets/js/jquery.hideMyEmail.min.js') . 'jquery.hideMyEmail.min.js', array('jquery'));
-    osc_enqueue_script('spam_protection-hideMail');
 }
 
 function sp_check_item($item) {
-    $user = osc_logged_user_id();
     $check = spam_prot::newInstance()->_checkForSpam($item);
     if (is_array($check)) {
+        $inform = spam_prot::newInstance()->_get('sp_activate_inform');
+        $clear = spam_prot::newInstance()->_get('sp_block_messages');
+        
         spam_prot::newInstance()->_markAsSpam($check['params'], $check['reason']);
+        
+        if (isset($clear) && $clear == '1') { ob_clean(); }
+        if (isset($inform) && $inform == '1') {
+            osc_add_flash_error_message(__("Your listing needs to be moderated, please have patience until it is released.", "spamprotection"));
+        }
+        if (isset($clear) && $clear == '1') {
+            header('Location: '.osc_base_url()); 
+            exit; 
+        }
+
     }
 }
 
@@ -114,13 +121,11 @@ function sp_check_user_login() {
         $logins = spam_prot::newInstance()->_countLogin($email, 'user', $ip);
         $max_logins = spam_prot::newInstance()->_get('sp_security_login_count');
         
-        if (!empty($data_token)) {
+        if (spam_prot::newInstance()->_checkUserBan($email, $ip) || !empty($data_token)) {
             ob_get_clean();
             osc_add_flash_error_message(__('<strong>Information!</strong> Your account is disabled due to too much of false login attempts. Please contact support.', 'spamprotection'));    
             header('Location: '.osc_base_url());
             exit;
-        } elseif ($logins <= $max_logins && spam_prot::newInstance()->_checkUserLogin($email, $password)) {            
-            spam_prot::newInstance()->_resetUserLogin($email);    
         } elseif (!spam_prot::newInstance()->_checkUserLogin($email, $password)) {
             if ($logins >= $max_logins) {
                 spam_prot::newInstance()->_handleUserLogin($email, $ip);
@@ -138,6 +143,8 @@ function sp_check_user_login() {
             }
             header('Location: '.osc_user_login_url());
             exit;   
+        } elseif ($logins <= $max_logins && spam_prot::newInstance()->_checkUserLogin($email, $password)) {            
+            spam_prot::newInstance()->_resetUserLogin($email);    
         }
     }
 }

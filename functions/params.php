@@ -6,11 +6,15 @@ if (!defined('ABS_PATH')) {
 $sp = new spam_prot;
 $page = Params::getParam('page');
 $ipBan = Params::getParam('addIpBan');
+
+$admin = Admin::newInstance()->findByPrimaryKey(osc_logged_admin_id());
+
 if (($page == 'items' || $page == 'users')) {
     if ($page == 'items') {
         $item = Item::newInstance()->findByPrimaryKey($ipBan);
     } if (isset($item['s_ip']) && !empty($item['s_ip'])) {
-        $sp->_doIpBan('add', $item['s_ip']);    
+        $sp->_doIpBan('add', $item['s_ip']);
+        $sp->_addGlobalLog('User was banned because of spam: ', $item['s_ip'], $admin['s_name']);    
     }
     
        
@@ -21,14 +25,18 @@ if (Params::getParam('sp_upgrade') == 'upgrade') {
 }
 
 if (Params::getParam('spam') == 'activate') {
-    $ip = spam_prot::newInstance()->_IpUserLogin();
-    $sp->_spamAction('activate', Params::getParam('item'));    
+    $sp->_spamAction('activate', Params::getParam('item'));
+    $sp->_addGlobalLog('Ad activated', Params::getParam('item'), $admin['s_name']);    
 } elseif (Params::getParam('spam') == 'block') {
     $ip = spam_prot::newInstance()->_IpUserLogin();
-    $sp->_spamAction('block', Params::getParam('mail'), $ip);    
+    $sp->_spamAction('block', Params::getParam('mail'), $ip);
+    $sp->_addGlobalLog('User was blocked because of spam', Params::getParam('mail'), $admin['s_name']);    
 } elseif (Params::getParam('spam') == 'ban') {
     $ip = spam_prot::newInstance()->_IpUserLogin();
-    $sp->_spamAction('ban', Params::getParam('mail'), $ip);    
+    $sp->_spamAction('ban', Params::getParam('mail'), $ip);
+    $sp->_addGlobalLog('User was banned because of spam', Params::getParam('mail'), $admin['s_name']);    
+} elseif (Params::getParam('spam') == 'del') {
+    $sp->_addGlobalLog('Ad was deleted because of spam', Params::getParam('id'), $admin['s_name']);    
 }
 
 if (Params::getParam('spamcomment') == 'activate') {

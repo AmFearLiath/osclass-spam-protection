@@ -158,6 +158,22 @@ input[name=honeypot_name].invalid {
     outline: none;    
 }
 
+#spamprot #honeypotInfo {
+    display: inline-block;
+    line-height: 32px;
+    width: auto;
+    padding-right: 5px;
+    background: #ddd;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: ease all .4s;
+}
+
+#spamprot #honeypotInfo:hover {
+    background: #fff;
+}
+
 #spamprot { 
     background: transparent; 
     border: none; 
@@ -665,6 +681,30 @@ span.sp_review_close {
 
 #spamprot fieldset input[type=text], #spamprot fieldset textarea {
     width: calc(100% - 15px);
+}
+
+
+
+#spamprot .rotateX {    
+    animation-name: rotate_x;
+    animation-duration: 1500ms;
+    transform-origin:70% 70%;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes rotate_x {
+    0% { transform: rotate(0deg); }
+    10% { transform: rotate(36deg); }
+    20% { transform: rotate(72deg); }
+    30% { transform: rotate(108deg); }
+    40% { transform: rotate(144deg); }
+    50% { transform: rotate(180deg); }
+    60% { transform: rotate(216deg); }
+    70% { transform: rotate(252deg); }
+    80% { transform: rotate(288deg); }
+    90% { transform: rotate(324deg); }
+    100% { transform: rotate(360deg); }
 }
 
 

@@ -23,7 +23,7 @@ elseif (!empty($create)) {
         echo '
             <div id="flash">'.spam_prot::newInstance()->_showPopup(
                 '<h1 style="display: inline-block;"><i class="sp-icon attention margin-right float-left"></i>'.__("<strong>Path writable.</strong>", "spamprotection").'</h1>', 
-                '<span><a id="createFileNow" class="btn btn-green" href="'.osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_security&sub=ipban&createFileNow=1').'">Create now</a></span>',
+                '<span><a id="createFileNow" class="btn btn-green" href="'.osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_security&sub=ipban&createFileNow=1').'">Create now</a></span>',
                 '', false, true, false, 'style="width: 400px;"').'</div>';    
     } else {
         $file = file_get_contents(osc_plugin_path().'spamprotection/assets/forbidden.php');

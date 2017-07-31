@@ -5,12 +5,54 @@ form#datatablesForm td.col-reputation {
     width: 32px;
 }
 
-div#osc_toolbar_spamprotection > a {
+nav.osc_admin_submenu{
+    position:absolute;
+    top:30px;
+    right:10px;
+    background:#383838;
+    border-color:#616161;
+    border-left:1px solid;
+    border-right:1px solid;
+    border-bottom:1px solid;
+    border-radius:0 0 3px 3px;
+    width:200px;
+    visibility:hidden;
+    opacity:0;
+    transition:all .3s linear;
+}
+nav.osc_admin_submenu ul{
+    margin:0;
+    padding:0;
+}
+nav.osc_admin_submenu ul li{
+    background-color:#1e1e1e;
+}
+nav.osc_admin_submenu ul li a{
+    width:calc(100% - 10px);
+    text-align:center;
+    padding:5px;
+}
+nav.osc_admin_submenu ul li a:hover{
+    background: #444;
+}
+div[id^='osc_toolbar_']:not(#osc_toolbar_logout){
+    position:relative
+}
+div[id^='osc_toolbar_']:not(#osc_toolbar_logout) > a{
+    min-width:100px;
+    text-align:center
+}
+div[id^='osc_toolbar_']:hover nav[id^='osc_toolbar_sub_']{
+    visibility:visible;
+    opacity:1
+}
+
+#osc_toolbar_spamprotection > a {
     min-width: 40px !important;
     width: 40px !important;
 }
 
-div#osc_toolbar_spamprotection > nav.osc_admin_submenu {
+#osc_toolbar_spamprotection > nav.osc_admin_submenu {
     position: absolute;
     top: 40px;
     left: 10px;
@@ -26,12 +68,12 @@ div#osc_toolbar_spamprotection > nav.osc_admin_submenu {
     transition: all .3s linear;
 }
 
-div#osc_toolbar_spamprotection > nav.osc_admin_submenu li:after {
+#osc_toolbar_spamprotection > nav.osc_admin_submenu li:after {
     content: "";
     clear: both;
 }
 
-div#osc_toolbar_spamprotection > nav.osc_admin_submenu a {
+#osc_toolbar_spamprotection > nav.osc_admin_submenu a {
     display: block;
     width: calc(100% - 10px);
     text-align: left;
@@ -39,7 +81,7 @@ div#osc_toolbar_spamprotection > nav.osc_admin_submenu a {
     float: none;
 }
 
-div#osc_toolbar_spamprotection:hover > nav.osc_admin_submenu {
+#osc_toolbar_spamprotection:hover > nav.osc_admin_submenu {
     visibility: visible;
     opacity: 1;
 }
@@ -77,7 +119,7 @@ div#osc_toolbar_spamprotection:hover > nav.osc_admin_submenu {
 #osc_toolbar_spamprotection .ico-spamprotection.highlight {
     background-image: url(../img/admin.png) !important;
     background-size: 150px 50px;
-    background-position: -105px -9px;
+    background-position: -105px -7px;
     opacity: 1;    
 }
 

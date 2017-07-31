@@ -58,7 +58,7 @@ if (Params::getParam('settings') == 'save') {
             );
             
         osc_add_flash_ok_message($message, 'admin');
-        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
+        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'main.php&tab='.$params['tab']);    
     } else {
         ob_get_clean();
         $message = $sp->_showPopup(
@@ -72,7 +72,7 @@ if (Params::getParam('settings') == 'save') {
             );
             
         osc_add_flash_ok_message($message, 'admin');
-        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
+        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'main.php&tab='.$params['tab']);    
     }      
 }
 
@@ -129,11 +129,11 @@ elseif (Params::getParam("createFileNow") == '1') {
             <li class="tab-link float-right<?php if (isset($config) && $config) { echo ' current'; } ?>" data-tab="sp_config"><a class="sp-icon tools"style="padding: 0;background-color: transparent;border: none;margin: 8px 10px 9px;"></a></li>
         </ul>
         
-        <form id="sp_save_settings" action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php'); ?>" method="POST">
+        <form id="sp_save_settings" action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php'); ?>" method="POST">
             <input type="hidden" name="page" value="plugins" />
             <input type="hidden" name="tab" id="sp_tab" value="<?php echo Params::getParam('tab'); ?>" />
             <input type="hidden" name="action" value="renderplugin" />
-            <input type="hidden" name="file" value="<?php echo osc_plugin_folder(__FILE__); ?>config.php" />
+            <input type="hidden" name="file" value="<?php echo osc_plugin_folder(__FILE__); ?>main.php" />
             <input type="hidden" name="settings" value="save" />
 
             <div id="sp_settings" class="tab-content<?php if (isset($settings) && $settings) { echo ' current'; } ?>">

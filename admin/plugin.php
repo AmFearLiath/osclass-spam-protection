@@ -122,7 +122,7 @@ if (Params::getParam('plugin_settings') == 'save') {
             );
             
         osc_add_flash_ok_message($message, 'admin');
-        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
+        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'main.php&tab='.$params['tab']);    
     } else {
         ob_get_clean();
         $message = $sp->_showPopup(
@@ -136,7 +136,7 @@ if (Params::getParam('plugin_settings') == 'save') {
             );
             
         osc_add_flash_ok_message($message, 'admin');
-        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
+        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'main.php&tab='.$params['tab']);    
     }      
 }
 
@@ -168,7 +168,7 @@ if (Params::getParam('save_mailtemplates') == 'true') {
             );
             
         osc_add_flash_ok_message($message, 'admin');
-        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
+        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'main.php&tab='.$params['tab']);    
     } else {
         ob_get_clean();
         $message = $sp->_showPopup(
@@ -182,7 +182,7 @@ if (Params::getParam('save_mailtemplates') == 'true') {
             );
             
         osc_add_flash_ok_message($message, 'admin');
-        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'config.php&tab='.$params['tab']);    
+        osc_admin_render_plugin( osc_plugin_folder(__FILE__) . 'main.php&tab='.$params['tab']);    
     }
       
 }
@@ -213,12 +213,12 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
     <div id="sp_config_options" class="sp_config_options">
 
         <div id="sp_config_settings" class="subtab-content <?php echo (!isset($subtab) || $subtab == 'settings' ? 'current' : ''); ?>">
-            <form action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php'); ?>" method="post">
+            <form action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php'); ?>" method="post">
                 <input type="hidden" name="page" value="plugins" />
                 <input type="hidden" name="tab" id="sp_tab" value="sp_config" />
                 <input type="hidden" name="subtab" id="sp_subtab" value="settings" />
                 <input type="hidden" name="action" value="renderplugin" />
-                <input type="hidden" name="file" value="<?php echo osc_plugin_folder(__FILE__); ?>config.php" />
+                <input type="hidden" name="file" value="<?php echo osc_plugin_folder(__FILE__); ?>main.php" />
                 <input type="hidden" name="plugin_settings" value="save" />    
             
                 <button type="submit" class="btn btn-info" style="float: right;margin-top: 15px;margin-bottom: -15px;"><?php _e('Save', 'spamprotection'); ?></button>
@@ -331,6 +331,49 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
                         </label><br />
                         <small><?php _e('This option checks after each manually or automatically update the database for needed changes.', 'spamprotection'); ?></small>
                     </div>
+                </fieldset>
+                
+                <fieldset id="globallog">
+                    <legend><?php _e("Global log settings", "spamprotection"); ?></legend>
+                    <div class="row form-group">
+                        <div class="halfrow" style="padding: 10px 0;">
+                            <label>
+                                <input type="checkbox" name="sp_globallog_activate" value="1"<?php if (!empty($data['sp_globallog_activate'])) { echo ' checked="checked"'; } ?> />
+                                <?php _e('Activate the global log', 'spamprotection'); ?>
+                            </label><br />
+                            <small><?php _e('If this option is activated, all activities of this plugin will be logged in the global log.', 'spamprotection'); ?></small>
+                        </div>
+                        <div class="halfrow" style="padding: 10px 0;">
+                            <label style="line-height: 28px;">
+                                <?php _e('Standard log limit', 'spamprotection'); ?>
+                                <input list="sp_limit_globallog" type="text" class="form-control" name="sp_globallog_limit" style="width: 50px;" value="<?php echo (isset($data['sp_globallog_limit']) && !empty($data['sp_globallog_limit']) ? $data['sp_globallog_limit'] : ''); ?>" /> <span><?php _e('Logs', 'spamprotection'); ?></span>
+                                <datalist id="sp_limit_globallog">
+                                    <option value="25"><?php _e("Show 25 log entries", "spamprotection"); ?></option>
+                                    <option value="50"><?php _e("Show 50 log entries", "spamprotection"); ?></option>
+                                    <option value="100"><?php _e("Show 100 log entries", "spamprotection"); ?></option>
+                                </datalist>
+                            </label><br />
+                            <small><?php _e('This would be the standard, how many logs are shown at once. You can change this on the global log page also.', 'spamprotection'); ?></small>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="halfrow" style="padding: 10px 0;">
+                            <label style="line-height: 28px;">
+                                <?php _e('Automatically delete logs after', 'spamprotection'); ?>
+                            </label><br />
+                            <select name="sp_globallog_lifetime" >
+                                <option value="0"<?php if (empty($data['sp_globallog_lifetime']) || $data['sp_globallog_lifetime'] == '0') { echo ' selected="selected"'; } ?>><?php _e("Disabled", "spamprotection"); ?></option>
+                                <option value="1 day"<?php if (!empty($data['sp_globallog_lifetime']) && $data['sp_globallog_lifetime'] == '1 day') { echo ' selected="selected"'; } ?>><?php _e("1 day", "spamprotection"); ?></option>
+                                <option value="1 week"<?php if (!empty($data['sp_globallog_lifetime']) && $data['sp_globallog_lifetime'] == '1 week') { echo ' selected="selected"'; } ?>><?php _e("1 week", "spamprotection"); ?></option>
+                                <option value="1 month"<?php if (!empty($data['sp_globallog_lifetime']) && $data['sp_globallog_lifetime'] == '1 month') { echo ' selected="selected"'; } ?>><?php _e("1 month", "spamprotection"); ?></option>
+                                <option value="6 month"<?php if (!empty($data['sp_globallog_lifetime']) && $data['sp_globallog_lifetime'] == '6 month') { echo ' selected="selected"'; } ?>><?php _e("6 month", "spamprotection"); ?></option>
+                            </select>
+                        </div>
+                        <div class="halfrow" style="padding: 10px 0;">
+                            <label>&nbsp;</label><br />
+                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/').'main.php&tab=sp_config&sub=settings&globallog=clear'; ?>" class="btn btn-red"><?php _e('Clear now', 'spamprotection'); ?></a>
+                        </div>
+                    </div>
                 </fieldset>    
             
                 <button type="submit" class="btn btn-info" style="float: right;margin-top: -5px;"><?php _e('Save', 'spamprotection'); ?></button>
@@ -342,7 +385,7 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
         <div id="sp_config_mailtemplates" class="subtab-content <?php echo (isset($subtab) && $subtab == 'mailtemplates' ? 'current' : ''); ?>">
             
             <h3><?php _e("Here you can edit the mailtemplates, which will be used to inform the user about false login attempts", "spamprotection"); ?></h3>
-            <p><?php echo sprintf(__("If you dont want to generate your own templates, the standard mail templates will be used. The mails for admins will be always sended to: %s", "spamprotection"), osc_contact_email()); ?></p>
+            <p><?php echo sprintf(__("If you don't want to generate your own templates, the standard mail templates will be used. The mails for admins will always be sent to: %s", "spamprotection"), osc_contact_email()); ?></p>
             
             <br /><hr /><br />
                     
@@ -364,12 +407,12 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
             
             <br /><hr /><br />
             
-            <form action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php'); ?>" method="post">
+            <form action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php'); ?>" method="post">
                 <input type="hidden" name="page" value="plugins" />
                 <input type="hidden" name="tab" id="sp_tab" value="sp_config" />
                 <input type="hidden" name="subtab" id="sp_subtab" value="mailtemplates" />
                 <input type="hidden" name="action" value="renderplugin" />
-                <input type="hidden" name="file" value="<?php echo osc_plugin_folder(__FILE__); ?>config.php" />
+                <input type="hidden" name="file" value="<?php echo osc_plugin_folder(__FILE__); ?>main.php" />
                 <input type="hidden" name="save_mailtemplates" value="true" />    
             
                 <button type="submit" class="btn btn-info" style="float: right;margin-top: -5px;"><?php _e('Save', 'spamprotection'); ?></button>
@@ -387,7 +430,7 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
                             
                             <label for="sp_mailuser_user"><?php _e("Mail", "spamprotection"); ?></label>
                             <textarea name="sp_mailuser_user" style="width: 100%; height: 150px; border-radius: 3px;"><?php echo (isset($mail['sp_mailuser_user']) ? $mail['sp_mailuser_user'] : ''); ?></textarea>
-                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&subtab=mailtemplates&target=user&target2=user&testmail='.osc_logged_admin_email()); ?>" class="btn btn-green" style="margin-top: 10px; margin-right: -15px; float: right; padding: 9px 25px 8px;"><?php echo sprintf(__("Send test mail to: %s", "spamprotection"), osc_logged_admin_email()); ?></a>                    
+                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_config&subtab=mailtemplates&target=user&target2=user&testmail='.osc_logged_admin_email()); ?>" class="btn btn-green" style="margin-top: 10px; margin-right: -15px; float: right; padding: 9px 25px 8px;"><?php echo sprintf(__("Send test mail to: %s", "spamprotection"), osc_logged_admin_email()); ?></a>                    
                         </div>
                                             
                         <div style="float: left; width: calc(50% - 37.5px); padding: 15px;">
@@ -398,7 +441,7 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
                             
                             <label for="sp_mailuser_admin"><?php _e("Mail", "spamprotection"); ?></label>
                             <textarea name="sp_mailuser_admin" style="width: 100%; height: 150px; border-radius: 3px;"><?php echo (isset($mail['sp_mailuser_admin']) ? $mail['sp_mailuser_admin'] : ''); ?></textarea>
-                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&subtab=mailtemplates&target=user&target2=admin&testmail='.osc_logged_admin_email()); ?>" class="btn btn-green" style="margin-top: 10px; margin-right: -15px; float: right; padding: 9px 25px 8px;"><?php echo sprintf(__("Send test mail to: %s", "spamprotection"), osc_logged_admin_email()); ?></a>                    
+                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_config&subtab=mailtemplates&target=user&target2=admin&testmail='.osc_logged_admin_email()); ?>" class="btn btn-green" style="margin-top: 10px; margin-right: -15px; float: right; padding: 9px 25px 8px;"><?php echo sprintf(__("Send test mail to: %s", "spamprotection"), osc_logged_admin_email()); ?></a>                    
                         </div>                        
                     </fieldset>
                 </div>
@@ -415,7 +458,7 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
                             
                             <label for="sp_mailadmin_user"><?php _e("Mail", "spamprotection"); ?></label>
                             <textarea name="sp_mailadmin_user" style="width: 100%; height: 150px; border-radius: 3px;"><?php echo (isset($mail['sp_mailadmin_user']) ? $mail['sp_mailadmin_user'] : ''); ?></textarea>
-                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&subtab=mailtemplates&target=admin&target2=user&testmail='.osc_logged_admin_email()); ?>" class="btn btn-green" style="margin-top: 10px; margin-right: -15px; float: right; padding: 9px 25px 8px;"><?php echo sprintf(__("Send test mail to: %s", "spamprotection"), osc_logged_admin_email()); ?></a>                    
+                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_config&subtab=mailtemplates&target=admin&target2=user&testmail='.osc_logged_admin_email()); ?>" class="btn btn-green" style="margin-top: 10px; margin-right: -15px; float: right; padding: 9px 25px 8px;"><?php echo sprintf(__("Send test mail to: %s", "spamprotection"), osc_logged_admin_email()); ?></a>                    
                         </div>
                                             
                         <div style="float: left; width: calc(50% - 37.5px); padding: 15px;">
@@ -426,7 +469,7 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
                             
                             <label for="sp_mailadmin_admin"><?php _e("Mail", "spamprotection"); ?></label>
                             <textarea name="sp_mailadmin_admin" style="width: 100%; height: 150px; border-radius: 3px;"><?php echo (isset($mail['sp_mailadmin_admin']) ? $mail['sp_mailadmin_admin'] : ''); ?></textarea>
-                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&subtab=mailtemplates&target=admin&target2=admin&testmail='.osc_logged_admin_email()); ?>" class="btn btn-green" style="margin-top: 10px; margin-right: -15px; float: right; padding: 9px 25px 8px;"><?php echo sprintf(__("Send test mail to: %s", "spamprotection"), osc_logged_admin_email()); ?></a>                    
+                            <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_config&subtab=mailtemplates&target=admin&target2=admin&testmail='.osc_logged_admin_email()); ?>" class="btn btn-green" style="margin-top: 10px; margin-right: -15px; float: right; padding: 9px 25px 8px;"><?php echo sprintf(__("Send test mail to: %s", "spamprotection"), osc_logged_admin_email()); ?></a>                    
                         </div>                        
                     </fieldset>                                    
                 </div>    
@@ -449,7 +492,7 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
                         <?php echo sprintf(__("<strong>Following path does not exist, please create and grant write access to:</strong><br /><em>%s</em>", "spamprotection"), $path); ?>
                     </p>
                     <p>
-                        <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&&create_path=true&tab=sp_config&subtab=export'); ?>"><button class="btn btn-green"><?php _e("Create Folder", "spamprotection"); ?></button></a>    
+                        <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php&&create_path=true&tab=sp_config&subtab=export'); ?>"><button class="btn btn-green"><?php _e("Create Folder", "spamprotection"); ?></button></a>    
                     </p>
                     <?php if (isset($create_error)) { echo '<div id="flash">'.$create_error.'</div>'; } ?>
             <?php } elseif (!is_writable($path)) { ?>
@@ -460,12 +503,12 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
                         <?php echo sprintf(__("<strong>Following path is not writable, please ensure that you grant write access to:</strong><br /><em>%s</em>", "spamprotection"), $path); ?>
                     </p>
                     <p>
-                        <form action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php'); ?>" method="post">
+                        <form action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php'); ?>" method="post">
                             <input type="hidden" name="page" value="plugins" />
                             <input type="hidden" name="tab" id="sp_tab" value="sp_config" />
                             <input type="hidden" name="subtab" id="sp_subtab" value="export" />
                             <input type="hidden" name="action" value="renderplugin" />
-                            <input type="hidden" name="file" value="<?php echo osc_plugin_folder(__FILE__); ?>config.php" />
+                            <input type="hidden" name="file" value="<?php echo osc_plugin_folder(__FILE__); ?>main.php" />
                             <input type="hidden" name="chmod_path" value="true" />
                             <div class="form-group" style="margin: 25px 0 0 46px;;">
                                 <label><small><?php _e("Here you can define which chmod should be set and try to fix this problem. Otherwise you have to change the permissions manually"); ?></small></label><br />
@@ -480,10 +523,10 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
                 <legend><?php _e("Select for export", "spamprotection"); ?></legend>                
                 <div class="halfrow" style="width: 50%; padding: 0;">
                     <p>
-                        <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&export=settings'); ?>">
+                        <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_config&export=settings'); ?>">
                             <button class="btn btn-green"><?php _e("Export plugin settings", "spamprotection"); ?></button>
                         </a>
-                        <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&export=database'); ?>">
+                        <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_config&export=database'); ?>">
                             <button class="btn btn-blue"><?php _e("Export database", "spamprotection"); ?></button>
                         </a>
                     </p>
@@ -507,7 +550,7 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
                                 <td style="width: 60px; text-align: center;"><?php echo number_format(filesize($path.'/'.$v)/1000,2).'kb'; ?></td>
                                 <td style="width: 75px; text-align: center;"><?php echo date("d.m.Y", filectime($path.'/'.$v)); ?></td>
                                 <td style="width: 70px; text-align: right;">
-                                    <a class="sp-icon delete small float-right" href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&subtab=export&delete='.$v); ?>" title="<?php _e("Delete", "spamprotection"); ?>">
+                                    <a class="sp-icon delete small float-right" href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_config&subtab=export&delete='.$v); ?>" title="<?php _e("Delete", "spamprotection"); ?>">
                                         
                                     </a>
                                     <a class="sp-icon download small float-right" href="<?php echo $url.'/export/'.$v; ?>" title="<?php _e("Download", "spamprotection"); ?>" download="<?php echo str_replace(".xml", "", $v).'_'.date("d.m.Y\_H.i.s", time()).'.xml'; ?>">
@@ -534,11 +577,11 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
             <?php if (!empty($import_files)) { ?>
                     <p><?php echo sprintf(__("This files can be used for quick import.", "spamprotection"), $path); ?></p>                
                 <?php if (file_exists($path.'/settings.xml')) { ?>
-                    <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&import=settings'); ?>">
+                    <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_config&import=settings'); ?>">
                         <button class="btn btn-green"><?php _e("Import plugin settings", "spamprotection"); ?></button>
                     </a>
                 <?php } if (file_exists($path.'/database.xml')) { ?>
-                    <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php&tab=sp_config&import=database'); ?>">
+                    <a href="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php&tab=sp_config&import=database'); ?>">
                         <button class="btn btn-blue"><?php _e("Import database", "spamprotection"); ?></button>
                     </a>
                 <?php } ?>
@@ -549,12 +592,12 @@ $import_files = array_diff(scandir($path), array('..', '.', 'index.php'));
             
             <fieldset id="#sp_import_drop" style="border: 1px solid #bbb; padding: 15px; margin: 15px 0;">
                 <legend><?php _e("Upload file for import", "spamprotection"); ?></legend>
-                <form action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/config.php'); ?>" method="post" enctype="multipart/form-data">
+                <form action="<?php echo osc_admin_render_plugin_url('spamprotection/admin/main.php'); ?>" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="page" value="plugins" />
                     <input type="hidden" name="tab" id="sp_tab" value="sp_config" />
                     <input type="hidden" name="subtab" id="sp_subtab" value="import" />
                     <input type="hidden" name="action" value="renderplugin" />
-                    <input type="hidden" name="file" value="<?php echo osc_plugin_folder(__FILE__); ?>config.php" />
+                    <input type="hidden" name="file" value="<?php echo osc_plugin_folder(__FILE__); ?>main.php" />
                     <input type="hidden" name="upload_exportfile" value="true" />
                     
                     <h3 id="file-upload-info"><?php _e("Only xml files generated through this plugin allowed", "spamprotection"); ?></h3>

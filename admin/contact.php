@@ -12,9 +12,9 @@ $sp = new spam_prot;
 
     <ul class="subtabs sp_tabs">
         <li class="subtab-link current" data-tab="sp_contact_mainfeatures"><a><?php _e('Main Settings', 'spamprotection'); ?></a></li>
-        <li class="subtab-link " data-tab="sp_contact_emailblock"><a><?php _e('E-Mail Block', 'spamprotection'); ?></a></li>
-        <li class="subtab-link " data-tab="sp_contact_stopwords"><a><?php _e('Stopwords', 'spamprotection'); ?></a></li>
-        <li class="subtab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
+        <li class="subtab-link" data-tab="sp_contact_emailblock"><a><?php _e('E-Mail Block', 'spamprotection'); ?></a></li>
+        <li class="subtab-link" data-tab="sp_contact_stopwords"><a><?php _e('Stopwords', 'spamprotection'); ?></a></li>
+        <li class="subtab-link" data-tab="sp_contact_save"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
     </ul>
     
     <div id="sp_contact_options" class="sp_contact_options <?php echo (empty($data['sp_contact_activate']) || $data['sp_contact_activate'] == '0' ? 'disabled' : 'enabled'); ?>">
@@ -133,6 +133,11 @@ $sp = new spam_prot;
                     <textarea class="form-control" name="sp_contact_stopwords" style="height: 200px;"><?php if (!empty($data['sp_contact_stopwords'])) { echo $data['sp_contact_stopwords']; } ?></textarea>
                 </div>
             </fieldset>         
+        </div>
+        
+        <div id="sp_contact_save" class="subtab-content" style=" width: 250px; margin: 10% auto; text-align: center;">
+            <h1 style="display: inline-block;"><i style="margin: 0 20px 0 -20px" class="sp-icon attention margin-right float-left rotateX"></i><?php _e("<strong>Saving</strong>", "spamprotection"); ?></h1> 
+            <div style="font-size: 18px;"><?php _e("Saving data, please be patient.", "spamprotection"); ?></div> 
         </div>            
         
     </div> 

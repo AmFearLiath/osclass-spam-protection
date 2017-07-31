@@ -12,10 +12,10 @@ $sp = new spam_prot;
 
     <ul class="subtabs sp_tabs">
         <li class="subtab-link current" data-tab="sp_comm_mainfeatures"><a><?php _e('Main Settings', 'spamprotection'); ?></a></li>
-        <li class="subtab-link " data-tab="sp_comm_emailblock"><a><?php _e('E-Mail Block', 'spamprotection'); ?></a></li>
-        <li class="subtab-link " data-tab="sp_comm_stopwords"><a><?php _e('Stopwords', 'spamprotection'); ?></a></li>
-        <li class="subtab-link " data-tab="sp_comm_cleaner"><a><?php _e('Cleaner', 'spamprotection'); ?></a></li>
-        <li class="subtab-link"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
+        <li class="subtab-link" data-tab="sp_comm_emailblock"><a><?php _e('E-Mail Block', 'spamprotection'); ?></a></li>
+        <li class="subtab-link" data-tab="sp_comm_stopwords"><a><?php _e('Stopwords', 'spamprotection'); ?></a></li>
+        <li class="subtab-link" data-tab="sp_comm_cleaner"><a><?php _e('Cleaner', 'spamprotection'); ?></a></li>
+        <li class="subtab-link" data-tab="sp_comm_save"><button type="submit" class="btn btn-info"><?php _e('Save', 'spamprotection'); ?></button></li>
     </ul>
     
     <div id="sp_comment_options" class="sp_comment_options <?php echo (empty($data['sp_comment_activate']) || $data['sp_comment_activate'] == '0' ? 'disabled' : 'enabled'); ?>">
@@ -146,7 +146,7 @@ $sp = new spam_prot;
                     <div style="float: left; width: calc(50% - 20px); padding: 10px;">
                         <label>
                             <input type="checkbox" name="sp_commdel_spam" value="1"<?php if (!empty($data['sp_commdel_spam'])) { echo ' checked="checked"'; } ?> />
-                            <?php _e('Delete as spam marked comments', 'spamprotection'); ?>
+                            <?php _e('Delete comments marked as spam', 'spamprotection'); ?>
                         </label><br />
                         <small><?php _e('Here you can define if as spam marked comments should be deleted automatically after x days.', 'spamprotection'); ?></small>
                     </div>                
@@ -166,6 +166,11 @@ $sp = new spam_prot;
                     </div>                    
                 </div>
             </fieldset>        
+        </div>
+        
+        <div id="sp_comm_save" class="subtab-content" style=" width: 250px; margin: 10% auto; text-align: center;">
+            <h1 style="display: inline-block;"><i style="margin: 0 20px 0 -20px" class="sp-icon attention margin-right float-left rotateX"></i><?php _e("<strong>Saving</strong>", "spamprotection"); ?></h1> 
+            <div style="font-size: 18px;"><?php _e("Saving data, please be patient.", "spamprotection"); ?></div> 
         </div>            
         
     </div> 

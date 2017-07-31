@@ -7,14 +7,17 @@ $date = Params::getParam("logDate");
 $search = Params::getParam("logSearch");
 
 if (!isset($limit) || !is_numeric($limit)) {
-    $limit = '25';    
+    $limit = $sp->_get('sp_globallog_limit');
+    if (!isset($limit) || !is_numeric($limit)) {
+        $limit = '25';
+    }    
 } if (!isset($page) || $page <= 0) {
     $page = '1';    
 }
 
 $log = $sp->_readGlobalLog($limit, $page, $date, $search, false);   
 $count = $sp->_countGlobalLog();
-$pages = number_format($count/$limit, 0);   
+$pages = ceil($count/$limit);   
 ?>
 <div id="logDetails" class="logHeader">
 
@@ -30,11 +33,15 @@ $pages = number_format($count/$limit, 0);
         <?php } ?>        
     </div>
     
+    <div id="logPages" class="form-group" style="float: left;">
+        <input type="text" readonly="readonly" style="width: 60px;margin-right: 5px;text-align: center;font-size: 15px;font-weight: bold;color: #bbb;" value="<?php echo $page.'/'.$pages; ?>" />
+    </div>
+    
     <div id="logLimitation" class="form-group" style="float: left;">
         <select name="logLimit">
-            <option value="25"<?php echo ($limit == '25' ? ' selected="selected"' : ''); ?>>Show 25 log entries</option>
-            <option value="50"<?php echo ($limit == '50' ? ' selected="selected"' : ''); ?>>Show 50 log entries</option>
-            <option value="100"<?php echo ($limit == '100' ? ' selected="selected"' : ''); ?>>Show 100 log entries</option>
+            <option value="25"<?php echo ($limit == '25' ? ' selected="selected"' : ''); ?>><?php _e("Show 25 log entries", "spamprotection"); ?></option>
+            <option value="50"<?php echo ($limit == '50' ? ' selected="selected"' : ''); ?>><?php _e("Show 50 log entries", "spamprotection"); ?></option>
+            <option value="100"<?php echo ($limit == '100' ? ' selected="selected"' : ''); ?>><?php _e("Show 100 log entries", "spamprotection"); ?></option>
         </select>
     </div>
     <div class="form-group" style="float: right;">

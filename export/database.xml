@@ -2,7 +2,168 @@
 <database>
   <osc_t_ban_rule/>
   <osc_t_spam_protection_ban_log/>
-  <osc_t_spam_protection_items/>
+  <osc_t_spam_protection_global_log>
+    <data>
+      <pk_i_id>1</pk_i_id>
+      <s_reason>User account deleted by Cleaner</s_reason>
+      <s_account>test@test.test</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 01:34:43</dt_date>
+    </data>
+    <data>
+      <pk_i_id>2</pk_i_id>
+      <s_reason>User account deleted by Cleaner</s_reason>
+      <s_account>test@test.test</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 01:36:38</dt_date>
+    </data>
+    <data>
+      <pk_i_id>3</pk_i_id>
+      <s_reason>User account deleted by Cleaner</s_reason>
+      <s_account>test1@test.test</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 01:40:49</dt_date>
+    </data>
+    <data>
+      <pk_i_id>4</pk_i_id>
+      <s_reason>User account deleted by Cleaner</s_reason>
+      <s_account>test@test.test</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 01:40:49</dt_date>
+    </data>
+    <data>
+      <pk_i_id>5</pk_i_id>
+      <s_reason>User account deleted by Cleaner</s_reason>
+      <s_account>test2@test.test</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 01:40:50</dt_date>
+    </data>
+    <data>
+      <pk_i_id>6</pk_i_id>
+      <s_reason>User account deleted by Cleaner</s_reason>
+      <s_account>test3@test.test</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 01:40:50</dt_date>
+    </data>
+    <data>
+      <pk_i_id>7</pk_i_id>
+      <s_reason>User account deleted by Cleaner</s_reason>
+      <s_account>test4@test.test</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 01:40:50</dt_date>
+    </data>
+    <data>
+      <pk_i_id>8</pk_i_id>
+      <s_reason>Bad/Trusted user removed</s_reason>
+      <s_account>My Name</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 02:04:26</dt_date>
+    </data>
+    <data>
+      <pk_i_id>9</pk_i_id>
+      <s_reason>Bad/Trusted user removed</s_reason>
+      <s_account>AmFearLiath</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 02:04:27</dt_date>
+    </data>
+    <data>
+      <pk_i_id>10</pk_i_id>
+      <s_reason>Bad/Trusted user added</s_reason>
+      <s_account>Liath</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 02:05:37</dt_date>
+    </data>
+    <data>
+      <pk_i_id>11</pk_i_id>
+      <s_reason>Bad/Trusted user added</s_reason>
+      <s_account>Your Name</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 02:05:39</dt_date>
+    </data>
+    <data>
+      <pk_i_id>12</pk_i_id>
+      <s_reason>Bad/Trusted user added</s_reason>
+      <s_account>Another Name</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 02:05:40</dt_date>
+    </data>
+    <data>
+      <pk_i_id>13</pk_i_id>
+      <s_reason>Bad/Trusted user added</s_reason>
+      <s_account>AmFearLiath</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 02:05:46</dt_date>
+    </data>
+    <data>
+      <pk_i_id>14</pk_i_id>
+      <s_reason>Item activated</s_reason>
+      <s_account>125</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-27 02:52:05</dt_date>
+    </data>
+    <data>
+      <pk_i_id>15</pk_i_id>
+      <s_reason>Stopword found in ad: test</s_reason>
+      <s_account/>
+      <s_done>System</s_done>
+      <dt_date>2017-05-27 02:52:36</dt_date>
+    </data>
+    <data>
+      <pk_i_id>16</pk_i_id>
+      <s_reason>Ad marked as spam</s_reason>
+      <s_account>125</s_account>
+      <s_done>System</s_done>
+      <dt_date>2017-05-27 02:52:36</dt_date>
+    </data>
+    <data>
+      <pk_i_id>17</pk_i_id>
+      <s_reason>Bad/Trusted user removed</s_reason>
+      <s_account>AmFearLiath</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-28 03:28:17</dt_date>
+    </data>
+    <data>
+      <pk_i_id>18</pk_i_id>
+      <s_reason>Bad/Trusted user removed</s_reason>
+      <s_account>Markus Blotko</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-28 03:28:18</dt_date>
+    </data>
+    <data>
+      <pk_i_id>19</pk_i_id>
+      <s_reason>Bad/Trusted user removed</s_reason>
+      <s_account>Test</s_account>
+      <s_done>Administrator</s_done>
+      <dt_date>2017-05-28 03:28:19</dt_date>
+    </data>
+  </osc_t_spam_protection_global_log>
+  <osc_t_spam_protection_items>
+    <data>
+      <pk_i_id>1</pk_i_id>
+      <fk_i_item_id>124</fk_i_item_id>
+      <fk_i_user_id>1</fk_i_user_id>
+      <s_reason>Bad/Stopword found (test).</s_reason>
+      <s_user_mail>amfearliath@gmx.de</s_user_mail>
+      <dt_date>2017-05-25 19:24:44</dt_date>
+    </data>
+    <data>
+      <pk_i_id>2</pk_i_id>
+      <fk_i_item_id>125</fk_i_item_id>
+      <fk_i_user_id>1</fk_i_user_id>
+      <s_reason>Bad/Stopword found (test).</s_reason>
+      <s_user_mail>amfearliath@gmx.de</s_user_mail>
+      <dt_date>2017-05-27 02:51:35</dt_date>
+    </data>
+    <data>
+      <pk_i_id>3</pk_i_id>
+      <fk_i_item_id>125</fk_i_item_id>
+      <fk_i_user_id>1</fk_i_user_id>
+      <s_reason>Bad/Stopword found (test).</s_reason>
+      <s_user_mail>amfearliath@gmx.de</s_user_mail>
+      <dt_date>2017-05-27 02:52:36</dt_date>
+    </data>
+  </osc_t_spam_protection_items>
+  <osc_t_spam_protection_users/>
   <osc_t_spam_protection_comments/>
   <osc_t_spam_protection_contacts/>
   <osc_t_spam_protection_logins/>
